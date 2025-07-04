@@ -51,7 +51,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lint.kotlin.metadata.Visibility
 import androidx.navigation.NavController
 import com.example.djigit.R
 import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
@@ -60,7 +59,7 @@ import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
 import com.example.djigit.data.postLoginData
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, login: LoginVariables, onEmailChange: (String) -> Unit, onPasswordChange: (String) -> Unit) {
     val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -103,8 +102,6 @@ fun LoginScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 val context = LocalContext.current
-                val email = remember { mutableStateOf("") }
-                val password = remember { mutableStateOf("") }
                 val response = remember { mutableStateOf("") }
                 val emailError = remember { mutableStateOf(false) }
                 val passError = remember { mutableStateOf(false) }
@@ -113,18 +110,18 @@ fun LoginScreen(navController: NavController) {
                 LoginHeader()
                 Spacer(modifier = Modifier.height(20.dp))
                 LoginFields(
-                    email.value,
-                    password.value,
+                    login,
                     emailError = emailError.value,
                     passError = passError.value,
                     onEmailChange = {
-                        email.value = it
+                        onEmailChange(it)
+                        //email.value = it
                         if (it.isNotEmpty()) {
                             emailError.value = false
                         }
                     },
                     onPasswordChange = {
-                        password.value = it
+                        onPasswordChange(it)
                         if (it.isNotEmpty()) {
                             passError.value = false
                         }
@@ -133,7 +130,7 @@ fun LoginScreen(navController: NavController) {
                 )
                 LoginFooter(
                     onSignInClick = {
-                        postLoginData(context, email.value, password.value, response)
+                        postLoginData(context, login.email, login.password, response)
                         when (response.value) {
                             "Wrong password" -> {
                                 passError.value = true
@@ -150,8 +147,7 @@ fun LoginScreen(navController: NavController) {
                     onSignUpClick = {
                         navController.toSignUp()
                     },
-                    email = email.value,
-                    password = password.value,
+                    login = login,
                     setError = {
                         emailError.value = true
                         passError.value = true
@@ -175,14 +171,15 @@ fun LoginHeader() {
 
 @Composable
 fun LoginFields(
-    email: String,
-    password: String,
+    login: LoginVariables,
     emailError: Boolean,
     passError: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
+    val email = login.email.toString()
+    val password = login.password.toString()
     Column {
         TextField(
             value = email,
@@ -212,7 +209,7 @@ fun LoginFields(
             placeholder = "Enter your password",
             onValueChange = onPasswordChange,
             visualTransformation = if (isVisible) VisualTransformation.None
-                                    else PasswordVisualTransformation(),
+            else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Go
@@ -253,13 +250,14 @@ fun LoginFooter(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     setError: (Boolean) -> Unit,
-    email: String,
-    password: String
+    login: LoginVariables
+//    email: String,
+//    password: String
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
+                if (login.email.isNotEmpty() && login.password.isNotEmpty()) {
                     onSignInClick()
                 } else {
                     setError(true)
@@ -309,10 +307,10 @@ fun TextField(
     setError(value.isEmpty())
     var isVisible by remember { mutableStateOf(false) }
 
-    fun String.isPasswordValid(password: String): Boolean {
-        return Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$")
-            .matches(password)
-    }
+//    fun String.isPasswordValid(password: String): Boolean {
+//        return Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$")
+//            .matches(password)
+//    }
 
     OutlinedTextField(
         value = value,
@@ -325,7 +323,7 @@ fun TextField(
             Text(text = placeholder)
         },
         visualTransformation = visualTransformation,//if (isVisible) VisualTransformation.None
-                //else PasswordVisualTransformation('\u2022'),
+        //else PasswordVisualTransformation('\u2022'),
         keyboardOptions = keyboardOptions,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon

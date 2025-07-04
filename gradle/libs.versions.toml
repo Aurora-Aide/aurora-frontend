@@ -15,6 +15,9 @@ navigationRuntimeAndroid = "2.9.0"
 retrofit = "2.9.0"
 animationCoreLint = "1.8.3"
 material-extended = "1.7.8"
+#Koin bom
+koin_bom_version = "3.5.0"
+koin_compose_version = "3.2.2"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -39,6 +42,11 @@ androidx-navigation-runtime-android = { group = "androidx.navigation", name = "n
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-animation-core-lint = { group = "androidx.compose.animation", name = "animation-core-lint", version.ref = "animationCoreLint" }
 material-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-extended" }
+#Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin_bom_version" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin_compose_version"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
