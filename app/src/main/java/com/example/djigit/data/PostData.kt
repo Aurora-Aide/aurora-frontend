@@ -1,4 +1,4 @@
-package com.example.djigit
+package com.example.djigit.data
 
 import android.content.Context
 import android.widget.Toast
@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import com.example.djigit.data.model.DataModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,7 +86,6 @@ fun PostData() {
 }
 
 
-//@Composable
 fun postLoginData(
     ctx: Context,
     email: String,

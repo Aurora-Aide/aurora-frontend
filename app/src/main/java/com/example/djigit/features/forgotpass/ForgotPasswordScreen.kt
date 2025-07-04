@@ -1,4 +1,4 @@
-package com.example.djigit
+package com.example.djigit.features.forgotpass
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,9 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.djigit.R
 
 @Composable
-fun HomeScreen() {
+fun ForgotPasswordScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.backgroundimage),
@@ -63,9 +64,10 @@ fun HomeScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Home Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = "Forgot Password Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
             }
         }
 
     }
+
 }

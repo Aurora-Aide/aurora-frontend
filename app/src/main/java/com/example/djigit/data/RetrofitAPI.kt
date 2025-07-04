@@ -1,5 +1,6 @@
-package com.example.djigit
+package com.example.djigit.data
 
+import com.example.djigit.data.model.DataModel
 import retrofit2.Call
 import retrofit2.http.*
 

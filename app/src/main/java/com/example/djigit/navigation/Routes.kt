@@ -1,4 +1,4 @@
-package com.example.djigit
+package com.example.djigit.navigation
 
 import androidx.navigation.NavController
 
