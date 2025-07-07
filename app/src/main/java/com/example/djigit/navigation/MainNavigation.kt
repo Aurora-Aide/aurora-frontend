@@ -6,7 +6,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.djigit.features.forgotpass.ForgotPasswordScreen
+import com.example.djigit.features.facebook.FacebookScreen
+import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
+import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
 import com.example.djigit.features.login.LoginScreen
 import com.example.djigit.features.login.LoginViewModel
@@ -20,7 +22,8 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModel = getViewModel<LoginViewModel>()
             val loginData by viewModel.login.collectAsStateWithLifecycle()
-            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)} )
+            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
+                onLoginClick = {viewModel.login()}, isLoginSuccessful = {viewModel.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()
@@ -31,11 +34,11 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Home.route) {
             HomeScreen()
         }
-//        composable(route = Routes.MainRoute.Google.route) {
-//            HomeScreen()
-//        }
-//        composable(route = Routes.MainRoute.Facebook.route) {
-//            HomeScreen()
-//        }
+        composable(route = Routes.MainRoute.Google.route) {
+            GoogleScreen()
+        }
+        composable(route = Routes.MainRoute.Facebook.route) {
+            FacebookScreen()
+        }
     }
 }

@@ -56,11 +56,19 @@ import com.example.djigit.R
 import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.djigit.navigation.Routes.MainRoute.Home.toHome
 import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
-import com.example.djigit.data.postLoginData
+//import com.example.djigit.data.postLoginData
+import com.example.djigit.navigation.Routes.MainRoute.Facebook.toFacebook
+import com.example.djigit.navigation.Routes.MainRoute.Google.toGoogle
 
 @Composable
-fun LoginScreen(navController: NavController, login: LoginVariables, onEmailChange: (String) -> Unit, onPasswordChange: (String) -> Unit) {
+fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (String) -> Unit,
+                onPasswordChange: (String) -> Unit, onLoginClick: () -> Unit, isLoginSuccessful: () -> Unit) {
     val scrollState = rememberScrollState()
+
+    if(login.isLoginSuccessful){
+        navController.toHome()
+        isLoginSuccessful()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -130,22 +138,16 @@ fun LoginScreen(navController: NavController, login: LoginVariables, onEmailChan
                 )
                 LoginFooter(
                     onSignInClick = {
-                        postLoginData(context, login.email, login.password, response)
-                        when (response.value) {
-                            "Wrong password" -> {
-                                passError.value = true
-                            }
-                            "Invalid email" -> {
-                                emailError.value = true
-                            }
-                            else -> {
-                                // create token ???
-                                navController.toHome()
-                            }
-                        }
+                        onLoginClick()
                     },
                     onSignUpClick = {
                         navController.toSignUp()
+                    },
+                    onGoogleClick = {
+                        navController.toGoogle()
+                    },
+                    onFacebookClick = {
+                        navController.toFacebook()
                     },
                     login = login,
                     setError = {
@@ -171,15 +173,15 @@ fun LoginHeader() {
 
 @Composable
 fun LoginFields(
-    login: LoginVariables,
+    login: LoginData,
     emailError: Boolean,
     passError: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
-    val email = login.email.toString()
-    val password = login.password.toString()
+    val email = login.email
+    val password = login.password
     Column {
         TextField(
             value = email,
@@ -232,10 +234,6 @@ fun LoginFields(
                 }
             },
             setError = { password.isNotEmpty() }
-//            isPasswordValid(password) = {
-//                return Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$")
-//                    .matches(password)
-//            }
         )
 
 
@@ -250,7 +248,9 @@ fun LoginFooter(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     setError: (Boolean) -> Unit,
-    login: LoginVariables
+    login: LoginData,
+    onFacebookClick: () -> Unit,
+    onGoogleClick: () -> Unit,
 //    email: String,
 //    password: String
 ) {
@@ -275,14 +275,18 @@ fun LoginFooter(
                 contentDescription = "Google",
                 modifier = Modifier
                     .size(50.dp)
-                    .clickable {}
+                    .clickable {
+                        onGoogleClick()
+                    }
             )
             Spacer(modifier = Modifier.height(30.dp))
             Image(painter = painterResource(id = R.drawable.facebook),
                 contentDescription = "Facebook",
                 modifier = Modifier
                     .size(50.dp)
-                    .clickable {}
+                    .clickable {
+                        onFacebookClick()
+                    }
             )
         }
         TextButton(onClick = onSignUpClick) {

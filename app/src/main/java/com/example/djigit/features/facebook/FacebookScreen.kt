@@ -1,4 +1,4 @@
-package com.example.djigit.features.forgotpass
+package com.example.djigit.features.facebook
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.example.djigit.R
 
 @Composable
-fun ForgotPasswordScreen() {
+fun FacebookScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.backgroundimage),
-            contentDescription = "Login",
+            contentDescription = "Facebook",
             modifier = Modifier
                 .fillMaxSize()
                 .blur(8.dp),
@@ -38,10 +38,10 @@ fun ForgotPasswordScreen() {
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    modifier = Modifier
+    .fillMaxSize(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
     ) {
         Box(
             modifier = Modifier
@@ -64,10 +64,9 @@ fun ForgotPasswordScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Forgot Password Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = "Facebook Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
             }
         }
 
     }
-
 }

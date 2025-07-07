@@ -4,3 +4,5 @@ data class LoginVariables (
     val email: String = "",
     val password: String = ""
 )
+
+

@@ -8,6 +8,7 @@ android {
     namespace = "com.example.djigit"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "com.example.djigit"
         minSdk = 24
@@ -37,6 +38,7 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
@@ -69,4 +71,6 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
 }
