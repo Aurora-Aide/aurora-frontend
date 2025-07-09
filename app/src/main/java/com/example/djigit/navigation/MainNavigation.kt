@@ -6,7 +6,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.djigit.features.facebook.FacebookScreen
 import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
 import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
@@ -36,9 +35,6 @@ fun MainNavigation() {
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
-        }
-        composable(route = Routes.MainRoute.Facebook.route) {
-            FacebookScreen()
         }
     }
 }

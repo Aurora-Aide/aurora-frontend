@@ -28,10 +28,6 @@ sealed class Routes(val route: String) {
             fun NavController.toGoogle() = navigate("${MainRoute.route}/google")
 
         }
-        data object Facebook : Routes("${MainRoute.route}/facebook") {
-            fun NavController.toFacebook() = navigate("${MainRoute.route}/facebook")
-
-        }
     }
 
 }
