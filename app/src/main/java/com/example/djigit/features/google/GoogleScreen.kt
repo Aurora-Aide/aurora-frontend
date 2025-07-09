@@ -27,17 +27,6 @@ import com.example.djigit.R
 
 @Composable
 fun GoogleScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.backgroundimage),
-            contentDescription = "Google",
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(8.dp),
-            contentScale = ContentScale.Crop
-        )
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize(),

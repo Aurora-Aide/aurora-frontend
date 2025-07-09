@@ -15,6 +15,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        //vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -73,4 +74,5 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.logging.interceptor)
     implementation(libs.okhttp)
+    //implementation(libs.appcompat.v7)
 }

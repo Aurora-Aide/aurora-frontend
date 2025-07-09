@@ -26,17 +26,6 @@ import com.example.djigit.R
 
 @Composable
 fun HomeScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.backgroundimage),
-            contentDescription = "Login",
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(8.dp),
-            contentScale = ContentScale.Crop
-        )
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize(),

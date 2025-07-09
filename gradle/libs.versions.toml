@@ -1,6 +1,7 @@
 [versions]
 accompanistNavigationAnimation = "0.30.1"
 agp = "8.8.1"
+appcompatV7 = "28.0.0"
 converterGson = "2.5.0"
 kotlin = "2.0.0"
 coreKtx = "1.16.0"
@@ -25,6 +26,7 @@ accompanist-navigation-animation = { module = "com.google.accompanist:accompanis
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

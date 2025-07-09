@@ -23,7 +23,7 @@ fun MainNavigation() {
             val viewModel = getViewModel<LoginViewModel>()
             val loginData by viewModel.login.collectAsStateWithLifecycle()
             LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
-                onLoginClick = {viewModel.login()}, isLoginSuccessful = {viewModel.resetLogin()} )
+                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()

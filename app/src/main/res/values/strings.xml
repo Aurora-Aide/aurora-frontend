@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">djigit</string>
+    // Errors
+    <string name="error_empty_email">Email is empty</string>
+    <string name="error_empty_password">Password is empty</string>
+    <string name="error_wrong_email">Please enter a valid email</string>
+    <string name="error_wrong_password">Password must be at least 8 characters long and include
+                    one uppercase letter, one lowercase letter, one digit,
+                    and one special symbol.</string>
 </resources>

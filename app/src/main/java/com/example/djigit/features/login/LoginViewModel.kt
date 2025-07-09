@@ -1,7 +1,10 @@
 package com.example.djigit.features.login
 
+import android.util.Patterns
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.djigit.R
 import com.example.djigit.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,4 +51,51 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         }
     }
 
+    fun isPasswordValid(): LoginPasswordErrors {
+     return if(_login.value.password.isEmpty()){
+         LoginPasswordErrors.EMPTY_PASSWORD
+      } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
+             .matches(_login.value.password)){
+         LoginPasswordErrors.INVALID_PASSWORD
+      } else{
+          LoginPasswordErrors.NONE
+      }
+    }
+
+    fun isEmailValid(): LoginEmailErrors{
+        return if( _login.value.email.isEmpty()){
+            LoginEmailErrors.EMPTY_EMAIL
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(_login.value.email).matches()){
+            LoginEmailErrors.INVALID_EMAIL
+        } else{
+            LoginEmailErrors.NONE
+        }
+    }
+
+    fun validate(){
+        val emailValid = isEmailValid()
+        val passwordValid = isPasswordValid()
+        if( emailValid == LoginEmailErrors.NONE && passwordValid == LoginPasswordErrors.NONE){
+            _login.update {
+                it.copy(isEmailError = LoginEmailErrors.NONE, isPasswordError = LoginPasswordErrors.NONE)
+            }
+            login()
+        } else{
+            _login.update {
+                it.copy(isEmailError = emailValid, isPasswordError = passwordValid)
+            }
+        }
+    }
+}
+
+enum class LoginEmailErrors(val value: Int? = null){
+    EMPTY_EMAIL(R.string.error_empty_email),
+    INVALID_EMAIL(R.string.error_wrong_email),
+    NONE()
+}
+
+enum class LoginPasswordErrors(val value: Int? = null){
+    EMPTY_PASSWORD(R.string.error_empty_password),
+    INVALID_PASSWORD(R.string.error_wrong_password),
+    NONE()
 }
