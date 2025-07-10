@@ -15,4 +15,15 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
             }
         )
     }
+
+    override suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<UserEntity> {
+        return data.signup(email, password, firstName, lastName).fold(
+            onSuccess = {
+                    token -> Result.success(token.user.toUserEntity())
+            },
+            onFailure = {
+                    error -> Result.failure(error)
+            }
+        )
+    }
 }

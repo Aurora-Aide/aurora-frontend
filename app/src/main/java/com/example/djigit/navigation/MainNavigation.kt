@@ -11,7 +11,9 @@ import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
 import com.example.djigit.features.login.LoginScreen
 import com.example.djigit.features.login.LoginViewModel
-import com.example.djigit.features.signup.SignUpScreen
+import com.example.djigit.features.signup.SignupData
+import com.example.djigit.features.signup.SignupScreen
+import com.example.djigit.features.signup.SignupViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -19,16 +21,32 @@ fun MainNavigation() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
         composable(route = Routes.MainRoute.Login.route) {
-            val viewModel = getViewModel<LoginViewModel>()
-            val loginData by viewModel.login.collectAsStateWithLifecycle()
-            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
-                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
+            val viewModelLogin = getViewModel<LoginViewModel>()
+            val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
+            LoginScreen(navController,loginData, onEmailChange = {viewModelLogin.email(it)},
+                onPasswordChange = {viewModelLogin.password(it)}, onLoginClick = {viewModelLogin.validate()},
+                isLoginSuccessful = {viewModelLogin.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()
         }
         composable(route = Routes.MainRoute.SignUp.route) {
-            SignUpScreen()
+            val viewModelSignup = getViewModel<SignupViewModel>()
+            val signupData by viewModelSignup.signup.collectAsStateWithLifecycle()
+            SignupScreen(
+                navController,
+                signupData,
+                onEmailChange = { viewModelSignup.email(it) },
+                onPasswordChange = { viewModelSignup.password(it) },
+                onFirstNameChange = { viewModelSignup.firstName(it) },
+                onLastNameChange = { viewModelSignup.lastName(it) },
+                onSignupClick = { viewModelSignup.validate() },
+                isSignupSuccessful = { viewModelSignup.resetSignup() },
+                onBrandChange = { viewModelSignup.brand(it) },
+                onModelChange = { viewModelSignup.model(it) },
+                onLicensePlateChange = { viewModelSignup.licensePlate(it) },
+                //onAddCarClick = TODO(),
+            )
         }
         composable(route = Routes.MainRoute.Home.route) {
             HomeScreen()

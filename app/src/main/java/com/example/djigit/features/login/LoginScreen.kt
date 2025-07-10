@@ -62,16 +62,11 @@ fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(20.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
             LoginHeader()
             Spacer(modifier = Modifier.height(30.dp))
             LoginFields(
@@ -96,7 +91,6 @@ fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (
                 },
                 enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
             )
-        }
     }
 }
 
@@ -205,7 +199,7 @@ fun LoginFooter(
             TextButton(onClick = onSignUpClick) {
                 Text(text = "Don't have an account?  ", fontSize = FontSize.PARAGRAPH3, fontWeight =  FontWeight.PARAGRAPH3R,
                     lineHeight = LineHeight.PARAGRAPH3, color = base100)
-                Text(text = "Create an account", textDecoration = TextDecoration.Underline, fontSize = FontSize.PARAGRAPH3,
+                Text(text = "Create Account", textDecoration = TextDecoration.Underline, fontSize = FontSize.PARAGRAPH3,
                     fontWeight = FontWeight.PARAGRAPH1M, lineHeight = LineHeight.PARAGRAPH3, color = primary1)
             }
         }
