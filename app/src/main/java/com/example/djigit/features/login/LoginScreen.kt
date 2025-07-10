@@ -33,9 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,18 +46,8 @@ import com.example.djigit.R
 import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.djigit.navigation.Routes.MainRoute.Home.toHome
 import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
-import com.example.djigit.navigation.Routes.MainRoute.Facebook.toFacebook
 import com.example.djigit.navigation.Routes.MainRoute.Google.toGoogle
-import com.example.djigit.ui.theme.FontSize
-import com.example.djigit.ui.theme.FontWeight
-import com.example.djigit.ui.theme.LineHeight
-import com.example.djigit.ui.theme.base0
-import com.example.djigit.ui.theme.base100
-import com.example.djigit.ui.theme.base60
-import com.example.djigit.ui.theme.base90
-import com.example.djigit.ui.theme.functionalError
-import com.example.djigit.ui.theme.primary1
-import com.example.djigit.ui.theme.secondary2
+import com.example.djigit.ui.theme.*
 
 @Composable
 fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (String) -> Unit,
@@ -107,9 +94,7 @@ fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (
                 onGoogleClick = {
                     navController.toGoogle()
                 },
-                onFacebookClick = {
-                    navController.toFacebook()
-                },
+                enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
             )
         }
     }
@@ -196,8 +181,8 @@ fun LoginFields(
 fun LoginFooter(
     onLogInClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onFacebookClick: () -> Unit,
     onGoogleClick: () -> Unit,
+    enabled: Boolean,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
@@ -208,7 +193,8 @@ fun LoginFooter(
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = base60)
+            enabled = enabled,
+            colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
             Text(text = "Log In", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
