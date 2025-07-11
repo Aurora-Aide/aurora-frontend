@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
+import com.example.djigit.features.forgotPassword.ForgotViewModel
 import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
 import com.example.djigit.features.login.LoginScreen
@@ -31,7 +32,19 @@ fun MainNavigation() {
                 isLoginSuccessful = {viewModelLogin.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
-            ForgotPasswordScreen()
+            val viewModelPass = getViewModel<ForgotViewModel>()
+            val data by viewModelPass.data.collectAsStateWithLifecycle()
+            ForgotPasswordScreen(
+                navController,
+                data,
+                onEmailChange = {viewModelPass.email(it)},
+                onPasswordChange = {viewModelPass.password(it)},
+                onRepeatChange = {viewModelPass.repeat(it)},
+                onSendClick = {viewModelPass.forgotPass()},
+                onResetClick = {viewModelPass.resetPass()},
+                isResetSuccessful = {},
+                onBackClick = {},
+            )
         }
         composable(route = Routes.MainRoute.SignUp.route) {
             val viewModelSignup = getViewModel<SignupViewModel>()

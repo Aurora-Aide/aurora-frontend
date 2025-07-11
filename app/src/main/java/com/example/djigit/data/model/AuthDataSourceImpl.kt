@@ -3,6 +3,8 @@ package com.example.djigit.data.model
 import com.example.djigit.data.api.RetrofitAPI
 import com.example.djigit.data.requestBody
 import com.example.djigit.data.sorce.AuthDataSource
+import com.example.djigit.features.forgotPassword.ForgotPassVariables
+import com.example.djigit.features.forgotPassword.ResetPassVariables
 import com.example.djigit.features.login.LoginVariables
 import com.example.djigit.features.signup.CarVariables
 import com.example.djigit.features.signup.SignupVariables
@@ -18,5 +20,13 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun addCar(brand: String, model: String, licensePlate: String): Result<Cars> {
         return requestBody(retrofit.addCar(CarVariables(brand, model, licensePlate)))
+    }
+
+    override suspend fun forgotPass(email: String): Result<ForgotPass> {
+        return requestBody(retrofit.forgotPass(ForgotPassVariables(email)))
+    }
+
+    override suspend fun resetPass(password: String, repeat: String): Result<ForgotPass> {
+        return requestBody(retrofit.resetPass(ResetPassVariables(password, repeat)))
     }
 }

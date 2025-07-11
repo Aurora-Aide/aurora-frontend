@@ -2,61 +2,365 @@ package com.example.djigit.features.forgotPassword
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.djigit.R
+import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
+import com.example.djigit.ui.theme.*
 
 @Composable
-fun ForgotPasswordScreen() {
+fun ForgotPasswordScreen(navController: NavController,
+                data: ForgotPassData,
+                onEmailChange: (String) -> Unit,
+                onPasswordChange: (String) -> Unit,
+                onRepeatChange: (String) -> Unit,
+                onSendClick: () -> Unit,
+                onResetClick: () -> Unit,
+                isResetSuccessful: () -> Unit,
+                onBackClick:() -> Unit,
+) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(20.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Box(
-            modifier = Modifier
-                .padding(28.dp)
-                .alpha(0.7f)
-                .clip(
-                    CutCornerShape(
-                        topStart = 10.dp,
-                        topEnd = 10.dp,
-                        bottomStart = 10.dp,
-                        bottomEnd = 10.dp
-                    )
-                )
-                .background(MaterialTheme.colorScheme.background)
-                .wrapContentHeight()
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(48.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Forgot Password Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+        ForgotPassHeader(true, onBackClick)
+        Spacer(modifier = Modifier.height(30.dp))
+        ForgotPassFields(
+            data,
+            onEmailChange = {
+                onEmailChange(it)
             }
+        )
+        ForgotPassFooter(
+            onSendClick = onSendClick,
+            enabled = data.email.isNotEmpty()
+        )
+    }
+}
+
+@Composable
+fun ForgotPassHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
+    if(isBackVisible){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
+        ){
+            Image(painter = painterResource(id = R.drawable.backarrow),
+                contentDescription = "back",
+                modifier = Modifier
+                    .width(24.dp)
+                    .clickable{
+                        onBackClick()
+                    }
+            )
         }
 
     }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(painter = painterResource(id = R.drawable.login_logo),
+            contentDescription = "djigit",
+            modifier = Modifier
+                .width(110.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Forgot Password", fontSize = FontSize.HEADING1, fontWeight = FontWeight.HEADING1, color = primary1)
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Enter your email, so we can send you a link", fontSize = FontSize.HEADING1, fontWeight = FontWeight.HEADING1, color = primary1)
+    }
+}
 
+@Composable
+fun ResetPassHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
+    if(isBackVisible){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
+        ){
+            Image(painter = painterResource(id = R.drawable.backarrow),
+                contentDescription = "back",
+                modifier = Modifier
+                    .width(24.dp)
+                    .clickable{
+                        onBackClick()
+                    }
+            )
+        }
+
+    }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(painter = painterResource(id = R.drawable.login_logo),
+            contentDescription = "djigit",
+            modifier = Modifier
+                .width(110.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Reset Password", fontSize = FontSize.HEADING1, fontWeight = FontWeight.HEADING1, color = primary1)
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Enter your new password", fontSize = FontSize.HEADING1, fontWeight = FontWeight.HEADING1, color = primary1)
+    }
+}
+
+@Composable
+fun ForgotPassFields(
+    data: ForgotPassData,
+    onEmailChange: (String) -> Unit,
+) {
+    Column {
+        TextField(
+            value = data.email,
+            label = "Email",
+            placeholder = "Email",
+            onValueChange = onEmailChange,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+fun ResetPassFields(
+    data: ForgotPassData,
+    onPasswordChange: (String) -> Unit,
+    onRepeatChange: (String) -> Unit,
+) {
+    Column {
+        TextField(
+            value = data.password,
+            label = "New Password",
+            placeholder = "New Password",
+            onValueChange = onPasswordChange,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = data.repeat,
+            label = "Repeat Password",
+            placeholder = "Repeat Password",
+            onValueChange = onRepeatChange,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+fun ForgotPassFooter(
+    onSendClick: () -> Unit,
+    enabled: Boolean,
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(
+            onClick = {
+                onSendClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
+            colors = ButtonDefaults.buttonColors(containerColor = primary1)
+
+        ) {
+            Text(text = "Send Email", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+                lineHeight = LineHeight.PARAGRAPH1, color = base0)
+        }
+    }
+}
+
+@Composable
+fun ResetPassFooter(
+    onResetClick: () -> Unit,
+    enabled: Boolean,
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(
+            onClick = {
+                onResetClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
+            colors = ButtonDefaults.buttonColors(containerColor = primary1)
+
+        ) {
+            Text(text = "Reset Password", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+                lineHeight = LineHeight.PARAGRAPH1, color = base0)
+        }
+    }
+}
+
+@Composable
+fun Success(navController: NavController){
+    Column{
+        Box(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(shape = CircleShape)
+                .background(color = functionalSuccess),
+            contentAlignment = Alignment.Center
+        ){
+            Image(painter = painterResource(id = R.drawable.check),
+                contentDescription = "check",
+                modifier = Modifier
+                    .width(40.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(text = "Password Changed!",
+            fontSize = FontSize.HEADING2,
+            fontWeight = FontWeight.HEADING2,
+            color = functionalSuccess)
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Your password has been changed successfully.",
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M,
+            lineHeight = LineHeight.PARAGRAPH1,
+            color = functionalSuccess)
+        Spacer(modifier = Modifier.height(30.dp))
+        Button(
+            onClick = {
+                navController.toSignUp()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = primary1)
+
+        ) {
+            Text(text = "Back to Jigit", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+                lineHeight = LineHeight.PARAGRAPH1, color = base0)
+        }
+    }
+}
+
+@Composable
+fun Error(navController: NavController){
+    Column{
+        Box(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(shape = CircleShape)
+                .background(color = functionalError),
+            contentAlignment = Alignment.Center
+        ){
+            Image(painter = painterResource(id = R.drawable.x),
+                contentDescription = "check",
+                modifier = Modifier
+                    .width(40.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(text = "Password Change Unsuccessful!",
+            fontSize = FontSize.HEADING2,
+            fontWeight = FontWeight.HEADING2,
+            color = functionalError)
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "There was an error while trying to change your password.",
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M,
+            lineHeight = LineHeight.PARAGRAPH1,
+            color = functionalError)
+        Spacer(modifier = Modifier.height(30.dp))
+        Button(
+            onClick = {
+                navController.toSignUp()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = primary1)
+
+        ) {
+            Text(text = "Back to Jigit", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+                lineHeight = LineHeight.PARAGRAPH1, color = base0)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextField(
+    value: String,
+    label: String,
+    placeholder: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onValueChange: (String) -> Unit,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = {
+            Text(text = label)
+        },
+        placeholder = {
+            Text(text = placeholder, color = primary1)
+        },
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        trailingIcon = trailingIcon,
+        modifier =Modifier.fillMaxWidth(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = secondary2,
+            unfocusedBorderColor = secondary2)
+
+    )
 }

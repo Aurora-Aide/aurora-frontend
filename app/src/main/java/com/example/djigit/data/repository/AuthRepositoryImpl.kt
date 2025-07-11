@@ -1,8 +1,10 @@
 package com.example.djigit.data.repository
 
 import com.example.djigit.data.entity.CarEntity
+import com.example.djigit.data.entity.ForgotPassEntity
 import com.example.djigit.data.entity.UserEntity
 import com.example.djigit.data.mapper.toCarMapper
+import com.example.djigit.data.mapper.toForgotPassMapper
 import com.example.djigit.data.mapper.toUserEntity
 import com.example.djigit.data.sorce.AuthDataSource
 
@@ -34,6 +36,28 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
         return data.addCar(brand, model, licensePlate).fold(
             onSuccess = {
                 car -> Result.success(car.toCarMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun forgotPass(email: String): Result<ForgotPassEntity> {
+        return data.forgotPass(email).fold(
+            onSuccess = {
+                    msg -> Result.success(msg.toForgotPassMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun resetPass(password: String, reset: String): Result<ForgotPassEntity> {
+        return data.resetPass(password, reset).fold(
+            onSuccess = {
+                    msg -> Result.success(msg.toForgotPassMapper())
             },
             onFailure = {
                 Result.failure(it)
