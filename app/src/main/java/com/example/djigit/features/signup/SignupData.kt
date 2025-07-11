@@ -11,7 +11,7 @@ data class SignupData (
     val isSignupSuccessful: Boolean = false,
     val isEmailError: LoginEmailErrors = LoginEmailErrors.NONE,
     val isPasswordError: LoginPasswordErrors = LoginPasswordErrors.NONE,
-    val isFirstStep:Boolean = true,
+    var isFirstStep:Boolean = true,
     val brand: String = "",
     val model: String = "",
     val licensePlate: String = "",

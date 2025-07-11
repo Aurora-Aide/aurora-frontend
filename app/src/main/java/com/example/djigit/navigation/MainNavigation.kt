@@ -48,7 +48,8 @@ fun MainNavigation() {
                 onBrandChange = { viewModelSignup.brand(it) },
                 onModelChange = { viewModelSignup.model(it) },
                 onLicensePlateChange = { viewModelSignup.licensePlate(it) },
-                onToHomeClick = { viewModelSignup.signup() }
+                onToHomeClick = { viewModelSignup.signup() },
+                onBackClick = {viewModelSignup.onBackClick(signupData.isFirstStep)}
                 //onAddCarClick = TODO(),
             )
         }
