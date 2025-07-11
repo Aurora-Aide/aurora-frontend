@@ -4,6 +4,7 @@ package com.example.djigit.features.signup
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.djigit.domain.usecase.CarUseCase
 import com.example.djigit.domain.usecase.SignupUseCase
 import com.example.djigit.features.login.LoginEmailErrors
 import com.example.djigit.features.login.LoginPasswordErrors
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
+class SignupViewModel(private val signupUseCase: SignupUseCase, private val carUseCase: CarUseCase): ViewModel() {
     private val _signup = MutableStateFlow(SignupData())
 
     val signup = _signup.asStateFlow()
@@ -43,7 +44,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     }
     fun brand(text: String) {
         _signup.update{
-            it.copy(model = text)
+            it.copy(brand = text)
         }
     }
 
@@ -55,7 +56,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
 
     fun model(text: String) {
         _signup.update{
-            it.copy(brand = text)
+            it.copy(model = text)
         }
     }
 
@@ -63,8 +64,12 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
         viewModelScope.launch{
             signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.firstName, _signup.value.lastName).fold(
                 onSuccess = {
-                    _signup.update {
-                        it.copy(isSignupSuccessful = true)
+                    if(_signup.value.brand.isNotEmpty() && _signup.value.model.isNotEmpty() && _signup.value.licensePlate.isNotEmpty()){
+                        carUseCase.invoke(_signup.value.brand, _signup.value.model, _signup.value.licensePlate)
+                    } else{
+                        _signup.update {
+                            it.copy(isSignupSuccessful = true)
+                        }
                     }
                 },
                 onFailure = {

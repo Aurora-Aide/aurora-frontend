@@ -23,8 +23,11 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
-            LoginScreen(navController,loginData, onEmailChange = {viewModelLogin.email(it)},
-                onPasswordChange = {viewModelLogin.password(it)}, onLoginClick = {viewModelLogin.validate()},
+            LoginScreen(navController,
+                loginData,
+                onEmailChange = {viewModelLogin.email(it)},
+                onPasswordChange = {viewModelLogin.password(it)},
+                onLoginClick = {viewModelLogin.validate()},
                 isLoginSuccessful = {viewModelLogin.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
@@ -45,6 +48,7 @@ fun MainNavigation() {
                 onBrandChange = { viewModelSignup.brand(it) },
                 onModelChange = { viewModelSignup.model(it) },
                 onLicensePlateChange = { viewModelSignup.licensePlate(it) },
+                onToHomeClick = { viewModelSignup.signup() }
                 //onAddCarClick = TODO(),
             )
         }

@@ -7,6 +7,7 @@ import com.example.djigit.data.model.urls
 import com.example.djigit.data.repository.AuthRepository
 import com.example.djigit.data.repository.AuthRepositoryImpl
 import com.example.djigit.data.sorce.AuthDataSource
+import com.example.djigit.domain.usecase.CarUseCase
 import com.example.djigit.domain.usecase.LoginUseCase
 import com.example.djigit.domain.usecase.SignupUseCase
 import com.example.djigit.features.login.LoginViewModel
@@ -25,7 +26,7 @@ val appModule = module {
     }
 
     viewModel {
-        SignupViewModel(get())
+        SignupViewModel(get(),get())
     }
 
     factory{
@@ -34,6 +35,10 @@ val appModule = module {
 
     factory{
         SignupUseCase(get())
+    }
+
+    factory{
+        CarUseCase(get())
     }
 
     single<AuthRepository>{

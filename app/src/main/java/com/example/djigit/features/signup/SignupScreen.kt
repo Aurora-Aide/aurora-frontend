@@ -71,6 +71,7 @@ fun SignupScreen(
     onLicensePlateChange: (String) -> Unit,
 //  onAddCarClick: () -> Unit,
     onSignupClick: () -> Unit,
+    onToHomeClick: () -> Unit,
     isSignupSuccessful: () -> Unit) {
     val scrollState = rememberScrollState()
 
@@ -117,17 +118,18 @@ fun SignupScreen(
                         navController.toGoogle()
                     },
                     enabled = signup.email.isNotEmpty() && signup.password.isNotEmpty()
+                            && signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty()
                 )
             } else{
                 LogCarFields (
                     car = signup,
-                    onBrandChange = {onBrandChange(it)},
-                    onModelChange = {onModelChange(it)},
-                    onLicensePlateChange = { onLicensePlateChange(it)}
+                    onBrandChange = { onBrandChange(it) },
+                    onModelChange = { onModelChange(it) },
+                    onLicensePlateChange = { onLicensePlateChange(it) },
                 )
                 LogCarFooter(
-                    onSignupClick = {},
-                    onAddCarClick = {}
+                    onToHomeClick = { onToHomeClick() },
+                    onAddCarClick = {}, // to be implemented
                 )
             }
     }
@@ -176,7 +178,7 @@ fun SignupFields(
                         lineHeight = LineHeight.PARAGRAPH1,
                         color = base0)
                 }
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Box(
                     modifier = Modifier
                         .size(32.dp)
@@ -410,9 +412,9 @@ fun SignupFooter(
             TextButton(onClick = onLoginClick) {
                 Text(
                     text = "Already have an account?  ",
-                    fontSize = FontSize.PARAGRAPH3,
-                    fontWeight = FontWeight.PARAGRAPH3R,
-                    lineHeight = LineHeight.PARAGRAPH3,
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2R,
+                    lineHeight = LineHeight.PARAGRAPH2,
                     color = base100
                 )
                 Text(
@@ -475,13 +477,13 @@ fun SignupFooter(
 
 @Composable
 fun LogCarFooter(
-    onSignupClick: () -> Unit,
+    onToHomeClick: () -> Unit,
     onAddCarClick: () -> Unit,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
-                onSignupClick()
+                onToHomeClick()
             },
             modifier = Modifier
                 .fillMaxWidth()

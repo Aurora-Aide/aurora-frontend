@@ -1,10 +1,13 @@
 package com.example.djigit.data.repository
 
+import com.example.djigit.data.entity.CarEntity
 import com.example.djigit.data.entity.UserEntity
+import com.example.djigit.data.mapper.toCarMapper
 import com.example.djigit.data.mapper.toUserEntity
 import com.example.djigit.data.sorce.AuthDataSource
 
 class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
+
     override suspend fun login(email: String, password: String): Result<UserEntity> {
         return data.login(email, password).fold(
             onSuccess = {
@@ -23,6 +26,17 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
             },
             onFailure = {
                     error -> Result.failure(error)
+            }
+        )
+    }
+
+    override suspend fun addCar(brand: String, model: String, licensePlate: String): Result<CarEntity> {
+        return data.addCar(brand, model, licensePlate).fold(
+            onSuccess = {
+                car -> Result.success(car.toCarMapper())
+            },
+            onFailure = {
+                Result.failure(it)
             }
         )
     }
