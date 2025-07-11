@@ -72,7 +72,9 @@ fun SignupScreen(
 //  onAddCarClick: () -> Unit,
     onSignupClick: () -> Unit,
     onToHomeClick: () -> Unit,
-    isSignupSuccessful: () -> Unit) {
+    isSignupSuccessful: () -> Unit,
+    onBackClick:() ->Unit,
+    ){
     val scrollState = rememberScrollState()
 
     if(signup.isSignupSuccessful){
@@ -88,9 +90,10 @@ fun SignupScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-            LoginHeader()
-            Spacer(modifier = Modifier.height(30.dp))
+
             if(signup.isFirstStep){
+                LoginHeader(isBackVisible = false, onBackClick)
+                Spacer(modifier = Modifier.height(30.dp))
                 SignupFields(
                     signup,
                     onEmailChange = {
@@ -121,6 +124,8 @@ fun SignupScreen(
                             && signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty()
                 )
             } else{
+                LoginHeader(isBackVisible = true, onBackClick)
+                Spacer(modifier = Modifier.height(30.dp))
                 LogCarFields (
                     car = signup,
                     onBrandChange = { onBrandChange(it) },
@@ -136,7 +141,26 @@ fun SignupScreen(
 }
 
 @Composable
-fun LoginHeader() {
+fun LoginHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
+    if(isBackVisible){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
+        ){
+            Image(painter = painterResource(id = R.drawable.backarrow),
+                contentDescription = "back",
+                modifier = Modifier
+                    .width(24.dp)
+                    .clickable{
+                        onBackClick()
+                    }
+            )
+        }
+
+    }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(painter = painterResource(id = R.drawable.login_logo),
             contentDescription = "djigit",
@@ -516,7 +540,7 @@ fun LogCarFooter(
 
         ) {
             Text(
-                text = "Add Car",
+                text = "Add Car  ",
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
@@ -526,7 +550,7 @@ fun LogCarFooter(
                 painter = painterResource(id = R.drawable.plus),
                 contentDescription = "djigit",
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(20.dp)
             )
         }
     }

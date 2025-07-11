@@ -73,7 +73,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val carU
                     }
                 },
                 onFailure = {
-
+                    // to implement
                 }
             )
         }
@@ -85,7 +85,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val carU
         }
     }
 
-    fun isPasswordValid(): LoginPasswordErrors {
+    private fun isPasswordValid(): LoginPasswordErrors {
         return if(_signup.value.password.isEmpty()){
             LoginPasswordErrors.EMPTY_PASSWORD
         } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
@@ -96,7 +96,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val carU
         }
     }
 
-    fun isEmailValid(): LoginEmailErrors {
+    private fun isEmailValid(): LoginEmailErrors {
         return if( _signup.value.email.isEmpty()){
             LoginEmailErrors.EMPTY_EMAIL
         } else if (!Patterns.EMAIL_ADDRESS.matcher(_signup.value.email).matches()){
@@ -117,6 +117,12 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val carU
             _signup.update {
                 it.copy(isEmailError = emailValid, isPasswordError = passwordValid)
             }
+        }
+    }
+
+    fun onBackClick(isFirstStep: Boolean){
+        if(isFirstStep){
+            
         }
     }
 }
