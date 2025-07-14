@@ -21,16 +21,10 @@ fun MainNavigation() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
         composable(route = Routes.MainRoute.Login.route) {
-//            val viewModel = getViewModel<LoginViewModel>()
-//            val loginData by viewModel.login.collectAsStateWithLifecycle()
-//            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
-//                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
-            val viewModel = getViewModel<ProfileViewModel>()
-            val showHide by viewModel.showPopUp.collectAsStateWithLifecycle()
-            ProfileScreen(
-                showPopup = showHide,
-                onLogOutClicked = { viewModel.showHide() }
-            )
+            val viewModel = getViewModel<LoginViewModel>()
+            val loginData by viewModel.login.collectAsStateWithLifecycle()
+            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
+                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()
@@ -45,7 +39,12 @@ fun MainNavigation() {
             GoogleScreen()
         }
         composable(route = Routes.MainRoute.Profile.route) {
-//            ProfileScreen()
+            val viewModel = getViewModel<ProfileViewModel>()
+            val showHide by viewModel.showPopUp.collectAsStateWithLifecycle()
+            ProfileScreen(
+                showPopup = showHide,
+                onLogOutClicked = { viewModel.showHide() }
+            )
         }
     }
 }
