@@ -7,8 +7,6 @@ object urls {
     const val googleURL = "$baseURL/auth/google"
     const val forgotPasswordURL = "$baseURL/auth/forgot-password"
     const val resetPasswordURL = "$baseURL/auth/reset-password"
-    const val facebookURL = "$baseURL/auth/facebook"
-    const val facebookCallbackURL = "$baseURL/auth/facebook/callback"
     const val refreshURL = "$baseURL/auth/refresh"
     const val logoutURL = "$baseURL/auth/logout"
     const val addCarURL = "$baseURL/car"

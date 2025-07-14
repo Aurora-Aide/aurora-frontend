@@ -7,4 +7,5 @@
     <string name="error_wrong_password">Password must be at least 8 characters long and include
                     one uppercase letter, one lowercase letter, one digit,
                     and one special symbol.</string>
+    <string name="error_mismatch_passwords">Passwords aren\'t the same</string>
 </resources>

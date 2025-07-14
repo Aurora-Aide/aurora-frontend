@@ -274,7 +274,6 @@ fun TextField(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = secondary2,
             unfocusedBorderColor = secondary2)
-
     )
     if (error) {
         Text(text = errorText, color = functionalError)

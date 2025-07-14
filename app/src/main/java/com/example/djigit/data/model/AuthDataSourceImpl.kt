@@ -22,11 +22,11 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.addCar(CarVariables(brand, model, licensePlate)))
     }
 
-    override suspend fun forgotPass(email: String): Result<ForgotPass> {
+    override suspend fun forgotPass(email: String): Result<Unit> {
         return requestBody(retrofit.forgotPass(ForgotPassVariables(email)))
     }
 
-    override suspend fun resetPass(password: String, repeat: String): Result<ForgotPass> {
-        return requestBody(retrofit.resetPass(ResetPassVariables(password, repeat)))
+    override suspend fun resetPass(password: String, token: String): Result<ForgotPass> {
+        return requestBody(retrofit.resetPass(ResetPassVariables(password, token)))
     }
 }

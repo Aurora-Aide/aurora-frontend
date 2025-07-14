@@ -7,6 +7,6 @@ import com.example.djigit.data.model.ForgotPass
 
 fun ForgotPass.toForgotPassMapper(): ForgotPassEntity {
     return ForgotPassEntity(
-       massage = this.massage
+       massage = this.massage.orEmpty()
     )
 }

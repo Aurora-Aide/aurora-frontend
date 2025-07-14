@@ -15,6 +15,7 @@ import com.example.djigit.features.login.LoginViewModel
 import com.example.djigit.features.signup.SignupData
 import com.example.djigit.features.signup.SignupScreen
 import com.example.djigit.features.signup.SignupViewModel
+import com.example.djigit.navigation.Routes.MainRoute.Login.toLogIn
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -40,10 +41,10 @@ fun MainNavigation() {
                 onEmailChange = {viewModelPass.email(it)},
                 onPasswordChange = {viewModelPass.password(it)},
                 onRepeatChange = {viewModelPass.repeat(it)},
-                onSendClick = {viewModelPass.forgotPass()},
-                onResetClick = {viewModelPass.resetPass()},
+                onSendClick = {viewModelPass.validateEmail()},
+                onResetClick = {viewModelPass.validatePassword()},
                 isResetSuccessful = {},
-                onBackClick = {},
+                onBackClick = {navController.toLogIn()},
             )
         }
         composable(route = Routes.MainRoute.SignUp.route) {
@@ -62,7 +63,7 @@ fun MainNavigation() {
                 onModelChange = { viewModelSignup.model(it) },
                 onLicensePlateChange = { viewModelSignup.licensePlate(it) },
                 onToHomeClick = { viewModelSignup.signup() },
-                onBackClick = {viewModelSignup.onBackClick(signupData.isFirstStep)}
+                onBackClick = {viewModelSignup.onBackClick()}
                 //onAddCarClick = TODO(),
             )
         }

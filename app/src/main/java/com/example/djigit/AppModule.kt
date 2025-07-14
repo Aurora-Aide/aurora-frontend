@@ -8,8 +8,11 @@ import com.example.djigit.data.repository.AuthRepository
 import com.example.djigit.data.repository.AuthRepositoryImpl
 import com.example.djigit.data.sorce.AuthDataSource
 import com.example.djigit.domain.usecase.CarUseCase
+import com.example.djigit.domain.usecase.ForgotPassUseCase
 import com.example.djigit.domain.usecase.LoginUseCase
+import com.example.djigit.domain.usecase.ResetPassUseCase
 import com.example.djigit.domain.usecase.SignupUseCase
+import com.example.djigit.features.forgotPassword.ForgotViewModel
 import com.example.djigit.features.login.LoginViewModel
 import com.example.djigit.features.signup.SignupViewModel
 import okhttp3.OkHttpClient
@@ -29,6 +32,10 @@ val appModule = module {
         SignupViewModel(get(),get())
     }
 
+    viewModel{
+        ForgotViewModel(get(), get())
+    }
+
     factory{
         LoginUseCase(get())
     }
@@ -40,6 +47,13 @@ val appModule = module {
     factory{
         CarUseCase(get())
     }
+    factory{
+        ForgotPassUseCase(get())
+    }
+    factory{
+        ResetPassUseCase(get())
+    }
+
 
     single<AuthRepository>{
         AuthRepositoryImpl(get())

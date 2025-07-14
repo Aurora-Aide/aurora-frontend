@@ -43,10 +43,10 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
         )
     }
 
-    override suspend fun forgotPass(email: String): Result<ForgotPassEntity> {
+    override suspend fun forgotPass(email: String): Result<Unit> {
         return data.forgotPass(email).fold(
             onSuccess = {
-                    msg -> Result.success(msg.toForgotPassMapper())
+                    msg -> Result.success(Unit)
             },
             onFailure = {
                 Result.failure(it)
@@ -54,8 +54,8 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
         )
     }
 
-    override suspend fun resetPass(password: String, reset: String): Result<ForgotPassEntity> {
-        return data.resetPass(password, reset).fold(
+    override suspend fun resetPass(password: String, token: String): Result<ForgotPassEntity> {
+        return data.resetPass(password, token).fold(
             onSuccess = {
                     msg -> Result.success(msg.toForgotPassMapper())
             },

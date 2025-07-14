@@ -1,9 +1,15 @@
 package com.example.djigit.features.login
 
+//import android.content.Context
 import android.util.Patterns
-import androidx.annotation.StringRes
+//import androidx.credentials.CredentialManager
+//import androidx.credentials.CustomCredential
+//import androidx.credentials.PasswordCredential
+//import androidx.credentials.PublicKeyCredential
+//import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+//import com.android.tools.build.jetifier.core.utils.Log
 import com.example.djigit.R
 import com.example.djigit.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +56,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         }
     }
 
-    fun isPasswordValid(): LoginPasswordErrors {
+    private fun isPasswordValid(): LoginPasswordErrors {
      return if(_login.value.password.isEmpty()){
          LoginPasswordErrors.EMPTY_PASSWORD
       } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
@@ -61,7 +67,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
       }
     }
 
-    fun isEmailValid(): LoginEmailErrors{
+    private fun isEmailValid(): LoginEmailErrors{
         return if( _login.value.email.isEmpty()){
             LoginEmailErrors.EMPTY_EMAIL
         } else if (!Patterns.EMAIL_ADDRESS.matcher(_login.value.email).matches()){

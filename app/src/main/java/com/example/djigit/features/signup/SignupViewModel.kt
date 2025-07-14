@@ -120,9 +120,9 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val carU
         }
     }
 
-    fun onBackClick(isFirstStep: Boolean){
-        if(isFirstStep){
-            
+    fun onBackClick(){
+        _signup.update {
+            it.copy(isFirstStep = true)
         }
     }
 }

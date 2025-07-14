@@ -26,7 +26,7 @@ interface RetrofitAPI {
     //must have token doesnt now
 
     @POST(urls.forgotPasswordURL)
-    suspend fun forgotPass(@Body dataModel: ForgotPassVariables): Response<ForgotPass>
+    suspend fun forgotPass(@Body dataModel: ForgotPassVariables): Response<Unit>
 
     @POST(urls.resetPasswordURL)
     suspend fun resetPass(@Body dataModel: ResetPassVariables): Response<ForgotPass>
