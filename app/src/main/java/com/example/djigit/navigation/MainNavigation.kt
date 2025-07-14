@@ -11,6 +11,8 @@ import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
 import com.example.djigit.features.login.LoginScreen
 import com.example.djigit.features.login.LoginViewModel
+import com.example.djigit.features.profile.ProfileScreen
+import com.example.djigit.features.profile.ProfileViewModel
 import com.example.djigit.features.signup.SignUpScreen
 import org.koin.androidx.compose.getViewModel
 
@@ -19,10 +21,16 @@ fun MainNavigation() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
         composable(route = Routes.MainRoute.Login.route) {
-            val viewModel = getViewModel<LoginViewModel>()
-            val loginData by viewModel.login.collectAsStateWithLifecycle()
-            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
-                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
+//            val viewModel = getViewModel<LoginViewModel>()
+//            val loginData by viewModel.login.collectAsStateWithLifecycle()
+//            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
+//                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
+            val viewModel = getViewModel<ProfileViewModel>()
+            val showHide by viewModel.showPopUp.collectAsStateWithLifecycle()
+            ProfileScreen(
+                showPopup = showHide,
+                onLogOutClicked = { viewModel.showHide() }
+            )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()
@@ -35,6 +43,9 @@ fun MainNavigation() {
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
+        }
+        composable(route = Routes.MainRoute.Profile.route) {
+//            ProfileScreen()
         }
     }
 }
