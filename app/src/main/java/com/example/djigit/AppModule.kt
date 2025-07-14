@@ -6,10 +6,13 @@ import com.example.djigit.data.model.urls
 import com.example.djigit.data.repository.AuthRepository
 import com.example.djigit.data.repository.AuthRepositoryImpl
 import com.example.djigit.data.sorce.AuthDataSource
+import com.example.djigit.domain.usecase.CarUseCase
 import com.example.djigit.domain.usecase.LoginUseCase
+import com.example.djigit.domain.usecase.SignupUseCase
 import com.example.djigit.features.login.LoginViewModel
 import com.example.djigit.features.profile.PersonalInformationViewModel
 import com.example.djigit.features.profile.ProfileViewModel
+import com.example.djigit.features.signup.SignupViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,13 +25,24 @@ val appModule = module {
     viewModel {
         LoginViewModel(get())
     }
-
+    
     viewModel { ProfileViewModel() }
 
     viewModel { PersonalInformationViewModel() }
+    viewModel {
+        SignupViewModel(get(),get())
+    }
 
     factory{
         LoginUseCase(get())
+    }
+
+    factory{
+        SignupUseCase(get())
+    }
+
+    factory{
+        CarUseCase(get())
     }
 
     single<AuthRepository>{

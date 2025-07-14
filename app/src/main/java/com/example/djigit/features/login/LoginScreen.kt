@@ -71,39 +71,33 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(20.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            LoginHeader()
-            Spacer(modifier = Modifier.height(30.dp))
-            LoginFields(
-                login,
-                onEmailChange = {
-                    onEmailChange(it)
-                },
-                onPasswordChange = {
-                    onPasswordChange(it)
-                },
-                onForgotPasswordClick = { onForgotPasswordClick() }
-            )
-            LoginFooter(
-                onLogInClick = {
-                    onLoginClick()
-                },
-                onSignUpClick = {
-                    onSignUpClick()
-                },
-                onGoogleClick = {},
-                enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
-            )
-        }
+        LoginHeader()
+        Spacer(modifier = Modifier.height(30.dp))
+        LoginFields(
+            login,
+            onEmailChange = {
+                onEmailChange(it)
+            },
+            onPasswordChange = {
+                onPasswordChange(it)
+            },
+            onForgotPasswordClick = { onForgotPasswordClick() }
+        )
+        LoginFooter(
+            onLogInClick = {
+                onLoginClick()
+            },
+            onSignUpClick = {
+                onSignUpClick()
+            },
+            onGoogleClick = {},
+            enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
+        )
     }
 }
 
@@ -235,6 +229,21 @@ fun LoginFooter(
                 )
                 Text(
                     text = "Create an account",
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = FontSize.PARAGRAPH3,
+                    fontWeight = FontWeight.PARAGRAPH1M,
+                    lineHeight = LineHeight.PARAGRAPH3,
+                    color = primary1
+                )
+                Text(
+                    text = "Don't have an account?  ",
+                    fontSize = FontSize.PARAGRAPH3,
+                    fontWeight = FontWeight.PARAGRAPH3R,
+                    lineHeight = LineHeight.PARAGRAPH3,
+                    color = base100
+                )
+                Text(
+                    text = "Create Account",
                     textDecoration = TextDecoration.Underline,
                     fontSize = FontSize.PARAGRAPH3,
                     fontWeight = FontWeight.PARAGRAPH1M,

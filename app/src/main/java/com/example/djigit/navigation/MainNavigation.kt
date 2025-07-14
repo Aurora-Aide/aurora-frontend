@@ -9,14 +9,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
 import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
-import com.example.djigit.features.login.LoginData
 import com.example.djigit.features.login.LoginScreen
 import com.example.djigit.features.login.LoginViewModel
 import com.example.djigit.features.profile.PersonalInfoScreen
 import com.example.djigit.features.profile.PersonalInformationViewModel
 import com.example.djigit.features.profile.ProfileScreen
 import com.example.djigit.features.profile.ProfileViewModel
-import com.example.djigit.features.signup.SignUpScreen
+import com.example.djigit.features.signup.SignupScreen
+import com.example.djigit.features.signup.SignupViewModel
 import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.djigit.navigation.Routes.MainRoute.PersonalInformation.toPersonalInformation
 import com.example.djigit.navigation.Routes.MainRoute.Profile.toProfile
@@ -44,7 +44,24 @@ fun MainNavigation() {
             ForgotPasswordScreen()
         }
         composable(route = Routes.MainRoute.SignUp.route) {
-            SignUpScreen()
+            val viewModelSignup = getViewModel<SignupViewModel>()
+            val signupData by viewModelSignup.signup.collectAsStateWithLifecycle()
+            SignupScreen(
+                navController,
+                signupData,
+                onEmailChange = { viewModelSignup.email(it) },
+                onPasswordChange = { viewModelSignup.password(it) },
+                onFirstNameChange = { viewModelSignup.firstName(it) },
+                onLastNameChange = { viewModelSignup.lastName(it) },
+                onSignupClick = { viewModelSignup.validate() },
+                isSignupSuccessful = { viewModelSignup.resetSignup() },
+                onBrandChange = { viewModelSignup.brand(it) },
+                onModelChange = { viewModelSignup.model(it) },
+                onLicensePlateChange = { viewModelSignup.licensePlate(it) },
+                onToHomeClick = { viewModelSignup.signup() },
+                onBackClick = {viewModelSignup.onBackClick(signupData.isFirstStep)}
+                //onAddCarClick = TODO(),
+            )
         }
         composable(route = Routes.MainRoute.Home.route) {
             HomeScreen()

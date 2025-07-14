@@ -11,4 +11,5 @@ object urls {
     const val facebookCallbackURL = "$baseURL/auth/facebook/callback"
     const val refreshURL = "$baseURL/auth/refresh"
     const val logoutURL = "$baseURL/auth/logout"
+    const val addCarURL = "$baseURL/car"
 }
