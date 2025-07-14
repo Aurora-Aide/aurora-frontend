@@ -1,6 +1,5 @@
 package com.example.djigit
 
-import android.hardware.DataSpace
 import com.example.djigit.data.api.RetrofitAPI
 import com.example.djigit.data.model.AuthDataSourceImpl
 import com.example.djigit.data.model.urls
@@ -11,6 +10,8 @@ import com.example.djigit.domain.usecase.CarUseCase
 import com.example.djigit.domain.usecase.LoginUseCase
 import com.example.djigit.domain.usecase.SignupUseCase
 import com.example.djigit.features.login.LoginViewModel
+import com.example.djigit.features.profile.PersonalInformationViewModel
+import com.example.djigit.features.profile.ProfileViewModel
 import com.example.djigit.features.signup.SignupViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,7 +25,10 @@ val appModule = module {
     viewModel {
         LoginViewModel(get())
     }
+    
+    viewModel { ProfileViewModel() }
 
+    viewModel { PersonalInformationViewModel() }
     viewModel {
         SignupViewModel(get(),get())
     }

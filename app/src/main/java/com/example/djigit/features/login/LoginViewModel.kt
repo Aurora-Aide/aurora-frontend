@@ -1,5 +1,6 @@
 package com.example.djigit.features.login
 
+import android.util.Log
 import android.util.Patterns
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         viewModelScope.launch{
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = {
+                    Log.d("TAG", "login request")
                     _login.update {
                         it.copy(isLoginSuccessful = true)
                     }
