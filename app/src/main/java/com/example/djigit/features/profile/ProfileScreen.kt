@@ -28,7 +28,7 @@ fun ProfileScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)
         ) {
             Header(isNotificationsVisible = true, title = "My Profile")
 
@@ -49,7 +49,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onLogOutClicked() }
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(vertical = 12.dp),
             )
         }
 

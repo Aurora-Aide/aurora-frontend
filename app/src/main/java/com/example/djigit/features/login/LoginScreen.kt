@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +66,9 @@ fun LoginScreen(
     val scrollState = rememberScrollState()
 
     if (login.isLoginSuccessful) {
-        isLoginSuccessful()
+        LaunchedEffect(null) {
+            isLoginSuccessful()
+        }
     }
 
     Column(
@@ -220,21 +223,6 @@ fun LoginFooter(
 
         Row {
             TextButton(onClick = onSignUpClick) {
-                Text(
-                    text = "Don't have an account?  ",
-                    fontSize = FontSize.PARAGRAPH3,
-                    fontWeight = FontWeight.PARAGRAPH3R,
-                    lineHeight = LineHeight.PARAGRAPH3,
-                    color = base100
-                )
-                Text(
-                    text = "Create an account",
-                    textDecoration = TextDecoration.Underline,
-                    fontSize = FontSize.PARAGRAPH3,
-                    fontWeight = FontWeight.PARAGRAPH1M,
-                    lineHeight = LineHeight.PARAGRAPH3,
-                    color = primary1
-                )
                 Text(
                     text = "Don't have an account?  ",
                     fontSize = FontSize.PARAGRAPH3,

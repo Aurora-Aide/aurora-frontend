@@ -27,7 +27,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.djigit.R
 import com.example.djigit.ui.theme.FontWeight
-import com.example.djigit.ui.theme.base0
 import com.example.djigit.ui.theme.base100
 import com.example.djigit.ui.theme.primary1
 import com.example.djigit.ui.theme.secondary2
@@ -38,6 +37,7 @@ fun Header(
     isNotificationsVisible: Boolean = false,
     isBackVisible: Boolean = false,
     title: String,
+    onBackClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -53,6 +53,7 @@ fun Header(
                     modifier = Modifier
                         .rotate(180f)
                         .size(24.dp)
+                        .clickable { onBackClick() }
                 )
             }
         }
@@ -69,9 +70,7 @@ fun Header(
                 Image(
                     painter = painterResource(R.drawable.notification_icon),
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(24.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -84,7 +83,7 @@ fun ProfileItem(text: String, onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

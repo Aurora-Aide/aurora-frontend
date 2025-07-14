@@ -1,5 +1,6 @@
 package com.example.djigit.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,7 +36,12 @@ fun MainNavigation() {
                 onEmailChange = { viewModel.email(it) },
                 onPasswordChange = { viewModel.password(it) },
                 onLoginClick = { viewModel.validate() },
-                isLoginSuccessful = { navController.toProfile() },
+                isLoginSuccessful = {
+                    Log.d("TAG", "to profile")
+                    viewModel.resetLogin()
+                    navController.toProfile()
+
+                },
                 onForgotPasswordClick = { navController.toForgotPassword() },
                 onSignUpClick = { navController.toSignUp() }
             )
@@ -59,7 +65,7 @@ fun MainNavigation() {
                 onModelChange = { viewModelSignup.model(it) },
                 onLicensePlateChange = { viewModelSignup.licensePlate(it) },
                 onToHomeClick = { viewModelSignup.signup() },
-                onBackClick = {viewModelSignup.onBackClick(signupData.isFirstStep)}
+                onBackClick = { viewModelSignup.onBackClick(signupData.isFirstStep) }
                 //onAddCarClick = TODO(),
             )
         }
@@ -89,7 +95,8 @@ fun MainNavigation() {
                 onLastNameChange = { viewModel.lastName(it) },
                 onFirstNameChange = { viewModel.firstName(it) },
                 onDeleteAccountClick = {},
-                onPasswordVisibilityChange = { viewModel.isPasswordVisible() }
+                onPasswordVisibilityChange = { viewModel.isPasswordVisible() },
+                onBackClick = { navController.navigateUp() }
             )
         }
     }

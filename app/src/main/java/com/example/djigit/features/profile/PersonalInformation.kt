@@ -62,6 +62,7 @@ fun PersonalInfoScreen(
     onLastNameChange: (String) -> Unit,
     onDeleteAccountClick: () -> Unit,
     onPasswordVisibilityChange: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -70,7 +71,7 @@ fun PersonalInfoScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Header(title = "Personal information", isBackVisible = true)
+        Header(title = "Personal information", isBackVisible = true, onBackClick = onBackClick)
 
         Spacer(modifier = Modifier.height(20.dp))
 
