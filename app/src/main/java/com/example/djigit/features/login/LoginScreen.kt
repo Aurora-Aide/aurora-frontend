@@ -41,21 +41,30 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.djigit.R
-import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
-import com.example.djigit.navigation.Routes.MainRoute.Home.toHome
-import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
-import com.example.djigit.navigation.Routes.MainRoute.Google.toGoogle
-import com.example.djigit.ui.theme.*
+import com.example.djigit.ui.theme.FontSize
+import com.example.djigit.ui.theme.FontWeight
+import com.example.djigit.ui.theme.LineHeight
+import com.example.djigit.ui.theme.base0
+import com.example.djigit.ui.theme.base100
+import com.example.djigit.ui.theme.base90
+import com.example.djigit.ui.theme.functionalError
+import com.example.djigit.ui.theme.primary1
+import com.example.djigit.ui.theme.secondary2
 
 @Composable
-fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (String) -> Unit,
-                onPasswordChange: (String) -> Unit, onLoginClick: () -> Unit, isLoginSuccessful: () -> Unit) {
+fun LoginScreen(
+    login: LoginData,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    isLoginSuccessful: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onSignUpClick: () -> Unit,
+) {
     val scrollState = rememberScrollState()
 
-    if(login.isLoginSuccessful){
-        navController.toHome()
+    if (login.isLoginSuccessful) {
         isLoginSuccessful()
     }
 
@@ -82,18 +91,16 @@ fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (
                 onPasswordChange = {
                     onPasswordChange(it)
                 },
-                onForgotPasswordClick = { navController.toForgotPassword() }
+                onForgotPasswordClick = { onForgotPasswordClick() }
             )
             LoginFooter(
                 onLogInClick = {
                     onLoginClick()
                 },
                 onSignUpClick = {
-                    navController.toSignUp()
+                    onSignUpClick()
                 },
-                onGoogleClick = {
-                    navController.toGoogle()
-                },
+                onGoogleClick = {},
                 enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
             )
         }
@@ -103,13 +110,19 @@ fun LoginScreen(navController: NavController, login: LoginData, onEmailChange: (
 @Composable
 fun LoginHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = painterResource(id = R.drawable.login_logo),
+        Image(
+            painter = painterResource(id = R.drawable.login_logo),
             contentDescription = "djigit",
             modifier = Modifier
                 .width(110.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Log In", fontSize = FontSize.HEADING1, fontWeight = FontWeight.HEADING1, color = primary1)
+        Text(
+            text = "Log In",
+            fontSize = FontSize.HEADING1,
+            fontWeight = FontWeight.HEADING1,
+            color = primary1
+        )
     }
 }
 
@@ -168,9 +181,14 @@ fun LoginFields(
         )
 
         TextButton(onClick = onForgotPasswordClick, modifier = Modifier.align(Alignment.End)) {
-            Text(text = "Forgot Password?", textDecoration = TextDecoration.Underline, fontSize = FontSize.PARAGRAPH3,
+            Text(
+                text = "Forgot Password?",
+                textDecoration = TextDecoration.Underline,
+                fontSize = FontSize.PARAGRAPH3,
                 fontWeight = FontWeight.PARAGRAPH3R,
-                lineHeight = LineHeight.PARAGRAPH3, color = primary1)
+                lineHeight = LineHeight.PARAGRAPH3,
+                color = primary1
+            )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -197,16 +215,32 @@ fun LoginFooter(
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
-            Text(text = "Log In", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
-                lineHeight = LineHeight.PARAGRAPH1, color = base0)
+            Text(
+                text = "Log In",
+                fontSize = FontSize.PARAGRAPH1,
+                fontWeight = FontWeight.PARAGRAPH1M,
+                lineHeight = LineHeight.PARAGRAPH1,
+                color = base0
+            )
         }
 
-        Row{
+        Row {
             TextButton(onClick = onSignUpClick) {
-                Text(text = "Don't have an account?  ", fontSize = FontSize.PARAGRAPH3, fontWeight =  FontWeight.PARAGRAPH3R,
-                    lineHeight = LineHeight.PARAGRAPH3, color = base100)
-                Text(text = "Create an account", textDecoration = TextDecoration.Underline, fontSize = FontSize.PARAGRAPH3,
-                    fontWeight = FontWeight.PARAGRAPH1M, lineHeight = LineHeight.PARAGRAPH3, color = primary1)
+                Text(
+                    text = "Don't have an account?  ",
+                    fontSize = FontSize.PARAGRAPH3,
+                    fontWeight = FontWeight.PARAGRAPH3R,
+                    lineHeight = LineHeight.PARAGRAPH3,
+                    color = base100
+                )
+                Text(
+                    text = "Create an account",
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = FontSize.PARAGRAPH3,
+                    fontWeight = FontWeight.PARAGRAPH1M,
+                    lineHeight = LineHeight.PARAGRAPH3,
+                    color = primary1
+                )
             }
         }
 
@@ -215,17 +249,21 @@ fun LoginFooter(
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-        ){
-            Image(painter = painterResource(id = R.drawable.line),
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.line),
                 contentDescription = "line",
                 modifier = Modifier
                     .weight(1f)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = " or ", fontSize = FontSize.PARAGRAPH2, fontWeight = FontWeight.PARAGRAPH2R,
-                lineHeight = LineHeight.PARAGRAPH2, color = base90)
+            Text(
+                text = " or ", fontSize = FontSize.PARAGRAPH2, fontWeight = FontWeight.PARAGRAPH2R,
+                lineHeight = LineHeight.PARAGRAPH2, color = base90
+            )
             Spacer(modifier = Modifier.width(4.dp))
-            Image(painter = painterResource(id = R.drawable.line),
+            Image(
+                painter = painterResource(id = R.drawable.line),
                 contentDescription = "line",
                 modifier = Modifier
                     .weight(1f)
@@ -238,7 +276,8 @@ fun LoginFooter(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Image(painter = painterResource(id = R.drawable.google),
+            Image(
+                painter = painterResource(id = R.drawable.google),
                 contentDescription = "Google",
                 modifier = Modifier
                     .weight(1f)
@@ -276,10 +315,11 @@ fun TextField(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         trailingIcon = trailingIcon,
-        modifier =Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = secondary2,
-            unfocusedBorderColor = secondary2)
+            unfocusedBorderColor = secondary2
+        )
 
     )
     if (error) {

@@ -30,8 +30,9 @@ sealed class Routes(val route: String) {
         }
         data object Profile: Routes("${MainRoute.route}/profile") {
             fun NavController.toProfile() = navigate("${MainRoute.route}/profile")
-
+        }
+        data object PersonalInformation: Routes("${MainRoute.route}/personalInformation") {
+            fun NavController.toPersonalInformation() = navigate("${MainRoute.route}/personalInformation")
         }
     }
-
 }

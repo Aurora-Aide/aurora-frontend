@@ -19,18 +19,24 @@ import com.example.djigit.ui.theme.FontWeight
 import com.example.djigit.ui.theme.functionalError
 
 @Composable
-fun ProfileScreen(showPopup: Boolean, onLogOutClicked: () -> Unit) {
+fun ProfileScreen(
+    showPopup: Boolean,
+    onLogOutClicked: () -> Unit,
+    onPersonalInformation: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
-            Header()
+            Header(isNotificationsVisible = true, title = "My Profile")
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            ProfileItem(stringResource(R.string.personal_information))
+            ProfileItem(stringResource(R.string.personal_information)) {
+                onPersonalInformation()
+            }
             ProfileItem(stringResource(R.string.car_details))
             ProfileItem(stringResource(R.string.my_reports))
             ProfileItem(stringResource(R.string.reports_about_me))
@@ -54,7 +60,7 @@ fun ProfileScreen(showPopup: Boolean, onLogOutClicked: () -> Unit) {
 
     if (showPopup) {
         LogoutPopup(
-            onDismiss = { onLogOutClicked()},
+            onDismiss = { onLogOutClicked() },
             onConfirmLogout = {
                 onLogOutClicked()
             }

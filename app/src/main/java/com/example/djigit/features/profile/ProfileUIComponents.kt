@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,28 +34,47 @@ import com.example.djigit.ui.theme.secondary2
 
 
 @Composable
-fun Header() {
-    Box(
+fun Header(
+    isNotificationsVisible: Boolean = false,
+    isBackVisible: Boolean = false,
+    title: String,
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        Box(Modifier.size(24.dp)) {
+            if (isBackVisible) {
+                Image(
+                    painter = painterResource(R.drawable.angl_left),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .rotate(180f)
+                        .size(24.dp)
+                )
+            }
+        }
+
         Text(
-            text = "My Profile",
+            text = title,
             fontSize = 20.sp,
             color = primary1,
             fontWeight = FontWeight.PARAGRAPH1M,
-            modifier = Modifier.align(Alignment.Center)
         )
 
-        Image(
-            painter = painterResource(R.drawable.notification_icon),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .size(24.dp)
-        )
+        Box(Modifier.size(24.dp)) {
+            if (isNotificationsVisible) {
+                Image(
+                    painter = painterResource(R.drawable.notification_icon),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(24.dp)
+                )
+            }
+        }
     }
 }
 

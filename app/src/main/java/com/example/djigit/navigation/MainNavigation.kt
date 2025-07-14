@@ -9,11 +9,18 @@ import androidx.navigation.compose.rememberNavController
 import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
 import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
+import com.example.djigit.features.login.LoginData
 import com.example.djigit.features.login.LoginScreen
 import com.example.djigit.features.login.LoginViewModel
+import com.example.djigit.features.profile.PersonalInfoScreen
+import com.example.djigit.features.profile.PersonalInformationViewModel
 import com.example.djigit.features.profile.ProfileScreen
 import com.example.djigit.features.profile.ProfileViewModel
 import com.example.djigit.features.signup.SignUpScreen
+import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
+import com.example.djigit.navigation.Routes.MainRoute.PersonalInformation.toPersonalInformation
+import com.example.djigit.navigation.Routes.MainRoute.Profile.toProfile
+import com.example.djigit.navigation.Routes.MainRoute.SignUp.toSignUp
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -23,8 +30,15 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModel = getViewModel<LoginViewModel>()
             val loginData by viewModel.login.collectAsStateWithLifecycle()
-            LoginScreen(navController,loginData, onEmailChange = {viewModel.email(it)}, onPasswordChange = {viewModel.password(it)},
-                onLoginClick = {viewModel.validate()}, isLoginSuccessful = {viewModel.resetLogin()} )
+            LoginScreen(
+                loginData,
+                onEmailChange = { viewModel.email(it) },
+                onPasswordChange = { viewModel.password(it) },
+                onLoginClick = { viewModel.validate() },
+                isLoginSuccessful = { navController.toProfile() },
+                onForgotPasswordClick = { navController.toForgotPassword() },
+                onSignUpClick = { navController.toSignUp() }
+            )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
             ForgotPasswordScreen()
@@ -43,7 +57,22 @@ fun MainNavigation() {
             val showHide by viewModel.showPopUp.collectAsStateWithLifecycle()
             ProfileScreen(
                 showPopup = showHide,
-                onLogOutClicked = { viewModel.showHide() }
+                onLogOutClicked = { viewModel.showHide() },
+                onPersonalInformation = { navController.toPersonalInformation() }
+            )
+        }
+        composable(route = Routes.MainRoute.PersonalInformation.route) {
+            val viewModel = getViewModel<PersonalInformationViewModel>()
+            val personalInformationData by viewModel.personalInformation.collectAsStateWithLifecycle()
+
+            PersonalInfoScreen(
+                personalInformationData = personalInformationData,
+                onEmailChange = { viewModel.email(it) },
+                onPasswordChange = { viewModel.password(it) },
+                onLastNameChange = { viewModel.lastName(it) },
+                onFirstNameChange = { viewModel.firstName(it) },
+                onDeleteAccountClick = {},
+                onPasswordVisibilityChange = { viewModel.isPasswordVisible() }
             )
         }
     }
