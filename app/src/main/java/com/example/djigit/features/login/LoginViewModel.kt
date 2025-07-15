@@ -1,15 +1,9 @@
 package com.example.djigit.features.login
 
-//import android.content.Context
+import android.util.Log
 import android.util.Patterns
-//import androidx.credentials.CredentialManager
-//import androidx.credentials.CustomCredential
-//import androidx.credentials.PasswordCredential
-//import androidx.credentials.PublicKeyCredential
-//import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.android.tools.build.jetifier.core.utils.Log
 import com.example.djigit.R
 import com.example.djigit.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +33,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         viewModelScope.launch{
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = {
+                    Log.d("TAG", "login request")
                     _login.update {
                         it.copy(isLoginSuccessful = true)
                     }
@@ -96,11 +91,11 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
 enum class LoginEmailErrors(val value: Int? = null){
     EMPTY_EMAIL(R.string.error_empty_email),
     INVALID_EMAIL(R.string.error_wrong_email),
-    NONE()
+    NONE
 }
 
 enum class LoginPasswordErrors(val value: Int? = null){
     EMPTY_PASSWORD(R.string.error_empty_password),
     INVALID_PASSWORD(R.string.error_wrong_password),
-    NONE()
+    NONE
 }
