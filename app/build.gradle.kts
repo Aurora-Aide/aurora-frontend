@@ -8,13 +8,21 @@ android {
     namespace = "com.example.djigit"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "com.example.djigit"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+//        versionName = "1.0"
+//        credentials_version = "1.5.0"
+//        googleid_version = "1.1.1"
 
+        //vectorDrawables.useSupportLibrary = true
+
+//        credentials = { module = "androidx.credentials:credentials"; version.ref = "credentials_version" }
+//        credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth"; version.ref = "credentials_version" }
+//        googleid = { module = "com.google.android.libraries.identity.googleid:googleid"; version.ref = "googleid_version" }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,10 +45,10 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +57,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.animation.core.lint)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +68,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.navigation.animation)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.material.extended)
+    // Koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
+    //implementation(libs.appcompat.v7)
 }
