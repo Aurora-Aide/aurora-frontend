@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.djigit.features.forgotPassword.ForgotPasswordScreen
+import com.example.djigit.features.forgotPassword.ForgotViewModel
 import com.example.djigit.features.google.GoogleScreen
 import com.example.djigit.features.home.HomeScreen
 import com.example.djigit.features.login.LoginScreen
@@ -18,6 +19,7 @@ import com.example.djigit.features.profile.ProfileScreen
 import com.example.djigit.features.profile.ProfileViewModel
 import com.example.djigit.features.signup.SignupScreen
 import com.example.djigit.features.signup.SignupViewModel
+import com.example.djigit.navigation.Routes.MainRoute.Login.toLogIn
 import com.example.djigit.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.djigit.navigation.Routes.MainRoute.PersonalInformation.toPersonalInformation
 import com.example.djigit.navigation.Routes.MainRoute.Profile.toProfile
@@ -47,7 +49,19 @@ fun MainNavigation() {
             )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
-            ForgotPasswordScreen()
+            val viewModelPass = getViewModel<ForgotViewModel>()
+            val data by viewModelPass.data.collectAsStateWithLifecycle()
+            ForgotPasswordScreen(
+                navController,
+                data,
+                onEmailChange = {viewModelPass.email(it)},
+                onPasswordChange = {viewModelPass.password(it)},
+                onRepeatChange = {viewModelPass.repeat(it)},
+                onSendClick = {viewModelPass.validateEmail()},
+                onResetClick = {viewModelPass.validatePassword()},
+                isResetSuccessful = {},
+                onBackClick = {navController.toLogIn()},
+            )
         }
         composable(route = Routes.MainRoute.SignUp.route) {
             val viewModelSignup = getViewModel<SignupViewModel>()
@@ -65,8 +79,7 @@ fun MainNavigation() {
                 onModelChange = { viewModelSignup.model(it) },
                 onLicensePlateChange = { viewModelSignup.licensePlate(it) },
                 onToHomeClick = { viewModelSignup.signup() },
-                onBackClick = { viewModelSignup.onBackClick(signupData.isFirstStep) }
-                //onAddCarClick = TODO(),
+                onBackClick = { viewModelSignup.onBackClick() }
             )
         }
         composable(route = Routes.MainRoute.Home.route) {

@@ -2,7 +2,6 @@ package com.example.djigit.features.login
 
 import android.util.Log
 import android.util.Patterns
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.djigit.R
@@ -52,7 +51,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         }
     }
 
-    fun isPasswordValid(): LoginPasswordErrors {
+    private fun isPasswordValid(): LoginPasswordErrors {
      return if(_login.value.password.isEmpty()){
          LoginPasswordErrors.EMPTY_PASSWORD
       } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
@@ -63,7 +62,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
       }
     }
 
-    fun isEmailValid(): LoginEmailErrors{
+    private fun isEmailValid(): LoginEmailErrors{
         return if( _login.value.email.isEmpty()){
             LoginEmailErrors.EMPTY_EMAIL
         } else if (!Patterns.EMAIL_ADDRESS.matcher(_login.value.email).matches()){
@@ -92,11 +91,11 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
 enum class LoginEmailErrors(val value: Int? = null){
     EMPTY_EMAIL(R.string.error_empty_email),
     INVALID_EMAIL(R.string.error_wrong_email),
-    NONE()
+    NONE
 }
 
 enum class LoginPasswordErrors(val value: Int? = null){
     EMPTY_PASSWORD(R.string.error_empty_password),
     INVALID_PASSWORD(R.string.error_wrong_password),
-    NONE()
+    NONE
 }
