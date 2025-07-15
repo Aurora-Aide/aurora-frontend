@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +57,7 @@ import com.example.djigit.features.login.TextField
 import com.example.djigit.navigation.Routes.MainRoute.Home.toHome
 import com.example.djigit.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.djigit.navigation.Routes.MainRoute.Login.toLogIn
+import com.example.djigit.navigation.Routes.MainRoute.Profile.toProfile
 import com.example.djigit.ui.theme.*
 
 @Composable
@@ -78,8 +80,10 @@ fun SignupScreen(
     val scrollState = rememberScrollState()
 
     if(signup.isSignupSuccessful){
-        navController.toHome()
-        isSignupSuccessful()
+        LaunchedEffect(null) {
+            isSignupSuccessful()
+            navController.toProfile()
+        }
     }
 
     Column(
