@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.aurora"
+    namespace = "com.example.djigit"
     compileSdk = 35
 
 
     defaultConfig {
-        applicationId = "com.example.aurora"
+        applicationId = "com.example.djigit"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

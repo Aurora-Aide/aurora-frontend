@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Aurora</string>
+    <string name="app_name">djigit</string>
     // Errors
     <string name="error_empty_email">Email is empty</string>
     <string name="error_empty_password">Password is empty</string>
