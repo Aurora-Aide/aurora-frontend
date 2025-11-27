@@ -78,7 +78,6 @@ fun MainNavigation() {
                 onLastNameChange = { viewModelSignup.lastName(it) },
                 onSignupClick = { viewModelSignup.validate() },
                 isSignupSuccessful = { viewModelSignup.resetSignup() },
-                onModelNumChange = {viewModelSignup.modelNumber(it)},
                 onToHomeClick = {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
@@ -86,8 +85,9 @@ fun MainNavigation() {
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
-                onDispenserNameChange = { viewModelSignup.dispenserName(it)}
-
+                onSecondPasswordChange = { viewModelSignup.passwordRepeat(it) },
+                onOneClick = {},
+                onTwoClick = {},
             )
         }
         composable(route = Routes.MainRoute.Home.route) {

@@ -14,8 +14,8 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.login(LoginVariables(email, password)))
     }
 
-    override suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<Tokens> {
-        return requestBody(retrofit.signup(SignupVariables(email, password, firstName, lastName)))
+    override suspend fun signup(email: String, password: String, passwordRepeat: String): Result<Tokens> {
+        return requestBody(retrofit.signup(SignupVariables(email, password, passwordRepeat)))
     }
 
     override suspend fun registerDispenser(modelNumber: String, name: String): Result<Dispensers> {

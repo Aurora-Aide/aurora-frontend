@@ -1,10 +1,10 @@
 package com.example.aurora.features.signup
 
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.domain.usecase.DispenserUseCase
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.features.login.LoginEmailErrors
 import com.example.aurora.features.login.LoginPasswordErrors
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class SignupViewModel(private val signupUseCase: SignupUseCase, private val dispenserUseCase: DispenserUseCase): ViewModel() {
+class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     private val _signup = MutableStateFlow(SignupData())
 
     val signup = _signup.asStateFlow()
@@ -31,6 +31,12 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val disp
         }
     }
 
+    fun passwordRepeat(text: String) {
+        _signup.update{
+            it.copy(passwordRepeat = text)
+        }
+    }
+
     fun firstName(text: String) {
         _signup.update{
             it.copy(firstName = text)
@@ -42,29 +48,20 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val disp
             it.copy(lastName = text)
         }
     }
-    fun modelNumber(text: String) {
-        _signup.update{
-            it.copy(modelNumber = text)
-        }
-    }
-
-    fun dispenserName(text: String) {
-        _signup.update{
-            it.copy(dispenserName = text)
-        }
-    }
 
     fun signup(){
         viewModelScope.launch{
-            signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.firstName, _signup.value.lastName).fold(
+            signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.passwordRepeat).fold(
                 onSuccess = {
-                    if(_signup.value.modelNumber.isNotEmpty()){
-                        dispenserUseCase.invoke(_signup.value.modelNumber, _signup.value.dispenserName)
-                    } else{
+                    Log.d("TAG", "signup request")
+//                    if(_signup.value.firstName.isNotEmpty() && _signup.value.lastName.isNotEmpty()){
+//                        firstName(_signup.value.firstName)
+//                        lastName(_signup.value.lastName)
+//                    } else{
                         _signup.update {
                             it.copy(isSignupSuccessful = true)
                         }
-                    }
+                    //}
                 },
                 onFailure = {
                     // to implement
@@ -90,6 +87,19 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val disp
         }
     }
 
+    private fun passwordsMatch(): LoginPasswordErrors {
+        return if(_signup.value.passwordRepeat.isEmpty()){
+            LoginPasswordErrors.EMPTY_PASSWORD
+        } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
+                .matches(_signup.value.passwordRepeat)){
+            LoginPasswordErrors.INVALID_PASSWORD
+        } else if(_signup.value.passwordRepeat == _signup.value.password){
+            LoginPasswordErrors.NOT_MATCHING
+        } else{
+            LoginPasswordErrors.NONE
+        }
+    }
+
     private fun isEmailValid(): LoginEmailErrors {
         return if( _signup.value.email.isEmpty()){
             LoginEmailErrors.EMPTY_EMAIL
@@ -103,13 +113,19 @@ class SignupViewModel(private val signupUseCase: SignupUseCase, private val disp
     fun validate(){
         val emailValid = isEmailValid()
         val passwordValid = isPasswordValid()
-        if( emailValid == LoginEmailErrors.NONE && passwordValid == LoginPasswordErrors.NONE){
+        val passwordRepeatValid = passwordsMatch()
+
+        if( emailValid == LoginEmailErrors.NONE &&
+            passwordValid == LoginPasswordErrors.NONE &&
+            passwordRepeatValid == LoginPasswordErrors.NONE)
+        {
             _signup.update {
-                it.copy(isEmailError = LoginEmailErrors.NONE, isPasswordError = LoginPasswordErrors.NONE, isFirstStep = false)
+                it.copy(isEmailError = LoginEmailErrors.NONE, isPasswordError = LoginPasswordErrors.NONE, isPasswordRepeatError = LoginPasswordErrors.NONE, isFirstStep = false)
             }
+            signup()
         } else{
             _signup.update {
-                it.copy(isEmailError = emailValid, isPasswordError = passwordValid)
+                it.copy(isEmailError = emailValid, isPasswordError = passwordValid, isPasswordRepeatError = passwordRepeatValid)
             }
         }
     }
