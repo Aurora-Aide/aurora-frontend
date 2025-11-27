@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">djigit</string>
+    <string name="app_name">Aurora</string>
     // Errors
     <string name="error_empty_email">Email is empty</string>
     <string name="error_empty_password">Password is empty</string>
@@ -7,4 +7,17 @@
     <string name="error_wrong_password">Password must be at least 8 characters long and include
                     one uppercase letter, one lowercase letter, one digit,
                     and one special symbol.</string>
+    <string name="error_mismatch_passwords">Passwords aren\'t the same</string>
+    // Profile
+    <string name="personal_information">Personal Information</string>
+    <string name="dispenser_details">Dispenser Details</string>
+    <string name="my_reports">My Reports</string>
+    <string name="reports_about_me">Reports About Me</string>
+    <string name="log_out">Log Out</string>
+    <string name="home">Home</string>
+    <string name="new_report">New Report</string>
+    <string name="profile">Profile</string>
+    <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
+    <string name="back_to_profile">Back To Profile</string>
+    <string name="delete_account">Delete Account</string>
 </resources>

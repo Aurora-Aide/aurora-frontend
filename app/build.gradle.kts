@@ -5,18 +5,24 @@ plugins {
 }
 
 android {
-    namespace = "com.example.djigit"
+    namespace = "com.example.aurora"
     compileSdk = 35
 
 
     defaultConfig {
-        applicationId = "com.example.djigit"
+        applicationId = "com.example.aurora"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+//        versionName = "1.0"
+//        credentials_version = "1.5.0"
+//        googleid_version = "1.1.1"
+
         //vectorDrawables.useSupportLibrary = true
 
+//        credentials = { module = "androidx.credentials:credentials"; version.ref = "credentials_version" }
+//        credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth"; version.ref = "credentials_version" }
+//        googleid = { module = "com.google.android.libraries.identity.googleid:googleid"; version.ref = "googleid_version" }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
