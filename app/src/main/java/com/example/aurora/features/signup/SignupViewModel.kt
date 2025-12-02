@@ -51,7 +51,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
 
     fun signup(){
         viewModelScope.launch{
-            signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.passwordRepeat).fold(
+            signupUseCase.invoke(_signup.value.email, _signup.value.password).fold(
                 onSuccess = {
                     Log.d("TAG", "signup request")
 //                    if(_signup.value.firstName.isNotEmpty() && _signup.value.lastName.isNotEmpty()){
@@ -93,7 +93,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
         } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
                 .matches(_signup.value.passwordRepeat)){
             LoginPasswordErrors.INVALID_PASSWORD
-        } else if(_signup.value.passwordRepeat == _signup.value.password){
+        } else if(_signup.value.passwordRepeat != _signup.value.password){
             LoginPasswordErrors.NOT_MATCHING
         } else{
             LoginPasswordErrors.NONE

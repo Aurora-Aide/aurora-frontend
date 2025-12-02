@@ -120,7 +120,14 @@ fun SignupScreen(
 
             SignupFooter(
                 onSignupClick = {
-                    onSignupClick()
+                    //if(signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty() && (signup.password == signup.passwordRepeat)){
+                        onSignupClick()
+                    //} //else {
+//                        if(signup.email.isEmpty()){
+//                            isEmailValid()
+//                        }
+//                    }
+
                 },
                 onLoginClick = {
                     navController.toLogIn()
@@ -128,8 +135,7 @@ fun SignupScreen(
                 onGoogleClick = {
                     navController.toGoogle()
                 },
-                enabled = signup.email.isNotEmpty() && signup.password.isNotEmpty()
-                        && signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty()
+                enabled = (signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty())
             )
         } else{
             SignupHeader(isBackVisible = true, onBackClick)
@@ -262,7 +268,8 @@ fun SignupFields(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        var isVisible1 by remember { mutableStateOf(false) }
+        val isVisible1 = remember { mutableStateOf(false) }
+        val isPasswordError = remember { mutableStateOf(false) }
 
         TextField(
             value = signup.password,
@@ -270,7 +277,7 @@ fun SignupFields(
             error = signup.isPasswordError != LoginPasswordErrors.NONE,
             placeholder = "Password",
             onValueChange = onPasswordChange,
-            visualTransformation = if (isVisible1) VisualTransformation.None
+            visualTransformation = if (isVisible1.value) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -279,31 +286,32 @@ fun SignupFields(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        isVisible1 = !isVisible1
+                        isVisible1.value = !isVisible1.value
                     }
                 ) {
                     Image(
-                        imageVector = if (isVisible1) Icons.Filled.Visibility
+                        imageVector = if (isVisible1.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
-                        contentDescription = if (isVisible1) "Hide password"
+                        contentDescription = if (isVisible1.value) "Hide password"
                         else "Show password"
                     )
                 }
             },
-            errorText = signup.isPasswordError.value?.let { stringResource(it) } ?: ""
+            errorText = signup.isPasswordError.value.toString()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        var isVisible2 by remember { mutableStateOf(false) }
+        val isVisible2 = remember { mutableStateOf(false) }
 
         TextField(
             value = signup.passwordRepeat,
             label = "Repeat Password*",
-            error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
+            //error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
+            error = isPasswordError.value,
             placeholder = "Repeat Password",
             onValueChange = onSecondPasswordChange,
-            visualTransformation = if (isVisible2) VisualTransformation.None
+            visualTransformation = if (isVisible2.value) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -312,18 +320,18 @@ fun SignupFields(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        isVisible2 = !isVisible2
+                        isVisible2.value = !isVisible2.value
                     }
                 ) {
                     Image(
-                        imageVector = if (isVisible2) Icons.Filled.Visibility
+                        imageVector = if (isVisible2.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
-                        contentDescription = if (isVisible2) "Hide password"
+                        contentDescription = if (isVisible2.value) "Hide password"
                         else "Show password"
                     )
                 }
             },
-            errorText = signup.isPasswordError.value?.let { stringResource(it) } ?: ""
+            errorText = signup.isPasswordError.value.toString()
         )
 
         Spacer(modifier = Modifier.height(20.dp))
