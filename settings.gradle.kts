@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "djigit"
+rootProject.name = "Aurora"
 include(":app")
  

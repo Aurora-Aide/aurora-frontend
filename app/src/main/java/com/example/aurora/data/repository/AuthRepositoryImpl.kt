@@ -1,0 +1,67 @@
+package com.example.aurora.data.repository
+
+import com.example.aurora.data.entity.DispenserEntity
+import com.example.aurora.data.entity.ForgotPassEntity
+import com.example.aurora.data.entity.UserEntity
+import com.example.aurora.data.mapper.toDispenserMapper
+import com.example.aurora.data.mapper.toForgotPassMapper
+import com.example.aurora.data.mapper.toUserEntity
+import com.example.aurora.data.sorce.AuthDataSource
+
+class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
+
+    override suspend fun login(email: String, password: String): Result<UserEntity> {
+        return data.login(email, password).fold(
+            onSuccess = {
+                token -> Result.success(token.user.toUserEntity())
+            },
+            onFailure = {
+                error -> Result.failure(error)
+            }
+        )
+    }
+
+    override suspend fun signup(email: String, password: String): Result<UserEntity> {
+        return data.signup(email, password).fold(
+            onSuccess = {
+                    token -> Result.success(token.user.toUserEntity())
+            },
+            onFailure = {
+                    error -> Result.failure(error)
+            }
+        )
+    }
+
+    override suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity> {
+        return data.registerDispenser(modelNumber, name).fold(
+            onSuccess = {
+                dispenser -> Result.success(dispenser.toDispenserMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun forgotPass(email: String): Result<Unit> {
+        return data.forgotPass(email).fold(
+            onSuccess = {
+                    msg -> Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun resetPass(password: String, token: String): Result<ForgotPassEntity> {
+        return data.resetPass(password, token).fold(
+            onSuccess = {
+                    msg -> Result.success(msg.toForgotPassMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+}
