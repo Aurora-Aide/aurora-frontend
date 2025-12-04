@@ -81,6 +81,7 @@ fun MainNavigation() {
                 onToHomeClick = {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
+                    viewModelSignup.signup()
                     navController.toHome()
 
                 },

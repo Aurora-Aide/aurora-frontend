@@ -90,10 +90,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     private fun passwordsMatch(): LoginPasswordErrors {
         return if(_signup.value.passwordRepeat.isEmpty()){
             LoginPasswordErrors.EMPTY_PASSWORD
-        } else if(!Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\p{Punct}]{8,}$")
-                .matches(_signup.value.passwordRepeat)){
-            LoginPasswordErrors.INVALID_PASSWORD
-        } else if(_signup.value.passwordRepeat != _signup.value.password){
+        }  else if(_signup.value.passwordRepeat != _signup.value.password){
             LoginPasswordErrors.NOT_MATCHING
         } else{
             LoginPasswordErrors.NONE
@@ -122,7 +119,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
             _signup.update {
                 it.copy(isEmailError = LoginEmailErrors.NONE, isPasswordError = LoginPasswordErrors.NONE, isPasswordRepeatError = LoginPasswordErrors.NONE, isFirstStep = false)
             }
-            signup()
+            //signup()
         } else{
             _signup.update {
                 it.copy(isEmailError = emailValid, isPasswordError = passwordValid, isPasswordRepeatError = passwordRepeatValid)

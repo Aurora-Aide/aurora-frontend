@@ -269,8 +269,8 @@ fun SignupFields(
         Spacer(modifier = Modifier.height(20.dp))
 
         val isVisible1 = remember { mutableStateOf(false) }
-        val isPasswordError = remember { mutableStateOf(false) }
 
+        //signup.isPasswordError.value?.let { stringResource(it) } ?: ""
         TextField(
             value = signup.password,
             label = "Password*",
@@ -297,8 +297,9 @@ fun SignupFields(
                     )
                 }
             },
-            errorText = signup.isPasswordError.value.toString()
+            errorText = signup.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -307,8 +308,8 @@ fun SignupFields(
         TextField(
             value = signup.passwordRepeat,
             label = "Repeat Password*",
-            //error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
-            error = isPasswordError.value,
+            error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
+           // error = isPasswordError2.value,
             placeholder = "Repeat Password",
             onValueChange = onSecondPasswordChange,
             visualTransformation = if (isVisible2.value) VisualTransformation.None
@@ -331,7 +332,7 @@ fun SignupFields(
                     )
                 }
             },
-            errorText = signup.isPasswordError.value.toString()
+            errorText = signup.isPasswordRepeatError.value?.let{ stringResource(it) } ?: ""
         )
 
         Spacer(modifier = Modifier.height(20.dp))
