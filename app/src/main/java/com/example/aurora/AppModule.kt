@@ -33,7 +33,7 @@ val appModule = module {
 
     viewModel { PersonalInformationViewModel() }
     viewModel {
-        SignupViewModel(get(),get())
+        SignupViewModel(get())
     }
 
     viewModel{

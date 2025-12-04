@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
+import com.example.aurora.navigation.Routes.MainRoute.Home.toHome
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
 import com.example.aurora.navigation.Routes.MainRoute.Profile.toProfile
 import com.example.aurora.ui.theme.*
@@ -65,21 +66,23 @@ fun SignupScreen(
     signup: SignupData,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onSecondPasswordChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
-    onModelNumChange: (String) -> Unit,
+    //onModelNumChange: (String) -> Unit,
     onSignupClick: () -> Unit,
     onToHomeClick: () -> Unit,
     isSignupSuccessful: () -> Unit,
     onBackClick:() ->Unit,
-    onDispenserNameChange:(String) -> Unit,
+    onOneClick:() ->Unit,
+    onTwoClick:() ->Unit,
     ){
     val scrollState = rememberScrollState()
 
     if(signup.isSignupSuccessful){
         LaunchedEffect(null) {
             isSignupSuccessful()
-            navController.toProfile()
+            navController.toHome()
         }
     }
 
@@ -91,57 +94,79 @@ fun SignupScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        if(signup.isFirstStep){
+            SignupHeader(isBackVisible = false, onBackClick)
 
-            if(signup.isFirstStep){
-                LoginHeader(isBackVisible = false, onBackClick)
-                Spacer(modifier = Modifier.height(30.dp))
-                SignupFields(
-                    signup,
-                    onEmailChange = {
-                        onEmailChange(it)
-                    },
-                    onPasswordChange = {
-                        onPasswordChange(it)
-                    },
-                    onFirstNameChange = {
-                        onFirstNameChange(it)
-                    },
-                    onLastNameChange = {
-                        onLastNameChange(it)
-                    },
-                )
+            Spacer(modifier = Modifier.height(30.dp))
 
-                SignupFooter(
-                    onSignupClick = {
+            SignupFields(
+                signup,
+                onEmailChange = {
+                    onEmailChange(it)
+                },
+                onPasswordChange = {
+                    onPasswordChange(it)
+                },
+                onSecondPasswordChange = {
+                    onSecondPasswordChange(it)
+                },
+                onOneClick = {
+                    onOneClick()
+                },
+                onTwoClick = {
+                    onTwoClick()
+                },
+            )
+
+            SignupFooter(
+                onSignupClick = {
+                    //if(signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty() && (signup.password == signup.passwordRepeat)){
                         onSignupClick()
-                    },
-                    onLoginClick = {
-                        navController.toLogIn()
-                    },
-                    onGoogleClick = {
-                        navController.toGoogle()
-                    },
-                    enabled = signup.email.isNotEmpty() && signup.password.isNotEmpty()
-                            && signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty()
-                )
-            } else{
-                LoginHeader(isBackVisible = true, onBackClick)
-                Spacer(modifier = Modifier.height(30.dp))
-                LogDispenserFields (
-                    dispenser = signup,
-                    onModelNumChange = { onModelNumChange(it) },
-                    onDispenserNameChange = { onDispenserNameChange(it) }
-                )
-                LogDispenserFooter(
-                    onToHomeClick = { onToHomeClick() },
-                    onRegisterDispenserClick = {}, // to be implemented
-                )
-            }
+                    //} //else {
+//                        if(signup.email.isEmpty()){
+//                            isEmailValid()
+//                        }
+//                    }
+
+                },
+                onLoginClick = {
+                    navController.toLogIn()
+                },
+                onGoogleClick = {
+                    navController.toGoogle()
+                },
+                enabled = (signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty())
+            )
+        } else{
+            SignupHeader(isBackVisible = true, onBackClick)
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            AddNamesFields(
+                signup,
+                onFirstNameChange = {
+                    onFirstNameChange(it)
+                },
+                onLastNameChange = {
+                    onLastNameChange(it)
+                },
+                onOneClick = {
+                    onOneClick()
+                },
+                onTwoClick = {
+                    onTwoClick()
+                }
+            )
+            LogDispenserFooter(
+                onToHomeClick = { onToHomeClick() },
+                onRegisterDispenserClick = {}, // to be implemented
+            )
+        }
     }
 }
 
 @Composable
-fun LoginHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
+fun SignupHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
     if(isBackVisible){
         Row(
             modifier = Modifier
@@ -154,7 +179,7 @@ fun LoginHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
                 contentDescription = "back",
                 modifier = Modifier
                     .width(24.dp)
-                    .clickable{
+                    .clickable {
                         onBackClick()
                     }
             )
@@ -178,8 +203,9 @@ fun SignupFields(
     signup: SignupData,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onFirstNameChange: (String) -> Unit,
-    onLastNameChange: (String) -> Unit
+    onSecondPasswordChange: (String) -> Unit,
+    onOneClick: () -> Unit,
+    onTwoClick: () -> Unit,
 ) {
     Column {
         Row(
@@ -193,7 +219,8 @@ fun SignupFields(
                     modifier = Modifier
                         .size(32.dp)
                         .clip(shape = CircleShape)
-                        .background(color = secondary2),
+                        .background(color = secondary2)
+                        .clickable { onOneClick() },
                     contentAlignment = Alignment.Center
                 ){
                     Text(text = "1",
@@ -212,7 +239,8 @@ fun SignupFields(
                             shape = CircleShape
                         )
                         .clip(shape = CircleShape)
-                        .background(color = base0),
+                        .background(color = base0)
+                        .clickable { onTwoClick() },
                     contentAlignment = Alignment.Center,
 
                 ){
@@ -240,15 +268,16 @@ fun SignupFields(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        var isVisible by remember { mutableStateOf(false) }
+        val isVisible1 = remember { mutableStateOf(false) }
 
+        //signup.isPasswordError.value?.let { stringResource(it) } ?: ""
         TextField(
             value = signup.password,
             label = "Password*",
             error = signup.isPasswordError != LoginPasswordErrors.NONE,
             placeholder = "Password",
             onValueChange = onPasswordChange,
-            visualTransformation = if (isVisible) VisualTransformation.None
+            visualTransformation = if (isVisible1.value) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -257,13 +286,13 @@ fun SignupFields(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        isVisible = !isVisible
+                        isVisible1.value = !isVisible1.value
                     }
                 ) {
                     Image(
-                        imageVector = if (isVisible) Icons.Filled.Visibility
+                        imageVector = if (isVisible1.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
-                        contentDescription = if (isVisible) "Hide password"
+                        contentDescription = if (isVisible1.value) "Hide password"
                         else "Show password"
                     )
                 }
@@ -271,8 +300,98 @@ fun SignupFields(
             errorText = signup.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
 
+
         Spacer(modifier = Modifier.height(20.dp))
 
+        val isVisible2 = remember { mutableStateOf(false) }
+
+        TextField(
+            value = signup.passwordRepeat,
+            label = "Repeat Password*",
+            error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
+           // error = isPasswordError2.value,
+            placeholder = "Repeat Password",
+            onValueChange = onSecondPasswordChange,
+            visualTransformation = if (isVisible2.value) VisualTransformation.None
+            else PasswordVisualTransformation('\u002A'),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Go
+            ),
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        isVisible2.value = !isVisible2.value
+                    }
+                ) {
+                    Image(
+                        imageVector = if (isVisible2.value) Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff,
+                        contentDescription = if (isVisible2.value) "Hide password"
+                        else "Show password"
+                    )
+                }
+            },
+            errorText = signup.isPasswordRepeatError.value?.let{ stringResource(it) } ?: ""
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+fun AddNamesFields(
+    signup: SignupData,
+    onFirstNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
+    onOneClick: () -> Unit,
+    onTwoClick: () -> Unit,
+) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Your names?",
+                fontSize = FontSize.BODY2,
+                fontWeight = FontWeight.BODY2,
+                lineHeight = LineHeight.BODY2,
+                color = secondary2
+            )
+            Row {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(shape = CircleShape)
+                        .background(color = secondary2)
+                        .clickable { onOneClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "1",
+                        fontSize = FontSize.PARAGRAPH1,
+                        fontWeight = FontWeight.PARAGRAPH1M,
+                        lineHeight = LineHeight.PARAGRAPH1,
+                        color = base0)
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(shape = CircleShape)
+                        .background(color = secondary2)
+                        .clickable { onTwoClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "2",
+                        fontSize = FontSize.PARAGRAPH1,
+                        fontWeight = FontWeight.PARAGRAPH1M,
+                        lineHeight = LineHeight.PARAGRAPH1,
+                        color = base0)
+                }
+            }
+
+        }
         TextField(
             value = signup.firstName,
             label = "First Name",
@@ -294,87 +413,6 @@ fun SignupFields(
             error = false,
             placeholder = "Last Name",
             onValueChange = onLastNameChange,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            errorText = ""
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-    }
-}
-
-@Composable
-fun LogDispenserFields(
-    dispenser: SignupData,
-    onModelNumChange: (String) -> Unit,
-    onDispenserNameChange: (String) -> Unit,
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Dispenser Details",
-                fontSize = FontSize.BODY2,
-                fontWeight = FontWeight.BODY2,
-                lineHeight = LineHeight.BODY2,
-                color = secondary2
-            )
-            Row {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = secondary2),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "1",
-                        fontSize = FontSize.PARAGRAPH1,
-                        fontWeight = FontWeight.PARAGRAPH1M,
-                        lineHeight = LineHeight.PARAGRAPH1,
-                        color = base0)
-                }
-                Spacer(modifier = Modifier.width(4.dp))
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = secondary2),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "2",
-                        fontSize = FontSize.PARAGRAPH1,
-                        fontWeight = FontWeight.PARAGRAPH1M,
-                        lineHeight = LineHeight.PARAGRAPH1,
-                        color = base0)
-                }
-            }
-
-        }
-        TextField(
-            value = dispenser.modelNumber,
-            label = "Model Number",
-            error = false,
-            placeholder = "Model Number",
-            onValueChange = onModelNumChange,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            errorText = ""
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = dispenser.dispenserName,
-            label = "Name",
-            error = false,
-            placeholder = "Name your container",
-            onValueChange = onDispenserNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next

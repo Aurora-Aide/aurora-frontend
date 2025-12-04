@@ -97,5 +97,6 @@ enum class LoginEmailErrors(val value: Int? = null){
 enum class LoginPasswordErrors(val value: Int? = null){
     EMPTY_PASSWORD(R.string.error_empty_password),
     INVALID_PASSWORD(R.string.error_wrong_password),
+    NOT_MATCHING(R.string.error_mismatch_passwords),
     NONE
 }

@@ -8,6 +8,5 @@ fun UserModel.toUserEntity(): UserEntity {
     return UserEntity(
         id = this.id,
         email = this.email,
-        names = "${this.firstName} ${this.lastName}"
     )
 }
