@@ -29,9 +29,14 @@ val appModule = module {
         LoginViewModel(get())
     }
     
-    viewModel { ProfileViewModel() }
+    viewModel {
+        ProfileViewModel()
+    }
 
-    viewModel { PersonalInformationViewModel() }
+    viewModel {
+        PersonalInformationViewModel()
+    }
+
     viewModel {
         SignupViewModel(get())
     }
@@ -39,6 +44,7 @@ val appModule = module {
     viewModel{
         ForgotViewModel(get(), get())
     }
+
 
     factory{
         LoginUseCase(get())

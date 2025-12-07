@@ -4,7 +4,8 @@ import com.example.aurora.data.entity.UserEntity
 import com.example.aurora.data.model.UserModel
 
 
-fun UserModel.toUserEntity(): UserEntity {
+fun UserModel.toUserEntity(): UserE
+\.ntity {
     return UserEntity(
         id = this.id,
         email = this.email,

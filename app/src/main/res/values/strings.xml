@@ -10,9 +10,7 @@
     <string name="error_mismatch_passwords">Passwords are not the same</string>
     // Profile
     <string name="personal_information">Personal Information</string>
-    <string name="dispenser_details">Dispenser Details</string>
-    <string name="my_reports">My Reports</string>
-    <string name="reports_about_me">Reports About Me</string>
+    <string name="your_dispensers">Your Dispensers</string>
     <string name="log_out">Log Out</string>
     <string name="home">Home</string>
     <string name="new_report">New Report</string>

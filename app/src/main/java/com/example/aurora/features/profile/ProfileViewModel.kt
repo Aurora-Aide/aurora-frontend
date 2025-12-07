@@ -6,10 +6,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class ProfileViewModel(): ViewModel() {
-    private val _showPopUp = MutableStateFlow(false)
-    val showPopUp = _showPopUp.asStateFlow()
+    private val _showPopUpLogOut = MutableStateFlow(false)
+    val showPopUpLogOut = _showPopUpLogOut.asStateFlow()
+    private val _showPopUpDelete = MutableStateFlow(false)
+    val showPopUpDelete = _showPopUpDelete.asStateFlow()
 
-    fun showHide() {
-        _showPopUp.update { value -> value.not()  }
+    fun showHideLogOutBack() {
+        _showPopUpLogOut.update { value -> value.not()  }
+    }
+
+    fun showHideDeleteBack() {
+        _showPopUpDelete.update { value -> value.not()  }
+    }
+
+    fun showHideLogOut(){
+        // delete tokens, send to log in page, backend log out
+    }
+
+    fun showHideDelete(){
+        // delete tokens, send to sign up page, backend delete profile
     }
 }

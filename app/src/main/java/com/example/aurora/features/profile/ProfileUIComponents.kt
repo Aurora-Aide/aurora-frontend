@@ -1,5 +1,6 @@
 package com.example.aurora.features.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,11 +9,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,10 +31,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.aurora.R
+import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
+import com.example.aurora.ui.theme.LineHeight
+import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.base100
+import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.theme.secondary4
 
 
 @Composable
@@ -60,9 +70,10 @@ fun Header(
 
         Text(
             text = title,
-            fontSize = 20.sp,
             color = primary1,
-            fontWeight = FontWeight.PARAGRAPH1M,
+            fontSize = FontSize.BODY1,
+            fontWeight = FontWeight.BODY1,
+            lineHeight = LineHeight.BODY1,
         )
 
         Box(Modifier.size(24.dp)) {
@@ -90,7 +101,39 @@ fun ProfileItem(text: String, onClick: () -> Unit = {}) {
         Text(
             text = text,
             color = primary1,
-            fontSize = 16.sp,
+            fontSize = FontSize.BODY2,
+            fontWeight = FontWeight.BODY2,
+            lineHeight = LineHeight.BODY2
+        )
+        Image(
+            painter = painterResource(R.drawable.angl_left),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
+fun DispenserItem(text1: String, text2: String, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 12.dp)
+            .padding(start = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = text1,
+            color = primary1,
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M
+        )
+        Text(
+            text = text2,
+            color = secondary4,
+            fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M
         )
         Image(
@@ -98,6 +141,106 @@ fun ProfileItem(text: String, onClick: () -> Unit = {}) {
             contentDescription = null,
             modifier = Modifier.size(20.dp)
         )
+    }
+    Image(
+        painter = painterResource(R.drawable.divider),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun PersonalInfoItem(text1: String, text2: String, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 12.dp)
+            .padding(start = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.SpaceBetween
+    ) {
+        Text(
+            text = text1,
+            color = primary1,
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M
+        )
+        Text(
+            text = text2,
+            color = secondary4,
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M
+        )
+    }
+    Image(
+        painter = painterResource(R.drawable.divider),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun ProfileFooter(
+    onLogOutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(
+            onClick = {
+                onLogOutClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = base0),
+            border = BorderStroke(1.dp, primary1)
+
+        ) {
+            Text(
+                text = "Log Out  ",
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M,
+                lineHeight = LineHeight.PARAGRAPH2,
+                color = primary1
+            )
+            Image(
+                painter = painterResource(id = R.drawable.log_out),
+                contentDescription = "log_out",
+                modifier = Modifier
+                    .size(20.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = {
+                onDeleteAccountClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = base0),
+            border = BorderStroke(1.dp, functionalError)
+
+        ) {
+            Text(
+                text = "Delete Account  ",
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M,
+                lineHeight = LineHeight.PARAGRAPH2,
+                color = functionalError,
+            )
+            Image(
+                painter = painterResource(id = R.drawable.delete),
+                contentDescription = "delete",
+                modifier = Modifier
+                    .size(20.dp)
+            )
+        }
     }
 }
 
@@ -190,14 +333,17 @@ fun LogoutPopup(
                     Text(
                         text = stringResource(R.string.log_out),
                         color = primary1,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.PARAGRAPH1M,
+                        fontSize = FontSize.BODY2,
+                        fontWeight = FontWeight.BODY2,
+                        lineHeight = LineHeight.BODY2,
                     )
 
                     Text(
                         text = stringResource(R.string.are_you_sure_you_want_to_log_out),
                         color = secondary2,
-                        fontSize = 14.sp,
+                        fontSize = FontSize.PARAGRAPH2,
+                        fontWeight = FontWeight.PARAGRAPH2R,
+                        lineHeight = LineHeight.PARAGRAPH2,
                     )
 
                     Row(
@@ -219,22 +365,30 @@ fun LogoutPopup(
                             Text(
                                 text = stringResource(R.string.back_to_profile),
                                 color = primary1,
-                                fontSize = 14.sp
+                                fontSize = FontSize.PARAGRAPH2,
+                                fontWeight = FontWeight.PARAGRAPH2M,
+                                lineHeight = LineHeight.PARAGRAPH2,
                             )
                         }
 
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .background(primary1, RoundedCornerShape(4.dp))
+                                .border(
+                                    width = 1.dp,
+                                    color = functionalError,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
                                 .clickable { onConfirmLogout() }
                                 .padding(vertical = 12.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "Log Out",
-                                color = Color.White,
-                                fontSize = 14.sp
+                                color = functionalError,
+                                fontSize = FontSize.PARAGRAPH2,
+                                fontWeight = FontWeight.PARAGRAPH2M,
+                                lineHeight = LineHeight.PARAGRAPH2,
                             )
                         }
                     }
