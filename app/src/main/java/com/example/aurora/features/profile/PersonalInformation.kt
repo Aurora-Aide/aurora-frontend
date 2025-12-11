@@ -45,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
+import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
+import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
@@ -75,7 +77,7 @@ fun PersonalInfoScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ProfileInitialsBox(initials = "JD")
+        //ProfileInitialsBox(initials = "JD")
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -89,7 +91,7 @@ fun PersonalInfoScreen(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        onPasswordVisibilityChange()
+                        //onPasswordVisibilityChange()
                     }
                 ) {
                     Image(
@@ -112,7 +114,7 @@ fun PersonalInfoScreen(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                       onPasswordVisibilityChange()
+                       //onPasswordVisibilityChange()
                     }
                 ) {
                     Image(
@@ -123,7 +125,7 @@ fun PersonalInfoScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
             value = personalInformationData.email,
@@ -139,7 +141,7 @@ fun PersonalInfoScreen(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        onPasswordVisibilityChange()
+                        //onPasswordVisibilityChange()
                     }
                 ) {
                     Image(
@@ -152,36 +154,36 @@ fun PersonalInfoScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        var isVisible by remember { mutableStateOf(false) }
-
-        TextField(
-            value = personalInformationData.password,
-            label = "Password",
-            error = false,
-            placeholder = "Password",
-            onValueChange = onPasswordChange,
-            visualTransformation = if (isVisible) VisualTransformation.None
-            else PasswordVisualTransformation('\u002A'),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Go
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        isVisible = !isVisible
-                    }
-                ) {
-                    Image(
-                        imageVector = if (isVisible) Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff,
-                        contentDescription = if (isVisible) "Hide password"
-                        else "Show password"
-                    )
-                }
-            },
-            errorText = "Error"
-        )
+//        var isVisible by remember { mutableStateOf(false) }
+//
+//        TextField(
+//            value = personalInformationData.password,
+//            label = "Password",
+//            error = false,
+//            placeholder = "Password",
+//            onValueChange = onPasswordChange,
+//            visualTransformation = if (isVisible) VisualTransformation.None
+//            else PasswordVisualTransformation('\u002A'),
+//            keyboardOptions = KeyboardOptions(
+//                keyboardType = KeyboardType.Password,
+//                imeAction = ImeAction.Go
+//            ),
+//            trailingIcon = {
+//                IconButton(
+//                    onClick = {
+//                        isVisible = !isVisible
+//                    }
+//                ) {
+//                    Image(
+//                        imageVector = if (isVisible) Icons.Filled.Visibility
+//                        else Icons.Filled.VisibilityOff,
+//                        contentDescription = if (isVisible) "Hide password"
+//                        else "Show password"
+//                    )
+//                }
+//            },
+//            errorText = "Error"
+//        )
         Spacer(modifier = Modifier.height(40.dp))
 
         Row(
@@ -190,7 +192,7 @@ fun PersonalInfoScreen(
                 .border(
                     width = 1.dp,
                     color = functionalError,
-                    shape = RoundedCornerShape(4.dp)
+                    shape = RoundedCornerShape(8.dp)
                 )
                 .clickable {
                     onDeleteAccountClick()
@@ -202,67 +204,68 @@ fun PersonalInfoScreen(
             Text(
                 text = stringResource(R.string.delete_account),
                 color = functionalError,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.PARAGRAPH1M
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M,
+                lineHeight = LineHeight.PARAGRAPH2,
             )
             Spacer(modifier = Modifier.width(10.dp))
             Image(
-                painter = painterResource(id = R.drawable.trash),
-                contentDescription = null
+                painter = painterResource(id = R.drawable.delete),
+                contentDescription = "delete"
             )
         }
     }
 }
 
-@Composable
-fun ProfileInitialsBox(
-    initials: String,
-    modifier: Modifier = Modifier,
-    onEditClick: () -> Unit = {}
-) {
-    Box(modifier = modifier.size(80.dp)) {
-        Box(
-            modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(primary2),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = initials,
-                fontSize = 32.sp,
-                fontWeight = Bold,
-                color = secondary2
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .size(28.dp)
-                .align(Alignment.BottomEnd)
-                .clip(RoundedCornerShape(8.dp))
-                .background(base0),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                Modifier
-                    .size(26.dp)
-                    .align(Alignment.BottomEnd)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(primary1)
-            ) {
-                IconButton(
-                    onClick = onEditClick,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = painterResource(R.drawable.pen).toString(),
-                        tint = base0,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-        }
-    }
-}
+//@Composable
+//fun ProfileInitialsBox(
+//    initials: String,
+//    modifier: Modifier = Modifier,
+//    onEditClick: () -> Unit = {}
+//) {
+//    Box(modifier = modifier.size(80.dp)) {
+//        Box(
+//            modifier = Modifier
+//                .size(80.dp)
+//                .clip(RoundedCornerShape(16.dp))
+//                .background(primary2),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Text(
+//                text = initials,
+//                fontSize = 32.sp,
+//                fontWeight = Bold,
+//                color = secondary2
+//            )
+//        }
+//
+//        Box(
+//            modifier = Modifier
+//                .size(28.dp)
+//                .align(Alignment.BottomEnd)
+//                .clip(RoundedCornerShape(8.dp))
+//                .background(base0),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Box(
+//                Modifier
+//                    .size(26.dp)
+//                    .align(Alignment.BottomEnd)
+//                    .clip(RoundedCornerShape(8.dp))
+//                    .background(primary1)
+//            ) {
+//                IconButton(
+//                    onClick = onEditClick,
+//                    modifier = Modifier.fillMaxSize()
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Filled.Edit,
+//                        contentDescription = painterResource(R.drawable.pen).toString(),
+//                        tint = base0,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}

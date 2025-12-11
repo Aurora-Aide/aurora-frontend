@@ -17,6 +17,7 @@ import com.example.aurora.features.profile.PersonalInfoScreen
 import com.example.aurora.features.profile.PersonalInformationViewModel
 import com.example.aurora.features.profile.ProfileScreen
 import com.example.aurora.features.profile.ProfileViewModel
+import com.example.aurora.features.settings.SettingsScreen
 import com.example.aurora.features.signup.SignupScreen
 import com.example.aurora.features.signup.SignupViewModel
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
@@ -25,13 +26,14 @@ import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.aurora.navigation.Routes.MainRoute.Home.toHome
 import com.example.aurora.navigation.Routes.MainRoute.PersonalInformation.toPersonalInformation
 import com.example.aurora.navigation.Routes.MainRoute.Profile.toProfile
+import com.example.aurora.navigation.Routes.MainRoute.Settings.toSettings
 import com.example.aurora.navigation.Routes.MainRoute.SignUp.toSignUp
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -97,13 +99,25 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
         }
+        composable(route = Routes.MainRoute.Settings.route) {
+            SettingsScreen()
+        }
         composable(route = Routes.MainRoute.Profile.route) {
             val viewModel = getViewModel<ProfileViewModel>()
-            val showHide by viewModel.showPopUp.collectAsStateWithLifecycle()
+            val showHideLogOut by viewModel.showPopUpLogOut.collectAsStateWithLifecycle()
+            val showHideDelete by viewModel.showPopUpDelete.collectAsStateWithLifecycle()
             ProfileScreen(
-                showPopup = showHide,
-                onLogOutClicked = { viewModel.showHide() },
-                onPersonalInformation = { navController.toPersonalInformation() }
+                showPopupLogOut = showHideLogOut,
+                showPopupDelete = showHideDelete,
+                onLogOutClicked = { viewModel.showHideLogOut() }, //log out
+                onDeleteAccountClicked = { viewModel.showHideDelete() },  // delete account
+                onPersonalInformation = { navController.toPersonalInformation() },
+                onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
+                onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
+                onSettings = { navController.toSettings() },
+                onLogOut = { viewModel.showHideLogOutBack() }, // show popup
+                onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
+                onToHomeClick = { navController.toHome() }
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {
