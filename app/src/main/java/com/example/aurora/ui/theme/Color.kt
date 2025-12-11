@@ -18,6 +18,7 @@ val secondary1 = Color(0xFF82E9ED)
 val secondary2 = Color(0xFF6EA5FF)
 val secondary3 = Color(0xFF870D7A)
 val secondary4 = Color(0x66000000)
+val secondary5 = Color(0xFFE6E6E6)
 
 val base0 = Color(0xFFFFFFFF)
 val base30 = Color(0xFFE6E6E6)

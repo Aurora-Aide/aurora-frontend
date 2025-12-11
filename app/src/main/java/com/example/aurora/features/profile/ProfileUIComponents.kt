@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.aurora.R
@@ -40,6 +41,7 @@ import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
+import com.example.aurora.ui.theme.secondary5
 
 
 @Composable
@@ -130,6 +132,7 @@ fun DispenserItem(text1: String, text2: String, onClick: () -> Unit = {}) {
             fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M
         )
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text2,
             color = secondary4,
@@ -143,22 +146,21 @@ fun DispenserItem(text1: String, text2: String, onClick: () -> Unit = {}) {
         )
     }
     Image(
-        painter = painterResource(R.drawable.divider),
+        painter = painterResource(R.drawable.divider_horizontal),
         contentDescription = null,
         modifier = Modifier.fillMaxWidth()
     )
 }
 
 @Composable
-fun PersonalInfoItem(text1: String, text2: String, onClick: () -> Unit = {}) {
+fun PersonalInfoItem(text1: String, text2: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
             .padding(vertical = 12.dp)
             .padding(start = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = text1,
@@ -166,15 +168,17 @@ fun PersonalInfoItem(text1: String, text2: String, onClick: () -> Unit = {}) {
             fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M
         )
+        //Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text2,
             color = secondary4,
             fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M
         )
+        Spacer(modifier = Modifier.width(24.dp))
     }
     Image(
-        painter = painterResource(R.drawable.divider),
+        painter = painterResource(R.drawable.divider_horizontal),
         contentDescription = null,
         modifier = Modifier.fillMaxWidth()
     )
@@ -245,35 +249,52 @@ fun ProfileFooter(
 }
 
 @Composable
-fun BottomNavigationBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        BottomNavItem(
-            iconResId = R.drawable.home,
-            label = stringResource(R.string.home),
-            isSelected = false,
-            onClick = {}
+fun BottomNavigationBar(
+    onToHomeClick: () -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()){
+        Image(
+            painter = painterResource(R.drawable.divider_horizontal),
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            BottomNavItem(
+                iconResId = R.drawable.home,
+                label = stringResource(R.string.home),
+                isSelected = false,
+                onClick = { onToHomeClick() }
+            )
 
-        BottomNavItem(
-            iconResId = R.drawable.new_report,
-            label = stringResource(R.string.new_report),
-            isSelected = false,
-            onClick = {}
-        )
+//            Image(
+//                painter = painterResource(R.drawable.divider_vertical),
+//                contentDescription = null,
+//                modifier = Modifier.fillMaxWidth()
+//            )
 
-        BottomNavItem(
-            iconResId = R.drawable.profile,
-            label = stringResource(R.string.profile),
-            isSelected = true,
-            onClick = {}
-        )
+//        BottomNavItem(
+//            iconResId = R.drawable.new_report,
+//            label = stringResource(R.string.new_report),
+//            isSelected = false,
+//            onClick = {}
+//        )
+
+            BottomNavItem(
+                iconResId = R.drawable.profile,
+                label = stringResource(R.string.profile),
+                isSelected = true,
+                onClick = {}
+            )
+        }
     }
+
 }
 
 @Composable
@@ -282,31 +303,45 @@ fun BottomNavItem(
     label: String,
     isSelected: Boolean,
     onClick: () -> Unit
-) {
-    val tintColor = if (isSelected) primary1 else Color(0xFF1A0759)
+) { // TODO the whole item to be clickable not only the image, add line between dif items
+    val tintColor = if (isSelected) primary1 else secondary4
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { onClick() }
-    ) {
-        Image(
-            painter = painterResource(id = iconResId),
-            contentDescription = label,
-            modifier = Modifier.size(28.dp),
-            alignment = Alignment.Center,
-        )
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = tintColor
-        )
+    Box(
+        modifier = Modifier
+            //.fillMaxHeight()
+            .clickable { onClick() }
+            //.border(1.dp, secondary5),
+
+    ){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            //modifier = Modifier.clickable { onClick() }
+        ) {
+            Image(
+                painter = painterResource(id = iconResId),
+                contentDescription = label,
+                modifier = Modifier.size(24.dp),
+                alignment = Alignment.Center,
+            )
+            Text(
+                text = label,
+                fontSize = FontSize.PARAGRAPH3,
+                fontWeight = FontWeight.PARAGRAPH3R,
+                lineHeight = LineHeight.PARAGRAPH3,
+                color = tintColor
+            )
+        }
     }
+
 }
 
 @Composable
 fun LogoutPopup(
     onDismiss: () -> Unit,
-    onConfirmLogout: () -> Unit
+    onConfirmLogout: () -> Unit,
+    title: String,
+    caption: String,
+    buttonText: String,
 ) {
     Box(
         modifier = Modifier
@@ -331,7 +366,7 @@ fun LogoutPopup(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.log_out),
+                        text = title,
                         color = primary1,
                         fontSize = FontSize.BODY2,
                         fontWeight = FontWeight.BODY2,
@@ -339,7 +374,7 @@ fun LogoutPopup(
                     )
 
                     Text(
-                        text = stringResource(R.string.are_you_sure_you_want_to_log_out),
+                        text = caption,
                         color = secondary2,
                         fontSize = FontSize.PARAGRAPH2,
                         fontWeight = FontWeight.PARAGRAPH2R,
@@ -384,7 +419,7 @@ fun LogoutPopup(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Log Out",
+                                text = buttonText,
                                 color = functionalError,
                                 fontSize = FontSize.PARAGRAPH2,
                                 fontWeight = FontWeight.PARAGRAPH2M,

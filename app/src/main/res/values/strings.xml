@@ -16,6 +16,7 @@
     <string name="new_report">New Report</string>
     <string name="profile">Profile</string>
     <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
+    <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your account?</string>
     <string name="back_to_profile">Back To Profile</string>
     <string name="delete_account">Delete Account</string>
 </resources>
