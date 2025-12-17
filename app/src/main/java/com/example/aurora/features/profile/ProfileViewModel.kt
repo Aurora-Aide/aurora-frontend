@@ -22,11 +22,12 @@ class ProfileViewModel(/*userModel: UserModel*/): ViewModel() {
     }
 
     fun showHideLogOut(){
-
+        _showPopUpLogOut.update { value -> value.not()  }
         // delete tokens, send to log in page, backend log out
     }
 
     fun showHideDelete(){
+        _showPopUpDelete.update { value -> value.not()  }
         // delete tokens, send to sign up page, backend delete profile
     }
 

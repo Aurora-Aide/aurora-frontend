@@ -32,10 +32,10 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
     fun login(){
         viewModelScope.launch{
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
-                onSuccess = {
+                onSuccess = { userEntity ->
                     Log.d("TAG", "login request")
                     _login.update {
-                        it.copy(isLoginSuccessful = true)
+                        it.copy(isLoginSuccessful = true, name = "${userEntity.firstName} ${userEntity.lastName}")
                     }
                 },
                 onFailure = {

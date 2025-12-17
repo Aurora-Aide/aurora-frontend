@@ -33,7 +33,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Home.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -94,7 +94,9 @@ fun MainNavigation() {
             )
         }
         composable(route = Routes.MainRoute.Home.route) {
-            HomeScreen()
+            HomeScreen(
+                onToProfileClick = { navController.toProfile() },
+            )
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
@@ -109,8 +111,8 @@ fun MainNavigation() {
             ProfileScreen(
                 showPopupLogOut = showHideLogOut,
                 showPopupDelete = showHideDelete,
-                onLogOutClicked = { viewModel.showHideLogOut() }, //log out
-                onDeleteAccountClicked = { viewModel.showHideDelete() },  // delete account
+                onLogOutClicked = { viewModel.showHideLogOut(); navController.toLogIn() },  //log out TODO
+                onDeleteAccountClicked = { navController.toSignUp(); viewModel.showHideDelete() },  // delete account TODO
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
