@@ -43,9 +43,9 @@ fun MainNavigation() {
                 onPasswordChange = { viewModelLogin.password(it) },
                 onLoginClick = { viewModelLogin.validate() },
                 isLoginSuccessful = {
-                    Log.d("TAG", "to home")
+                    Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.toHome()
+                    navController.toHome(loginData.firstName, "")  //TODO id
 
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
@@ -84,7 +84,7 @@ fun MainNavigation() {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
                     viewModelSignup.signup()
-                    navController.toHome()
+                    navController.toHome(signupData.firstName, "") // TODO id
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
@@ -93,9 +93,11 @@ fun MainNavigation() {
                 onTwoClick = {},
             )
         }
-        composable(route = Routes.MainRoute.Home.route) {
+        composable(route = Routes.MainRoute.Home.route) { navBackStackEntry ->
+            val name = navBackStackEntry.arguments?.getString("name")
             HomeScreen(
-                onToProfileClick = { navController.toProfile() },
+                onToProfileClick = { navController.toProfile("", "", "", "") },  //TODO use actual data
+                name = name.orEmpty(),
             )
         }
         composable(route = Routes.MainRoute.Google.route) {
@@ -119,7 +121,7 @@ fun MainNavigation() {
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
-                onToHomeClick = { navController.toHome() }
+                onToHomeClick = { navController.toHome("name", "") } // TODO find id
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {

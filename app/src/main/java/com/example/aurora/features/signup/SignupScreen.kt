@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
@@ -82,7 +83,6 @@ fun SignupScreen(
     if(signup.isSignupSuccessful){
         LaunchedEffect(null) {
             isSignupSuccessful()
-            navController.toHome()
         }
     }
 

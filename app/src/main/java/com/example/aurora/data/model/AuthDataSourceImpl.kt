@@ -6,6 +6,7 @@ import com.example.aurora.data.sorce.AuthDataSource
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.login.LoginVariables
+import com.example.aurora.features.profile.LogoutVariables
 import com.example.aurora.features.signup.DispenserVariables
 import com.example.aurora.features.signup.SignupVariables
 
@@ -28,5 +29,9 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun resetPass(password: String, token: String): Result<ForgotPass> {
         return requestBody(retrofit.resetPass(ResetPassVariables(password, token)))
+    }
+
+    override suspend fun logout(refreshToken: String): Result<Logout> {
+        return requestBody(retrofit.logout(LogoutVariables(refreshToken)))
     }
 }

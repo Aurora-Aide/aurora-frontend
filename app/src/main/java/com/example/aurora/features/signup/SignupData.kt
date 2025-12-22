@@ -14,4 +14,5 @@ data class SignupData (
     val isPasswordError: LoginPasswordErrors = LoginPasswordErrors.NONE,
     val isPasswordRepeatError: LoginPasswordErrors = LoginPasswordErrors.NONE,
     var isFirstStep: Boolean = true,
+    //val id: String = "",
 )

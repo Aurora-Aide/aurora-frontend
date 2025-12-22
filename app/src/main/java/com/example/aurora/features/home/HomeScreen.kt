@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.aurora.features.login.LoginData
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.FontWeight
@@ -35,6 +36,7 @@ import com.example.aurora.ui.theme.secondary2
 @Composable
 fun HomeScreen(
     onToProfileClick: () -> Unit,
+    name: String,
 ) {
 
     val scrollState = rememberScrollState()
@@ -70,12 +72,11 @@ fun HomeScreen(
         )
         {
             Text(
-                text = "Hello, User", // TODO change "user" to their real first name
+                text = "Hello, $name",
                 color = primary1,
                 fontSize = FontSize.BODY2,
                 fontWeight = FontWeight.BODY2,
                 lineHeight = LineHeight.BODY2,
-                // modifier = Modifier.padding(8.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))

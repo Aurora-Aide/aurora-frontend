@@ -1,5 +1,5 @@
 package com.example.aurora.data.entity
 
-data class ForgotPassEntity (
+data class LogoutEntity (
     val message: String? = "",
 )

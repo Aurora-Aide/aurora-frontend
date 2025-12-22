@@ -1,6 +1,9 @@
 package com.example.aurora.navigation
 
+import android.net.Uri
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 sealed class Routes(val route: String) {
 
@@ -18,16 +21,21 @@ sealed class Routes(val route: String) {
             fun NavController.toSignUp() = navigate("${MainRoute.route}/signUp")
         }
 
-        data object Home : Routes("${MainRoute.route}/home") {
-            fun NavController.toHome() = navigate("${MainRoute.route}/home")
+        data object Home : Routes("${MainRoute.route}/home?name={name}&id={id}") {
+            fun NavController.toHome(name: String, id: String) = navigate("${MainRoute.route}/home?name=${Uri.encode(name)}")
         }
 
         data object Google: Routes("${MainRoute.route}/google") {
             fun NavController.toGoogle() = navigate("${MainRoute.route}/google")
         }
 
-        data object Profile: Routes("${MainRoute.route}/profile") {
-            fun NavController.toProfile() = navigate("${MainRoute.route}/profile")
+        data object Profile: Routes("${MainRoute.route}/profile?firstName={firstName}&lastName={lastName}&email={email}&id={id}") {
+            fun NavController.toProfile(firstName: String, lastName: String, email: String, id: String)
+            = navigate("${MainRoute.route}/profile" +
+                    "?name=${Uri.encode(firstName)}" +
+                    "&lastName=$lastName" +
+                    "&email=$email" +
+                    "&id=$id")
         }
 
         data object PersonalInformation: Routes("${MainRoute.route}/personalInformation") {

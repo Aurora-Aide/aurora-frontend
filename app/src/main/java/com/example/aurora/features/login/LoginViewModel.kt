@@ -35,7 +35,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
                 onSuccess = { userEntity ->
                     Log.d("TAG", "login request")
                     _login.update {
-                        it.copy(isLoginSuccessful = true, name = "${userEntity.firstName} ${userEntity.lastName}")
+                        it.copy(isLoginSuccessful = true, firstName = userEntity.firstName, lastName = userEntity.lastName)
                     }
                 },
                 onFailure = {
