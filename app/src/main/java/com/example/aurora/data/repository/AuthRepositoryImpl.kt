@@ -2,10 +2,13 @@ package com.example.aurora.data.repository
 
 import com.example.aurora.data.entity.DispenserEntity
 import com.example.aurora.data.entity.ForgotPassEntity
+import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.UserEntity
 import com.example.aurora.data.mapper.toDispenserMapper
 import com.example.aurora.data.mapper.toForgotPassMapper
+import com.example.aurora.data.mapper.toLogoutMapper
 import com.example.aurora.data.mapper.toUserEntity
+import com.example.aurora.data.model.Logout
 import com.example.aurora.data.sorce.AuthDataSource
 
 class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
@@ -61,6 +64,17 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
             },
             onFailure = {
                 Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun logout(refreshToken: String): Result<LogoutEntity> {
+        return data.logout(refreshToken).fold(
+            onSuccess = {
+                    msg -> Result.success(msg.toLogoutMapper())
+            },
+            onFailure = {
+                    Result.failure(it)
             }
         )
     }

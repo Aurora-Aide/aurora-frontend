@@ -2,6 +2,7 @@ package com.example.aurora.data.repository
 
 import com.example.aurora.data.entity.DispenserEntity
 import com.example.aurora.data.entity.ForgotPassEntity
+import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.UserEntity
 
 interface AuthRepository {
@@ -10,4 +11,5 @@ interface AuthRepository {
     suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity>
     suspend fun forgotPass(email: String): Result<Unit>
     suspend fun resetPass(password: String, reset: String): Result<ForgotPassEntity>
+    suspend fun logout(refreshToken: String): Result<LogoutEntity>
 }

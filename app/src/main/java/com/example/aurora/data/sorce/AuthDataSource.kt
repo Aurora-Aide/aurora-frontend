@@ -2,6 +2,7 @@ package com.example.aurora.data.sorce
 
 import com.example.aurora.data.model.Dispensers
 import com.example.aurora.data.model.ForgotPass
+import com.example.aurora.data.model.Logout
 import com.example.aurora.data.model.Tokens
 
 interface AuthDataSource {
@@ -10,4 +11,5 @@ interface AuthDataSource {
     suspend fun registerDispenser(modelNumber: String, name: String): Result<Dispensers>
     suspend fun forgotPass(email: String): Result<Unit>
     suspend fun resetPass(password: String, token: String): Result<ForgotPass>
+    suspend fun logout(refreshToken: String): Result<Logout>
 }

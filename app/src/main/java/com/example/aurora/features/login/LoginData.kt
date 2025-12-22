@@ -6,7 +6,7 @@ data class LoginData(
     val isLoginSuccessful: Boolean = false,
     val isEmailError: LoginEmailErrors = LoginEmailErrors.NONE,
     val isPasswordError: LoginPasswordErrors = LoginPasswordErrors.NONE,
-//    val name: String = "",
-//    val googleProfilePictureUrl: String = "",
-//    val navigationState: NavController.Companion,
+    val firstName: String = "",  // TODO use this in home
+    val lastName: String = "",
+    val id: String = "",
 )

@@ -33,7 +33,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Home.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -43,9 +43,9 @@ fun MainNavigation() {
                 onPasswordChange = { viewModelLogin.password(it) },
                 onLoginClick = { viewModelLogin.validate() },
                 isLoginSuccessful = {
-                    Log.d("TAG", "to home")
+                    Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.toHome()
+                    navController.toHome(loginData.firstName, "")  //TODO id
 
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
@@ -84,7 +84,7 @@ fun MainNavigation() {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
                     viewModelSignup.signup()
-                    navController.toHome()
+                    navController.toHome(signupData.firstName, "") // TODO id
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
@@ -93,8 +93,12 @@ fun MainNavigation() {
                 onTwoClick = {},
             )
         }
-        composable(route = Routes.MainRoute.Home.route) {
-            HomeScreen()
+        composable(route = Routes.MainRoute.Home.route) { navBackStackEntry ->
+            val name = navBackStackEntry.arguments?.getString("name")
+            HomeScreen(
+                onToProfileClick = { navController.toProfile("", "", "", "") },  //TODO use actual data
+                name = name.orEmpty(),
+            )
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
@@ -109,15 +113,15 @@ fun MainNavigation() {
             ProfileScreen(
                 showPopupLogOut = showHideLogOut,
                 showPopupDelete = showHideDelete,
-                onLogOutClicked = { viewModel.showHideLogOut() }, //log out
-                onDeleteAccountClicked = { viewModel.showHideDelete() },  // delete account
+                onLogOutClicked = { viewModel.showHideLogOut(); navController.toLogIn() },  //log out TODO
+                onDeleteAccountClicked = { navController.toSignUp(); viewModel.showHideDelete() },  // delete account TODO
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
-                onToHomeClick = { navController.toHome() }
+                onToHomeClick = { navController.toHome("name", "") } // TODO find id
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {

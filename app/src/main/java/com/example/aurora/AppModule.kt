@@ -9,6 +9,7 @@ import com.example.aurora.data.sorce.AuthDataSource
 import com.example.aurora.domain.usecase.DispenserUseCase
 import com.example.aurora.domain.usecase.ForgotPassUseCase
 import com.example.aurora.domain.usecase.LoginUseCase
+import com.example.aurora.domain.usecase.LogoutUseCase
 import com.example.aurora.domain.usecase.ResetPassUseCase
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.features.forgotPassword.ForgotViewModel
@@ -30,7 +31,7 @@ val appModule = module {
     }
     
     viewModel {
-        ProfileViewModel()
+        ProfileViewModel(get())
     }
 
     viewModel {
@@ -62,6 +63,10 @@ val appModule = module {
     }
     factory{
         ResetPassUseCase(get())
+    }
+
+    factory{
+        LogoutUseCase(get())
     }
 
 

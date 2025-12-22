@@ -253,16 +253,9 @@ fun BottomNavigationBar(
     onToHomeClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()){
-        Image(
-            painter = painterResource(R.drawable.divider_horizontal),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -273,19 +266,6 @@ fun BottomNavigationBar(
                 onClick = { onToHomeClick() }
             )
 
-//            Image(
-//                painter = painterResource(R.drawable.divider_vertical),
-//                contentDescription = null,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-
-//        BottomNavItem(
-//            iconResId = R.drawable.new_report,
-//            label = stringResource(R.string.new_report),
-//            isSelected = false,
-//            onClick = {}
-//        )
-
             BottomNavItem(
                 iconResId = R.drawable.profile,
                 label = stringResource(R.string.profile),
@@ -294,7 +274,6 @@ fun BottomNavigationBar(
             )
         }
     }
-
 }
 
 @Composable
