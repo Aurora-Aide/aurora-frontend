@@ -15,13 +15,10 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.login(LoginVariables(email, password)))
     }
 
-    override suspend fun signup(email: String, password: String): Result<Tokens> {
-        return requestBody(retrofit.signup(SignupVariables(email, password)))
+    override suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<Tokens> {
+        return requestBody(retrofit.signup(SignupVariables(email, password, firstName, lastName)))
     }
 
-    override suspend fun registerDispenser(modelNumber: String, name: String): Result<Dispensers> {
-        return requestBody(retrofit.registerDispenser(DispenserVariables(modelNumber, name)))
-    }
 
     override suspend fun forgotPass(email: String): Result<Unit> {
         return requestBody(retrofit.forgotPass(ForgotPassVariables(email)))
@@ -32,6 +29,15 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     }
 
     override suspend fun logout(refreshToken: String): Result<Logout> {
-        return requestBody(retrofit.logout(LogoutVariables(refreshToken)))
+        return requestBody(retrofit.logout(LogoutVariables(refreshToken))) //token
+    }
+
+    override suspend fun listAllUserDispensers(accessToken: String): Result<Dispensers> {
+        return requestBody(retrofit.listAllUserDispensers(LogoutVariables(accessToken)))  //token
+    }
+
+
+    override suspend fun addDispenser(modelNumber: String, name: String, accessToken: String): Result<Dispensers> {
+        return requestBody(retrofit.registerDispenser(DispenserVariables(modelNumber, name, accessToken)))
     }
 }

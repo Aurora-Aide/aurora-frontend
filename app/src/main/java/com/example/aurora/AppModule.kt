@@ -6,13 +6,15 @@ import com.example.aurora.data.model.urls
 import com.example.aurora.data.repository.AuthRepository
 import com.example.aurora.data.repository.AuthRepositoryImpl
 import com.example.aurora.data.sorce.AuthDataSource
-import com.example.aurora.domain.usecase.DispenserUseCase
+import com.example.aurora.domain.usecase.AddDispenserUseCase
 import com.example.aurora.domain.usecase.ForgotPassUseCase
+import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
 import com.example.aurora.domain.usecase.LoginUseCase
 import com.example.aurora.domain.usecase.LogoutUseCase
 import com.example.aurora.domain.usecase.ResetPassUseCase
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.features.forgotPassword.ForgotViewModel
+import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.login.LoginViewModel
 import com.example.aurora.features.profile.PersonalInformationViewModel
 import com.example.aurora.features.profile.ProfileViewModel
@@ -31,7 +33,7 @@ val appModule = module {
     }
     
     viewModel {
-        ProfileViewModel(get())
+        ProfileViewModel(get(), get())
     }
 
     viewModel {
@@ -46,6 +48,10 @@ val appModule = module {
         ForgotViewModel(get(), get())
     }
 
+    viewModel{
+        AddDispenserViewModel(get())
+    }
+
 
     factory{
         LoginUseCase(get())
@@ -56,17 +62,23 @@ val appModule = module {
     }
 
     factory{
-        DispenserUseCase(get())
+        AddDispenserUseCase(get())
     }
+
     factory{
         ForgotPassUseCase(get())
     }
+
     factory{
         ResetPassUseCase(get())
     }
 
     factory{
         LogoutUseCase(get())
+    }
+
+    factory{
+        ListAllUserDispensersUseCase(get())
     }
 
 

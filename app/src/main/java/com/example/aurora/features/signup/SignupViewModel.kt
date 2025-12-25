@@ -51,20 +51,20 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
 
     fun signup(){
         viewModelScope.launch{
-            signupUseCase.invoke(_signup.value.email, _signup.value.password).fold(
+            signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.firstName, _signup.value.lastName).fold(
                 onSuccess = {
                     Log.d("TAG", "signup request")
-//                    if(_signup.value.firstName.isNotEmpty() && _signup.value.lastName.isNotEmpty()){
-//                        firstName(_signup.value.firstName)
-//                        lastName(_signup.value.lastName)
-//                    } else{
+                    if(_signup.value.firstName.isNotEmpty() && _signup.value.lastName.isNotEmpty()){
+                        firstName(_signup.value.firstName)
+                        lastName(_signup.value.lastName)
+                    } else{
                         _signup.update {
                             it.copy(isSignupSuccessful = true)
                         }
-                    //}
+                    }
                 },
                 onFailure = {
-                    // to implement
+
                 }
             )
         }

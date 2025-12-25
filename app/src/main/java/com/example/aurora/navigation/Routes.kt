@@ -22,7 +22,11 @@ sealed class Routes(val route: String) {
         }
 
         data object Home : Routes("${MainRoute.route}/home?name={name}&id={id}") {
-            fun NavController.toHome(name: String, id: String) = navigate("${MainRoute.route}/home?name=${Uri.encode(name)}")
+            fun NavController.toHome(name: String) = navigate("${MainRoute.route}/home?name=${Uri.encode(name)}")
+        }
+
+        data object AddDispenser : Routes("${MainRoute.route}/addDispenser") {
+            fun NavController.toAddDispenser() = navigate("${MainRoute.route}/addDispenser")
         }
 
         data object Google: Routes("${MainRoute.route}/google") {

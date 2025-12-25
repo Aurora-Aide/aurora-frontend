@@ -4,6 +4,6 @@ import com.example.aurora.data.repository.AuthRepository
 import com.example.aurora.features.login.LoginPasswordErrors
 
 class SignupUseCase(private val repository: AuthRepository) {
-    suspend operator fun invoke(email: String, password: String) =
-        repository.signup(email, password)
+    suspend operator fun invoke(email: String, password: String, firstName: String, lastName: String) =
+        repository.signup(email, password, firstName, lastName)
 }
