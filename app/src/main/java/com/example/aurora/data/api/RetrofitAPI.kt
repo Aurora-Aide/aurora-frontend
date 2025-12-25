@@ -36,13 +36,16 @@ interface RetrofitAPI {
 
     @POST(urls.logoutURL)
     suspend fun logout(@Body dataModel: LogoutVariables): Response<Logout>
+    //needs refresh token
 
-
-    //TODO
-    @POST(urls.logoutURL)
-    suspend fun deleteAccount(@Body dataModel: LogoutVariables): Response<Logout>
+//    TODO
+//    @POST(urls.deleteAccountURL)
+//    suspend fun deleteAccount(@Body dataModel: LogoutVariables): Response<Logout>
 
     // dispensers
+    @GET(urls.listAllUserDispensersURL)
+    suspend fun listAllUserDispensers(@Body dataModel: LogoutVariables): Response<Dispensers>
+    //needs access token
 
-    
+
 }

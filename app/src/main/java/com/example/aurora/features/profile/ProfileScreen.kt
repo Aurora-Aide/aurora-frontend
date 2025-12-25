@@ -53,9 +53,11 @@ fun ProfileScreen(
     onPersonalInformation: () -> Unit,
     onSettings: () -> Unit,
     onToHomeClick: ()-> Unit,
+    dispenserData: () -> Unit,
 ) {
-
+    val dispensers = DispenserData()
     val scrollState = rememberScrollState()
+
 
     Scaffold(
         bottomBar = {
@@ -112,7 +114,7 @@ fun ProfileScreen(
                 // TODO change both texts to real data and place however many dispensers there are
                 // use showAllUserDispensers from backend
 
-                DispenserItem("Name1", "Id 1 of dis")
+                DispenserItem(dispensers.name, dispensers.id)
                 DispenserItem("Name2", "Id 2 of dis")
                 DispenserItem("Name3", "Id 3 of dis")
 

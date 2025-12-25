@@ -8,12 +8,11 @@ import com.example.aurora.data.mapper.toDispenserMapper
 import com.example.aurora.data.mapper.toForgotPassMapper
 import com.example.aurora.data.mapper.toLogoutMapper
 import com.example.aurora.data.mapper.toUserEntity
-import com.example.aurora.data.model.Logout
 import com.example.aurora.data.sorce.AuthDataSource
 
 class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
 
-    override suspend fun login(email: String, password: String): Result<UserEntity> {
+    override suspend fun login(email: String, password: String): Result<UserEntity>{
         return data.login(email, password).fold(
             onSuccess = {
                 token -> Result.success(token.user.toUserEntity())
@@ -24,8 +23,8 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
         )
     }
 
-    override suspend fun signup(email: String, password: String): Result<UserEntity> {
-        return data.signup(email, password).fold(
+    override suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<UserEntity> {
+        return data.signup(email, password, firstName, lastName).fold(
             onSuccess = {
                     token -> Result.success(token.user.toUserEntity())
             },
@@ -35,8 +34,8 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
         )
     }
 
-    override suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity> {
-        return data.registerDispenser(modelNumber, name).fold(
+    override suspend fun addDispenser(modelNumber: String, name: String, token: String): Result<DispenserEntity> {
+        return data.addDispenser(modelNumber, name, token).fold(
             onSuccess = {
                 dispenser -> Result.success(dispenser.toDispenserMapper())
             },
@@ -75,6 +74,17 @@ class AuthRepositoryImpl(private val data: AuthDataSource): AuthRepository {
             },
             onFailure = {
                     Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun listAllUserDispensers(accessToken: String): Result<DispenserEntity> {
+        return data.listAllUserDispensers(accessToken).fold(
+            onSuccess = {
+                    dispenser -> Result.success(dispenser.toDispenserMapper())
+            },
+            onFailure = {
+                Result.failure(it)
             }
         )
     }

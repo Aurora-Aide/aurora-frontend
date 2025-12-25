@@ -75,9 +75,7 @@ fun PersonalInfoScreen(
     ) {
         Header(title = "Personal information", isBackVisible = true, onBackClick = onBackClick)
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        //ProfileInitialsBox(initials = "JD")
+        //Spacer(modifier = Modifier.height(20.dp))
 
         Spacer(modifier = Modifier.height(32.dp))
 

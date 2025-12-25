@@ -36,6 +36,7 @@ import com.example.aurora.ui.theme.secondary2
 @Composable
 fun HomeScreen(
     onToProfileClick: () -> Unit,
+    onAddDispenserClick: () -> Unit,
     name: String,
 ) {
 
@@ -45,7 +46,7 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.size(68.dp),
-                onClick = { /* do something */ },
+                onClick = { onAddDispenserClick() },
                 containerColor = baseBlue,
                 contentColor = secondary2,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
