@@ -5,9 +5,9 @@ import com.example.aurora.data.requestBody
 import com.example.aurora.data.sorce.AuthDataSource
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
+import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.profile.LogoutVariables
-import com.example.aurora.features.signup.DispenserVariables
 import com.example.aurora.features.signup.SignupVariables
 
 class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {

@@ -49,5 +49,17 @@ sealed class Routes(val route: String) {
         data object Settings: Routes("${MainRoute.route}/settings") {
             fun NavController.toSettings() = navigate("${MainRoute.route}/settings")
         }
+
+        data object Dispenser: Routes("${MainRoute.route}/dispenser") {
+            fun NavController.toDispenser() = navigate("${MainRoute.route}/dispenser")
+        }
+
+        data object Container: Routes("${MainRoute.route}/container") {
+            fun NavController.toContainer() = navigate("${MainRoute.route}/container")
+        }
+
+        data object Schedule: Routes("${MainRoute.route}/schedule") {
+            fun NavController.toSchedule() = navigate("${MainRoute.route}/schedule")
+        }
     }
 }

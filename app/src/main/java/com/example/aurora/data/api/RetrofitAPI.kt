@@ -7,9 +7,9 @@ import com.example.aurora.data.model.Tokens
 import com.example.aurora.data.model.urls
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
+import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.profile.LogoutVariables
-import com.example.aurora.features.signup.DispenserVariables
 import com.example.aurora.features.signup.SignupVariables
 import retrofit2.Response
 import retrofit2.http.*

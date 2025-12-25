@@ -38,8 +38,8 @@ fun HomeScreen(
     onToProfileClick: () -> Unit,
     onAddDispenserClick: () -> Unit,
     name: String,
+    onToDispenserClick: () -> Unit,
 ) {
-
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -83,7 +83,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Your Containers:",
+                text = "Your Dispensers:",
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -99,11 +99,11 @@ fun HomeScreen(
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.Start
             ) {
-                ContainerBox { }
-                ContainerBox { }
-                ContainerBox { }
-                ContainerBox { }
-                ContainerBox { }
+                ContainerBox { onToDispenserClick() }
+                ContainerBox { onToDispenserClick() }
+                ContainerBox { onToDispenserClick() }
+                ContainerBox { onToDispenserClick() }
+                ContainerBox { onToDispenserClick() }
             }
         }
     }
