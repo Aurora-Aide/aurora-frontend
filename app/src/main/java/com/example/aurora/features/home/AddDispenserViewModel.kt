@@ -52,7 +52,8 @@ class AddDispenserViewModel(private val addDispenserUseCase: AddDispenserUseCase
     private fun isIDValid(): AddDispenserIDErrors {
         return if( _dispenser.value.id.isEmpty()){
             AddDispenserIDErrors.EMPTY_ID
-        } else if (_dispenser.value.id == ""){   // TODO make smth to check if id is valid
+        } else if (!Regex("^[A-Za-z][–-](\\d{4})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])[–-]\\d{4}$")
+            .matches(_dispenser.value.id)){
             AddDispenserIDErrors.INVALID_ID
         } else if(_dispenser.value.id == "") {     // TODO check if this dispenser has already been added
             AddDispenserIDErrors.EXISTING_DISPENSER
@@ -64,7 +65,8 @@ class AddDispenserViewModel(private val addDispenserUseCase: AddDispenserUseCase
     private fun isNameValid(): AddDispenserNameErrors {
         return if( _dispenser.value.name.isEmpty()){
             AddDispenserNameErrors.EMPTY_NAME
-        } else if (_dispenser.value.name.length < 3){   // TODO or the others not only length
+        } else if (!Regex("^[\\p{L}\\p{N} _-]{3,}$")
+                .matches(_dispenser.value.name)){
             AddDispenserNameErrors.INVALID_NAME
         } else if(_dispenser.value.name == ""){   // TODO check for other names
             AddDispenserNameErrors.REPEATING_NAME

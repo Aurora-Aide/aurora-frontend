@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +40,6 @@ import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
-import com.example.aurora.ui.theme.secondary5
 
 
 @Composable

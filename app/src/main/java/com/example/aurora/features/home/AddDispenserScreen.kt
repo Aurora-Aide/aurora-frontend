@@ -87,6 +87,7 @@ fun AddDispenserScreen(
             },
             enabled = dispenser.id.isNotEmpty() && dispenser.name.isNotEmpty()
         )
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -104,7 +105,6 @@ fun Back(
         )
         Spacer(modifier = Modifier.weight(1f))
     }
-
 }
 
 @Composable

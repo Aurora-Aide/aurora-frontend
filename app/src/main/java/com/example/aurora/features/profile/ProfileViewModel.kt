@@ -28,6 +28,8 @@ class ProfileViewModel(private val logoutUseCase: LogoutUseCase, private val lis
     }
 
     fun showHideLogOut(){
+        _showPopUpLogOut.update { value -> value.not() }
+
         viewModelScope.launch{
             logoutUseCase.invoke(_logout.value.refreshToken).fold(
                 onSuccess = {
@@ -41,8 +43,6 @@ class ProfileViewModel(private val logoutUseCase: LogoutUseCase, private val lis
                 }
             )
         }
-        _showPopUpLogOut.update { value -> value.not()  }
-        // delete tokens, backend log out
     }
 
     fun showHideDelete(){
@@ -65,23 +65,4 @@ class ProfileViewModel(private val logoutUseCase: LogoutUseCase, private val lis
             )
         }
     }
-
-//    fun email(text: String) {
-//        _personalInformation.update{
-//            it.copy(email = text)
-//        }
-//    }
-//
-//
-//    fun firstName(text: String) {
-//        _personalInformation.update{
-//            it.copy(firstName = text)
-//        }
-//    }
-//
-//    fun lastName(text: String) {
-//        _personalInformation.update{
-//            it.copy(lastName = text)
-//        }
-//    }
 }
