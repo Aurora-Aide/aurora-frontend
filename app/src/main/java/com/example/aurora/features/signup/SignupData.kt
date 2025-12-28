@@ -13,5 +13,8 @@ data class SignupData (
     val isEmailError: LoginEmailErrors = LoginEmailErrors.NONE,
     val isPasswordError: LoginPasswordErrors = LoginPasswordErrors.NONE,
     val isPasswordRepeatError: LoginPasswordErrors = LoginPasswordErrors.NONE,
+    val isFirstNameError: SignupNamesErrors = SignupNamesErrors.NONE,
+    val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     var isFirstStep: Boolean = true,
+    //val id: String = "",
 )

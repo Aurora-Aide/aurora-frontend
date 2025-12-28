@@ -7,10 +7,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.aurora.features.dispenser.ContainerScreen
+import com.example.aurora.features.dispenser.DispenserScreen
 import com.example.aurora.features.forgotPassword.ForgotPasswordScreen
 import com.example.aurora.features.forgotPassword.ForgotViewModel
 import com.example.aurora.features.google.GoogleScreen
+import com.example.aurora.features.home.AddDispenserScreen
+import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.home.HomeScreen
+import com.example.aurora.features.dispenser.ScheduleScreen
 import com.example.aurora.features.login.LoginScreen
 import com.example.aurora.features.login.LoginViewModel
 import com.example.aurora.features.profile.PersonalInfoScreen
@@ -20,12 +25,16 @@ import com.example.aurora.features.profile.ProfileViewModel
 import com.example.aurora.features.settings.SettingsScreen
 import com.example.aurora.features.signup.SignupScreen
 import com.example.aurora.features.signup.SignupViewModel
+import com.example.aurora.navigation.Routes.MainRoute.AddDispenser.toAddDispenser
+import com.example.aurora.navigation.Routes.MainRoute.Container.toContainer
+import com.example.aurora.navigation.Routes.MainRoute.Dispenser.toDispenser
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
 import com.example.aurora.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.aurora.navigation.Routes.MainRoute.Home.toHome
 import com.example.aurora.navigation.Routes.MainRoute.PersonalInformation.toPersonalInformation
 import com.example.aurora.navigation.Routes.MainRoute.Profile.toProfile
+import com.example.aurora.navigation.Routes.MainRoute.Schedule.toSchedule
 import com.example.aurora.navigation.Routes.MainRoute.Settings.toSettings
 import com.example.aurora.navigation.Routes.MainRoute.SignUp.toSignUp
 import org.koin.androidx.compose.getViewModel
@@ -33,7 +42,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Home.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -43,10 +52,9 @@ fun MainNavigation() {
                 onPasswordChange = { viewModelLogin.password(it) },
                 onLoginClick = { viewModelLogin.validate() },
                 isLoginSuccessful = {
-                    Log.d("TAG", "to home")
+                    Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.toHome()
-
+                    navController.toHome(loginData.firstName)  //TODO id
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
                 onSignUpClick = { navController.toSignUp() },
@@ -78,13 +86,13 @@ fun MainNavigation() {
                 onPasswordChange = { viewModelSignup.password(it) },
                 onFirstNameChange = { viewModelSignup.firstName(it) },
                 onLastNameChange = { viewModelSignup.lastName(it) },
-                onSignupClick = { viewModelSignup.validate() },
+                onContinueClick = { viewModelSignup.validateFirstStep() },
                 isSignupSuccessful = { viewModelSignup.resetSignup() },
-                onToHomeClick = {
+                onCreateAccountClick = {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
-                    viewModelSignup.signup()
-                    navController.toHome()
+                    viewModelSignup.validateSecondStep()
+                    navController.toHome(signupData.firstName) // TODO id
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
@@ -93,8 +101,50 @@ fun MainNavigation() {
                 onTwoClick = {},
             )
         }
-        composable(route = Routes.MainRoute.Home.route) {
-            HomeScreen()
+        composable(route = Routes.MainRoute.Home.route) { navBackStackEntry ->
+            val name = navBackStackEntry.arguments?.getString("name")
+            HomeScreen(
+                onToProfileClick = { navController.toProfile("", "", "", "") },  //TODO use actual data
+                name = name.orEmpty(),
+                onAddDispenserClick = { navController.toAddDispenser() },
+                onToDispenserClick = { navController.toDispenser()},
+            )
+        }
+        composable(route = Routes.MainRoute.AddDispenser.route) {
+            val viewModelAddDispenser = getViewModel<AddDispenserViewModel>()
+            val dispenserData by viewModelAddDispenser.dispenser.collectAsStateWithLifecycle()
+            AddDispenserScreen(
+                dispenser = dispenserData,
+                onIDChange = { viewModelAddDispenser.id(it) },
+                onNameChange = { viewModelAddDispenser.name(it) },
+                onAddDispenserClick = { viewModelAddDispenser.validate() },
+                isAddDispenserSuccessful = {
+                    Log.d("TAG", "add dispenser")
+                    viewModelAddDispenser.resetAdd()
+                    navController.toHome("")
+                },
+                onBackClick = { navController.toHome("")}
+            )
+        }
+        composable(route = Routes.MainRoute.Dispenser.route){
+            DispenserScreen(
+                name = "Name",
+                id = "S-20251225-0001",
+                onBackClick = { navController.toHome("") },
+                onPillClick = { navController.toContainer() },
+                onEditClick = { }
+            )
+        }
+        composable(route = Routes.MainRoute.Container.route){
+            ContainerScreen(
+                name = "Pill1",
+                onBackClick = { navController.toDispenser() },
+                onEditClick = { },
+                onScheduleClick = { navController.toSchedule() }
+            )
+        }
+        composable(route = Routes.MainRoute.Schedule.route){
+            ScheduleScreen()
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()
@@ -109,15 +159,16 @@ fun MainNavigation() {
             ProfileScreen(
                 showPopupLogOut = showHideLogOut,
                 showPopupDelete = showHideDelete,
-                onLogOutClicked = { viewModel.showHideLogOut() }, //log out
-                onDeleteAccountClicked = { viewModel.showHideDelete() },  // delete account
+                onLogOutClicked = { viewModel.showHideLogOut(); navController.toLogIn() },  //log out TODO
+                onDeleteAccountClicked = { navController.toSignUp(); viewModel.showHideDelete() },  // delete account TODO
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
-                onToHomeClick = { navController.toHome() }
+                onToHomeClick = { navController.toHome("name") }, // TODO find id
+                // dispenserData = { viewModel.listDispensers() },
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {

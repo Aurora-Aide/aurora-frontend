@@ -1,16 +1,22 @@
 package com.example.aurora.features.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.aurora.data.model.UserModel
+import androidx.lifecycle.viewModelScope
+import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
+import com.example.aurora.domain.usecase.LogoutUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class ProfileViewModel(/*userModel: UserModel*/): ViewModel() {
+class ProfileViewModel(private val logoutUseCase: LogoutUseCase, private val listDispensersUseCase: ListAllUserDispensersUseCase): ViewModel() {
     private val _showPopUpLogOut = MutableStateFlow(false)
     val showPopUpLogOut = _showPopUpLogOut.asStateFlow()
     private val _showPopUpDelete = MutableStateFlow(false)
     val showPopUpDelete = _showPopUpDelete.asStateFlow()
+    private val _logout = MutableStateFlow(LogoutData())
+    private val _dispenser = MutableStateFlow(DispenserData())
     //private val _personalInformation = userModel
 
     fun showHideLogOutBack() {
@@ -22,30 +28,41 @@ class ProfileViewModel(/*userModel: UserModel*/): ViewModel() {
     }
 
     fun showHideLogOut(){
+        _showPopUpLogOut.update { value -> value.not() }
 
-        // delete tokens, send to log in page, backend log out
+        viewModelScope.launch{
+            logoutUseCase.invoke(_logout.value.refreshToken).fold(
+                onSuccess = {
+                    Log.d("TAG", "log out request")
+                    _logout.update {
+                        it.copy(refreshToken = null.toString())
+                    }
+                },
+                onFailure = {
+
+                }
+            )
+        }
     }
 
     fun showHideDelete(){
+        _showPopUpDelete.update { value -> value.not()  }
         // delete tokens, send to sign up page, backend delete profile
     }
 
-//    fun email(text: String) {
-//        _personalInformation.update{
-//            it.copy(email = text)
-//        }
-//    }
-//
-//
-//    fun firstName(text: String) {
-//        _personalInformation.update{
-//            it.copy(firstName = text)
-//        }
-//    }
-//
-//    fun lastName(text: String) {
-//        _personalInformation.update{
-//            it.copy(lastName = text)
-//        }
-//    }
+    fun listDispensers(){
+        viewModelScope.launch{
+            listDispensersUseCase.invoke(_logout.value.accessToken).fold(
+                onSuccess = { data ->
+                    Log.d("TAG", "List all user dispensers request")
+                    _dispenser.update {
+                        it.copy(id = data.id.toString(), name = data.name)
+                    }
+                },
+                onFailure = {
+
+                }
+            )
+        }
+    }
 }

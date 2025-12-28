@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +40,6 @@ import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
-import com.example.aurora.ui.theme.secondary5
 
 
 @Composable
@@ -253,16 +251,9 @@ fun BottomNavigationBar(
     onToHomeClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()){
-        Image(
-            painter = painterResource(R.drawable.divider_horizontal),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -273,19 +264,6 @@ fun BottomNavigationBar(
                 onClick = { onToHomeClick() }
             )
 
-//            Image(
-//                painter = painterResource(R.drawable.divider_vertical),
-//                contentDescription = null,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-
-//        BottomNavItem(
-//            iconResId = R.drawable.new_report,
-//            label = stringResource(R.string.new_report),
-//            isSelected = false,
-//            onClick = {}
-//        )
-
             BottomNavItem(
                 iconResId = R.drawable.profile,
                 label = stringResource(R.string.profile),
@@ -294,7 +272,6 @@ fun BottomNavigationBar(
             )
         }
     }
-
 }
 
 @Composable

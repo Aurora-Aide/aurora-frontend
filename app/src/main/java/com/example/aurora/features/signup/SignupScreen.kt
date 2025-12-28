@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
@@ -70,8 +71,8 @@ fun SignupScreen(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     //onModelNumChange: (String) -> Unit,
-    onSignupClick: () -> Unit,
-    onToHomeClick: () -> Unit,
+    onContinueClick: () -> Unit,
+    onCreateAccountClick: () -> Unit,
     isSignupSuccessful: () -> Unit,
     onBackClick:() ->Unit,
     onOneClick:() ->Unit,
@@ -82,7 +83,6 @@ fun SignupScreen(
     if(signup.isSignupSuccessful){
         LaunchedEffect(null) {
             isSignupSuccessful()
-            navController.toHome()
         }
     }
 
@@ -121,7 +121,7 @@ fun SignupScreen(
             SignupFooter(
                 onSignupClick = {
                     //if(signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty() && (signup.password == signup.passwordRepeat)){
-                        onSignupClick()
+                        onContinueClick()
                     //} //else {
 //                        if(signup.email.isEmpty()){
 //                            isEmailValid()
@@ -157,9 +157,11 @@ fun SignupScreen(
                     onTwoClick()
                 }
             )
-            LogDispenserFooter(
-                onToHomeClick = { onToHomeClick() },
-                onRegisterDispenserClick = {}, // to be implemented
+            LogNamesFooter(
+                onCreateAccountClick = {
+                    onCreateAccountClick()
+                },
+                enabled = (signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty())
             )
         }
     }
@@ -521,19 +523,20 @@ fun SignupFooter(
 }
 
 @Composable
-fun LogDispenserFooter(
-    onToHomeClick: () -> Unit,
-    onRegisterDispenserClick: () -> Unit,
+fun LogNamesFooter(
+    onCreateAccountClick: () -> Unit,
+    enabled: Boolean
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
-                onToHomeClick()
+                onCreateAccountClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
@@ -543,35 +546,6 @@ fun LogDispenserFooter(
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
                 color = base0
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(
-            onClick = {
-                onRegisterDispenserClick()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = base0),
-            border = BorderStroke(1.dp, primary1)
-
-        ) {
-            Text(
-                text = "Add Dispenser  ",
-                fontSize = FontSize.PARAGRAPH1,
-                fontWeight = FontWeight.PARAGRAPH1M,
-                lineHeight = LineHeight.PARAGRAPH1,
-                color = primary1
-            )
-            Image(
-                painter = painterResource(id = R.drawable.plus),
-                contentDescription = "Aurora",
-                modifier = Modifier
-                    .size(20.dp)
             )
         }
     }
