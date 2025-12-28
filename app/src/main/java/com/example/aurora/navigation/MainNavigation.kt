@@ -86,12 +86,12 @@ fun MainNavigation() {
                 onPasswordChange = { viewModelSignup.password(it) },
                 onFirstNameChange = { viewModelSignup.firstName(it) },
                 onLastNameChange = { viewModelSignup.lastName(it) },
-                onSignupClick = { viewModelSignup.validate() },
+                onContinueClick = { viewModelSignup.validateFirstStep() },
                 isSignupSuccessful = { viewModelSignup.resetSignup() },
-                onToHomeClick = {
+                onCreateAccountClick = {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
-                    viewModelSignup.signup()
+                    viewModelSignup.validateSecondStep()
                     navController.toHome(signupData.firstName) // TODO id
 
                 },
@@ -121,7 +121,7 @@ fun MainNavigation() {
                 isAddDispenserSuccessful = {
                     Log.d("TAG", "add dispenser")
                     viewModelAddDispenser.resetAdd()
-                    navController.toHome("")  //TODO id
+                    navController.toHome("")
                 },
                 onBackClick = { navController.toHome("")}
             )
@@ -168,7 +168,7 @@ fun MainNavigation() {
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
                 onToHomeClick = { navController.toHome("name") }, // TODO find id
-                dispenserData = { viewModel.listDispensers() },
+                // dispenserData = { viewModel.listDispensers() },
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {

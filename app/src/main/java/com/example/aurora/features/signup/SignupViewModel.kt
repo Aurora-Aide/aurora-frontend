@@ -5,6 +5,7 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.R
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.features.login.LoginEmailErrors
 import com.example.aurora.features.login.LoginPasswordErrors
@@ -107,24 +108,68 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
         }
     }
 
-    fun validate(){
+    private fun isNameValid( name: String): SignupNamesErrors {
+        return if(name.isEmpty()){
+            SignupNamesErrors.EMPTY_NAME
+        } else if (!Regex("^[\\p{L}\\p{N} _-]{3,}$")
+                .matches(name)){
+            SignupNamesErrors.INVALID_NAME
+        } else{
+            SignupNamesErrors.NONE
+        }
+    }
+
+    fun validateFirstStep(){
         val emailValid = isEmailValid()
         val passwordValid = isPasswordValid()
         val passwordRepeatValid = passwordsMatch()
 
         if( emailValid == LoginEmailErrors.NONE &&
             passwordValid == LoginPasswordErrors.NONE &&
-            passwordRepeatValid == LoginPasswordErrors.NONE)
+            passwordRepeatValid == LoginPasswordErrors.NONE )
         {
             _signup.update {
-                it.copy(isEmailError = LoginEmailErrors.NONE, isPasswordError = LoginPasswordErrors.NONE, isPasswordRepeatError = LoginPasswordErrors.NONE, isFirstStep = false)
+                it.copy(isEmailError = LoginEmailErrors.NONE,
+                    isPasswordError = LoginPasswordErrors.NONE,
+                    isPasswordRepeatError = LoginPasswordErrors.NONE,
+                    isFirstStep = false)
             }
-            //signup()
         } else{
             _signup.update {
-                it.copy(isEmailError = emailValid, isPasswordError = passwordValid, isPasswordRepeatError = passwordRepeatValid)
+                it.copy(
+                    isEmailError = emailValid,
+                    isPasswordError = passwordValid,
+                    isPasswordRepeatError = passwordRepeatValid
+                )
             }
         }
+    }
+
+    fun validateSecondStep(){
+        val firstNameValid = isNameValid(_signup.value.firstName)
+        val lastNameValid = isNameValid(_signup.value.lastName)
+
+        if (
+            firstNameValid == SignupNamesErrors.NONE &&
+            lastNameValid == SignupNamesErrors.NONE
+        ){
+            _signup.update {
+                it.copy(
+                    isFirstNameError = SignupNamesErrors.NONE,
+                    isLastNameError = SignupNamesErrors.NONE
+                )
+            }
+            signup()
+        } else {
+            _signup.update {
+                it.copy(
+                    isFirstNameError = firstNameValid,
+                    isLastNameError = lastNameValid
+                )
+            }
+        }
+
+
     }
 
     fun onBackClick(){
@@ -132,5 +177,11 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
             it.copy(isFirstStep = true)
         }
     }
+}
+
+enum class SignupNamesErrors(val value: Int? = null){
+    EMPTY_NAME(R.string.error_empty_name),
+    INVALID_NAME(R.string.error_wrong_name),
+    NONE
 }
 
