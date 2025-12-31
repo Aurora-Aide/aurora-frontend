@@ -6,7 +6,6 @@ import com.example.aurora.data.model.UserModel
 
 fun UserModel.toUserEntity(): UserEntity {
     return UserEntity(
-        id = this.id,
         email = this.email,
         firstName = this.firstName,
         lastName = this.lastName,

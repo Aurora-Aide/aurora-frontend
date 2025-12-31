@@ -1,9 +1,7 @@
 package com.example.aurora.navigation
 
 import android.net.Uri
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 
 sealed class Routes(val route: String) {
 
@@ -50,8 +48,8 @@ sealed class Routes(val route: String) {
             fun NavController.toSettings() = navigate("${MainRoute.route}/settings")
         }
 
-        data object Dispenser: Routes("${MainRoute.route}/dispenser") {
-            fun NavController.toDispenser() = navigate("${MainRoute.route}/dispenser")
+        data object Dispenser: Routes("${MainRoute.route}/dispenser?id={id}&name={name}") {
+            fun NavController.toDispenser(id: String, name: String) = navigate("${MainRoute.route}/dispenser?id=$id&name=${Uri.encode(name)}")
         }
 
         data object Container: Routes("${MainRoute.route}/container") {

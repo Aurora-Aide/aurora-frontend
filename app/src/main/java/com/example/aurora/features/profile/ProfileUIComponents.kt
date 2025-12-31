@@ -114,43 +114,6 @@ fun ProfileItem(text: String, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun DispenserItem(text1: String, text2: String, onClick: () -> Unit = {}) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 12.dp)
-            .padding(start = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = text1,
-            color = primary1,
-            fontSize = FontSize.PARAGRAPH1,
-            fontWeight = FontWeight.PARAGRAPH1M
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = text2,
-            color = secondary4,
-            fontSize = FontSize.PARAGRAPH1,
-            fontWeight = FontWeight.PARAGRAPH1M
-        )
-        Image(
-            painter = painterResource(R.drawable.angl_left),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
-    }
-    Image(
-        painter = painterResource(R.drawable.divider_horizontal),
-        contentDescription = null,
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
 fun PersonalInfoItem(text1: String, text2: String) {
     Row(
         modifier = Modifier

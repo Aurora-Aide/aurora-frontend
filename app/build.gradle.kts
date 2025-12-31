@@ -46,6 +46,22 @@ android {
         compose = true
     }
 
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/INDEX.LIST",
+                "META-INF/io.netty.versions.properties",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/LICENSE.md",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/*.kotlin_module"
+            )
+        }
+    }
+
 }
 
 dependencies {
@@ -61,6 +77,8 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
+    implementation(libs.firebase.appdistribution.gradle)
+    implementation(libs.volley)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,4 +99,5 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.okhttp)
     //implementation(libs.appcompat.v7)
+    implementation(libs.androidx.security.crypto)
 }

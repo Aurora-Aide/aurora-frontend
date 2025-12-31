@@ -2,6 +2,7 @@ package com.example.aurora.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -15,6 +16,7 @@ import com.example.aurora.features.google.GoogleScreen
 import com.example.aurora.features.home.AddDispenserScreen
 import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.home.HomeScreen
+import com.example.aurora.features.home.HomeViewModel
 import com.example.aurora.features.dispenser.ScheduleScreen
 import com.example.aurora.features.login.LoginScreen
 import com.example.aurora.features.login.LoginViewModel
@@ -42,7 +44,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Home.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -103,11 +105,19 @@ fun MainNavigation() {
         }
         composable(route = Routes.MainRoute.Home.route) { navBackStackEntry ->
             val name = navBackStackEntry.arguments?.getString("name")
+            val viewModel = getViewModel<HomeViewModel>()
+            val dispensers by viewModel.dispensers.collectAsStateWithLifecycle()
+            
+            LaunchedEffect(Unit) {
+                viewModel.listDispensers()
+            }
+            
             HomeScreen(
                 onToProfileClick = { navController.toProfile("", "", "", "") },  //TODO use actual data
                 name = name.orEmpty(),
                 onAddDispenserClick = { navController.toAddDispenser() },
-                onToDispenserClick = { navController.toDispenser()},
+                onToDispenserClick = { dispenserId, dispenserName -> navController.toDispenser(dispenserId, dispenserName) },
+                dispensers = dispensers,
             )
         }
         composable(route = Routes.MainRoute.AddDispenser.route) {
@@ -126,10 +136,12 @@ fun MainNavigation() {
                 onBackClick = { navController.toHome("")}
             )
         }
-        composable(route = Routes.MainRoute.Dispenser.route){
+        composable(route = Routes.MainRoute.Dispenser.route) { navBackStackEntry ->
+            val dispenserId = navBackStackEntry.arguments?.getString("id") ?: "0"
+            val dispenserName = navBackStackEntry.arguments?.getString("name") ?: ""
             DispenserScreen(
-                name = "Name",
-                id = "S-20251225-0001",
+                name = dispenserName,
+                id = dispenserId,
                 onBackClick = { navController.toHome("") },
                 onPillClick = { navController.toContainer() },
                 onEditClick = { }
@@ -138,7 +150,7 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Container.route){
             ContainerScreen(
                 name = "Pill1",
-                onBackClick = { navController.toDispenser() },
+                onBackClick = { navController.toDispenser("123", "name") },
                 onEditClick = { },
                 onScheduleClick = { navController.toSchedule() }
             )
@@ -156,19 +168,23 @@ fun MainNavigation() {
             val viewModel = getViewModel<ProfileViewModel>()
             val showHideLogOut by viewModel.showPopUpLogOut.collectAsStateWithLifecycle()
             val showHideDelete by viewModel.showPopUpDelete.collectAsStateWithLifecycle()
+            val user by viewModel.personalInfo.collectAsStateWithLifecycle()
+            LaunchedEffect(true) {
+                viewModel.getUser()
+            }
             ProfileScreen(
                 showPopupLogOut = showHideLogOut,
                 showPopupDelete = showHideDelete,
-                onLogOutClicked = { viewModel.showHideLogOut(); navController.toLogIn() },  //log out TODO
-                onDeleteAccountClicked = { navController.toSignUp(); viewModel.showHideDelete() },  // delete account TODO
+                onLogOutClicked = { viewModel.performLogout { navController.toLogIn() } },
+                onDeleteAccountClicked = { viewModel.performDelete { navController.toSignUp()  }},
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
-                onToHomeClick = { navController.toHome("name") }, // TODO find id
-                // dispenserData = { viewModel.listDispensers() },
+                onToHomeClick = {navController.toHome("")},
+                personalInfo = user,
             )
         }
         composable(route = Routes.MainRoute.PersonalInformation.route) {
