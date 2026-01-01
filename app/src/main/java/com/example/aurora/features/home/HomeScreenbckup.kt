@@ -60,10 +60,10 @@ fun HomeScreen(
             BottomAppBar (
                 containerColor = base10,
                 modifier = Modifier.height(64.dp)
-            ){
+        ){
                 BottomNavigationBar(onToProfileClick = onToProfileClick)
-            }
-        },
+        }
+       },
     )
     { paddingValues ->
         Column(
