@@ -87,7 +87,7 @@ fun AddDispenserScreen(
             },
             enabled = dispenser.id.isNotEmpty() && dispenser.name.isNotEmpty()
         )
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.weight(0.3f))
     }
 }
 
@@ -201,6 +201,12 @@ fun AddDispenserFooter(
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
                 color = base0
+            )
+            Image(
+                painter = painterResource(id = R.drawable.add_circle),
+                contentDescription = "add_dispenser",
+                modifier = Modifier
+                    .size(20.dp)
             )
         }
     }

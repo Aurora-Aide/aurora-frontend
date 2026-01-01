@@ -32,13 +32,16 @@ import com.example.aurora.ui.theme.base10
 import com.example.aurora.ui.theme.baseBlue
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.theme.secondary4
+
 
 @Composable
 fun HomeScreen(
     onToProfileClick: () -> Unit,
     onAddDispenserClick: () -> Unit,
     name: String,
-    onToDispenserClick: () -> Unit,
+    onToDispenserClick: (dispenserId: String, dispenserName: String) -> Unit,
+    dispensers: DispensersData,
 ) {
     val scrollState = rememberScrollState()
 
@@ -59,10 +62,10 @@ fun HomeScreen(
             BottomAppBar (
                 containerColor = base10,
                 modifier = Modifier.height(64.dp)
-        ){
+            ){
                 BottomNavigationBar(onToProfileClick = onToProfileClick)
-        }
-       },
+            }
+        },
     )
     { paddingValues ->
         Column(
@@ -92,6 +95,15 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            if(dispensers.dispensers.isEmpty()){
+                Text(
+                    text = "You don't have any dispensers! You can add your dispenser by clicking the + button on the bottom right of this page",
+                    color = secondary4,
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2R,
+                    lineHeight = LineHeight.PARAGRAPH2,
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,20 +111,14 @@ fun HomeScreen(
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.Start
             ) {
-                ContainerBox { onToDispenserClick() }
-                ContainerBox { onToDispenserClick() }
-                ContainerBox { onToDispenserClick() }
-                ContainerBox { onToDispenserClick() }
-                ContainerBox { onToDispenserClick() }
+                dispensers.dispensers.forEach { dispenser ->
+                    ContainerBox(
+                        dispenserName = dispenser.name,
+                        dispenserId = dispenser.id.toString(),
+                        onContainerClick = { onToDispenserClick(dispenser.id.toString(), dispenser.name) }
+                    )
+                }
             }
         }
     }
-
-//    Box(modifier = Modifier
-//            //.padding(bottom = 4.dp)
-//            .fillMaxWidth(),
-//            contentAlignment = Alignment.BottomEnd)
-//        {
-//            BottomNavigationBar(onToProfileClick = onToProfileClick)
-//        }
 }
