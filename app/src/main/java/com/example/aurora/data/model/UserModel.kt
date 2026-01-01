@@ -1,8 +1,9 @@
 package com.example.aurora.data.model
 
-data class UserModel (
-    val id: Int,
+import com.google.gson.annotations.SerializedName
+
+data class UserModel(
     val email: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
+    @SerializedName("first_name") val firstName: String = "",
+    @SerializedName("last_name") val lastName: String = ""
 )

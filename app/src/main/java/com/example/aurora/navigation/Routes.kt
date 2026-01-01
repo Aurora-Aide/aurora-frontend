@@ -1,9 +1,7 @@
 package com.example.aurora.navigation
 
 import android.net.Uri
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 
 sealed class Routes(val route: String) {
 
@@ -33,13 +31,8 @@ sealed class Routes(val route: String) {
             fun NavController.toGoogle() = navigate("${MainRoute.route}/google")
         }
 
-        data object Profile: Routes("${MainRoute.route}/profile?firstName={firstName}&lastName={lastName}&email={email}&id={id}") {
-            fun NavController.toProfile(firstName: String, lastName: String, email: String, id: String)
-            = navigate("${MainRoute.route}/profile" +
-                    "?name=${Uri.encode(firstName)}" +
-                    "&lastName=$lastName" +
-                    "&email=$email" +
-                    "&id=$id")
+        data object Profile: Routes("${MainRoute.route}/profile") {
+            fun NavController.toProfile() = navigate("${MainRoute.route}/profile")
         }
 
         data object PersonalInformation: Routes("${MainRoute.route}/personalInformation") {
@@ -50,8 +43,8 @@ sealed class Routes(val route: String) {
             fun NavController.toSettings() = navigate("${MainRoute.route}/settings")
         }
 
-        data object Dispenser: Routes("${MainRoute.route}/dispenser") {
-            fun NavController.toDispenser() = navigate("${MainRoute.route}/dispenser")
+        data object Dispenser: Routes("${MainRoute.route}/dispenser?id={id}&name={name}") {
+            fun NavController.toDispenser(id: String, name: String) = navigate("${MainRoute.route}/dispenser?id=$id&name=${Uri.encode(name)}")
         }
 
         data object Container: Routes("${MainRoute.route}/container") {

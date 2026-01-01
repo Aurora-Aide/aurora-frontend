@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,13 +28,12 @@ import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.baseBlue
-import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
-import com.example.aurora.ui.theme.secondary5
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun ContainerBox(
+    dispenserName: String,
+    dispenserId: String,
     onContainerClick: () -> Unit,
 ) {
     Box(
@@ -51,7 +49,7 @@ fun ContainerBox(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Absolute.Left,
             verticalAlignment = Alignment.CenterVertically
         ){
             Image(
@@ -60,14 +58,25 @@ fun ContainerBox(
                 modifier = Modifier
                     .height(172.dp)
             )
-            Text(
-                text = "This is your container",
-                fontWeight = FontWeight.BODY2,
-                fontSize = FontSize.BODY2,
-                lineHeight = LineHeight.BODY2,
-                color = secondary2
-
-            )
+            Spacer(modifier = Modifier.width(44.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = dispenserName,
+                    fontWeight = FontWeight.BODY2,
+                    fontSize = FontSize.BODY2,
+                    lineHeight = LineHeight.BODY2,
+                    color = secondary2
+                )
+                Text(
+                    text = "ID: $dispenserId",
+                    fontWeight = FontWeight.PARAGRAPH2M,
+                    fontSize = FontSize.PARAGRAPH2,
+                    lineHeight = LineHeight.PARAGRAPH2,
+                    color = secondary2
+                )
+            }
         }
     }
     Spacer(modifier = Modifier.height(16.dp))

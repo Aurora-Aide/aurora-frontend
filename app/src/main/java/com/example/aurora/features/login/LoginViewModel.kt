@@ -29,13 +29,17 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         }
     }
 
-    fun login(){
-        viewModelScope.launch{
+    fun login() {
+        viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
-                onSuccess = { userEntity ->
-                    Log.d("TAG", "login request")
+                onSuccess = { result ->
+                    // Tokens are already saved in AuthRepositoryImpl, no need to save again
                     _login.update {
-                        it.copy(isLoginSuccessful = true, firstName = userEntity.firstName, lastName = userEntity.lastName)
+                        it.copy(
+                            isLoginSuccessful = true,
+                            firstName = result.firstName,
+                            lastName = result.lastName
+                        )
                     }
                 },
                 onFailure = {
