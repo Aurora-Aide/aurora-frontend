@@ -7,8 +7,9 @@ import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
-import com.example.aurora.features.profile.LogoutVariables
 import com.example.aurora.features.signup.SignupVariables
+import com.example.aurora.data.model.UpdateNamesRequest
+import com.example.aurora.data.model.DeleteDispenserResponse
 
 class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     override suspend fun login(email: String, password: String): Result<Tokens> {
@@ -19,25 +20,55 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.signup(SignupVariables(email, password, firstName, lastName)))
     }
 
-
     override suspend fun forgotPass(email: String): Result<Unit> {
         return requestBody(retrofit.forgotPass(ForgotPassVariables(email)))
     }
 
-    override suspend fun resetPass(password: String, token: String): Result<ForgotPass> {
-        return requestBody(retrofit.resetPass(ResetPassVariables(password, token)))
+    override suspend fun resetPass(password: String): Result<ForgotPass> {
+        return requestBody(retrofit.resetPass(ResetPassVariables(password)))
     }
 
-    override suspend fun logout(refreshToken: String): Result<Logout> {
-        return requestBody(retrofit.logout(LogoutVariables(refreshToken))) //token
+    override suspend fun logout(refreshToken: Refresh): Result<Logout> {
+        return try {
+            requestBody(retrofit.logout(refreshToken))
+        } catch (e: java.net.ProtocolException) {
+            // Handle HTTP 205 with body (backend bug, but logout succeeds)
+            // HTTP 205 means "Reset Content" - action succeeded
+            if (e.message?.contains("HTTP 205") == true) {
+                Result.success(Logout(message = "Logged out successfully"))
+            } else {
+                Result.failure(e)
+            }
+        }
     }
 
-    override suspend fun listAllUserDispensers(accessToken: String): Result<Dispensers> {
-        return requestBody(retrofit.listAllUserDispensers(LogoutVariables(accessToken)))  //token
+    override suspend fun listAllUserDispensers(): Result<Dispensers> {
+        return requestBody(retrofit.listAllUserDispensers()).map { list ->
+            Dispensers(dispensers = list)
+        }
     }
 
+    override suspend fun getUser(): Result<UserModel> {
+        return requestBody(retrofit.getUser())
+    }
 
-    override suspend fun addDispenser(modelNumber: String, name: String, accessToken: String): Result<Dispensers> {
-        return requestBody(retrofit.registerDispenser(DispenserVariables(modelNumber, name, accessToken)))
+    override suspend fun refreshToken(refreshToken: Refresh): Result<AccessToken> {
+        return requestBody(retrofit.refreshToken(refreshToken))
+    }
+
+    override suspend fun addDispenser(modelNumber: String, name: String, accessToken: String): Result<Dispenser> {
+        return requestBody(retrofit.registerDispenser(DispenserVariables(modelNumber, name)))
+    }
+
+    override suspend fun deleteUser(email: String): Result<DeleteUserResponse> {
+        return requestBody(retrofit.deleteUser(DeleteUserRequest(email)))
+    }
+
+    override suspend fun updateNames(firstName: String?, lastName: String?): Result<UserModel> {
+        return requestBody(retrofit.updateNames(UpdateNamesRequest(firstName, lastName)))
+    }
+
+    override suspend fun deleteDispenser(name: String): Result<DeleteDispenserResponse> {
+        return requestBody(retrofit.deleteDispenser(name))
     }
 }

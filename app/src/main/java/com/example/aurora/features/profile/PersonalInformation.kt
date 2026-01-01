@@ -1,5 +1,6 @@
 package com.example.aurora.features.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +24,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -58,12 +61,9 @@ import com.example.aurora.ui.theme.secondary2
 @Composable
 fun PersonalInfoScreen(
     personalInformationData: PersonalInformationData,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
-    onDeleteAccountClick: () -> Unit,
-    onPasswordVisibilityChange: () -> Unit,
+    onUpdateNamesClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     Column(
@@ -73,24 +73,24 @@ fun PersonalInfoScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Header(title = "Personal information", isBackVisible = true, onBackClick = onBackClick)
+        Back(onBackClick)
 
-        //Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Header(title = "Change your name/s:")
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         TextField(
             value = personalInformationData.firstName,
             onValueChange = onFirstNameChange,
             label = "First Name",
-            placeholder = "First Name",
+            placeholder = personalInformationData.firstName,
             errorText = "Error",
             error = false,
             trailingIcon = {
                 IconButton(
-                    onClick = {
-                        //onPasswordVisibilityChange()
-                    }
+                    onClick = {}
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.pen),
@@ -105,16 +105,14 @@ fun PersonalInfoScreen(
         TextField(
             value = personalInformationData.lastName,
             onValueChange = onLastNameChange,
-            label = "Last Name",
-            placeholder = "Last Name",
+            label = "Last name",
+            placeholder = personalInformationData.lastName,
             errorText = "Error",
             error = false,
             trailingIcon = {
                 IconButton(
-                    onClick = {
-                       //onPasswordVisibilityChange()
-                    }
-                ) {
+                    onClick = {}
+                ){
                     Image(
                         painter = painterResource(id = R.drawable.pen),
                         contentDescription = "pen",
@@ -123,147 +121,34 @@ fun PersonalInfoScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
-        TextField(
-            value = personalInformationData.email,
-            label = "Email",
-            error = false,
-            placeholder = "Email",
-            onValueChange = onEmailChange,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            errorText = "Error",
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        //onPasswordVisibilityChange()
-                    }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.pen),
-                        contentDescription = "pen",
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-//        var isVisible by remember { mutableStateOf(false) }
-//
-//        TextField(
-//            value = personalInformationData.password,
-//            label = "Password",
-//            error = false,
-//            placeholder = "Password",
-//            onValueChange = onPasswordChange,
-//            visualTransformation = if (isVisible) VisualTransformation.None
-//            else PasswordVisualTransformation('\u002A'),
-//            keyboardOptions = KeyboardOptions(
-//                keyboardType = KeyboardType.Password,
-//                imeAction = ImeAction.Go
-//            ),
-//            trailingIcon = {
-//                IconButton(
-//                    onClick = {
-//                        isVisible = !isVisible
-//                    }
-//                ) {
-//                    Image(
-//                        imageVector = if (isVisible) Icons.Filled.Visibility
-//                        else Icons.Filled.VisibilityOff,
-//                        contentDescription = if (isVisible) "Hide password"
-//                        else "Show password"
-//                    )
-//                }
-//            },
-//            errorText = "Error"
-//        )
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Row(
+        Button(
+            onClick = {
+                onUpdateNamesClick()
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = functionalError,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clickable {
-                    onDeleteAccountClick()
-                }
-                .padding(vertical = 12.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .height(52.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = base0),
+            border = BorderStroke(1.dp, primary1)
+
         ) {
             Text(
-                text = stringResource(R.string.delete_account),
-                color = functionalError,
+                text = "Change Names  ",
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M,
                 lineHeight = LineHeight.PARAGRAPH2,
+                color = primary1
             )
-            Spacer(modifier = Modifier.width(10.dp))
             Image(
-                painter = painterResource(id = R.drawable.delete),
-                contentDescription = "delete"
+                painter = painterResource(id = R.drawable.upload),
+                contentDescription = "update_names",
+                modifier = Modifier
+                    .size(20.dp)
             )
         }
+        Spacer(modifier = Modifier.weight(0.3f))
     }
 }
-
-//@Composable
-//fun ProfileInitialsBox(
-//    initials: String,
-//    modifier: Modifier = Modifier,
-//    onEditClick: () -> Unit = {}
-//) {
-//    Box(modifier = modifier.size(80.dp)) {
-//        Box(
-//            modifier = Modifier
-//                .size(80.dp)
-//                .clip(RoundedCornerShape(16.dp))
-//                .background(primary2),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Text(
-//                text = initials,
-//                fontSize = 32.sp,
-//                fontWeight = Bold,
-//                color = secondary2
-//            )
-//        }
-//
-//        Box(
-//            modifier = Modifier
-//                .size(28.dp)
-//                .align(Alignment.BottomEnd)
-//                .clip(RoundedCornerShape(8.dp))
-//                .background(base0),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Box(
-//                Modifier
-//                    .size(26.dp)
-//                    .align(Alignment.BottomEnd)
-//                    .clip(RoundedCornerShape(8.dp))
-//                    .background(primary1)
-//            ) {
-//                IconButton(
-//                    onClick = onEditClick,
-//                    modifier = Modifier.fillMaxSize()
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Edit,
-//                        contentDescription = painterResource(R.drawable.pen).toString(),
-//                        tint = base0,
-//                        modifier = Modifier.size(16.dp)
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
