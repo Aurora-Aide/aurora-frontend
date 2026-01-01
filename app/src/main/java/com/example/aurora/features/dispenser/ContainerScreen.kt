@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -22,8 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
-import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
+import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.primary1
 
 @Composable
@@ -46,10 +45,11 @@ fun ContainerScreen(
                 .padding(vertical = 16.dp, horizontal = 16.dp)
                 .verticalScroll(scrollState)
         ) {
-            ContainerHeader(
-                onBackClick = onBackClick,
+            DispenserHeader(
                 name = name,
-                onEditClick = onEditClick
+                id = "",
+                onBackClick = onBackClick,
+                onEditClick = onEditClick,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Schedule( onScheduleClick )
@@ -80,48 +80,6 @@ fun Schedule(onClick: () -> Unit = {}) {
             contentDescription = null,
             modifier = Modifier.size(20.dp)
         )
-    }
-}
-
-@Composable
-fun ContainerHeader(
-    onBackClick: () -> Unit,
-    name: String,
-    onEditClick: () -> Unit,
-) {
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row {
-            Image(
-                painter = painterResource(id = R.drawable.backarrow),
-                contentDescription = "back",
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable { onBackClick() }
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = name,
-                fontSize = FontSize.HEADING3,
-                fontWeight = FontWeight.HEADING3,
-                lineHeight = LineHeight.HEADING3,
-                color = primary1
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(R.drawable.pen),
-                contentDescription = "pen",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onEditClick() }
-            )
-        }
     }
 }
 
