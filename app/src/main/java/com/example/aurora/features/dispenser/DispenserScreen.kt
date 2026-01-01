@@ -1,9 +1,10 @@
 package com.example.aurora.features.dispenser
 
-import androidx.compose.animation.animateBounds
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,201 +14,321 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aurora.R
+import com.example.aurora.features.profile.LogoutPopup
 import com.example.aurora.ui.theme.FontSize
-import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.FontWeight
+import com.example.aurora.ui.theme.LineHeight
+import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary4
 
 @Composable
 fun DispenserScreen(
+    viewModel: DispenserViewModel,
     name: String,
     id: String,
     onPillClick: () -> Unit,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 )
 {
-    val scrollState = rememberScrollState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showDeleteConfirm by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        Arrangement.Center
+    androidx.compose.runtime.LaunchedEffect(name, id) {
+        viewModel.loadDispenser(id, name)
+    }
 
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            DispenserTopBar(onBackClick = onBackClick)
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            HeaderCard(
+                uiState = uiState,
+                onEditClick = onEditClick,
+                onDeleteClick = { showDeleteConfirm = true },
+                actionsEnabled = !uiState.isDeleting
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ContentArea(
+                uiState = uiState,
+                onPillClick = onPillClick
+            )
+        }
+    }
+
+    if (showDeleteConfirm) {
+        LogoutPopup(
+            onDismiss = { showDeleteConfirm = false },
+            onConfirmLogout = {
+                showDeleteConfirm = false
+                onDeleteClick()
+            },
+            title = "Delete dispenser",
+            caption = "Are you sure you want to delete this dispenser?",
+            buttonText = "Delete"
+        )
+    }
+}
+
+@Composable
+fun HeaderCard(
+    uiState: DispenserUiState,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    actionsEnabled: Boolean
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFD)),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-                .verticalScroll(scrollState)
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            DispenserHeader(
-                name = name,
-                id = id,
-                onBackClick = onBackClick,
-                onEditClick = onEditClick,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = uiState.name,
+                        fontSize = FontSize.HEADING3,
+                        fontWeight = FontWeight.HEADING3,
+                        lineHeight = LineHeight.HEADING3,
+                        color = primary1
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "ID: ${uiState.id}",
+                        fontSize = FontSize.PARAGRAPH2,
+                        fontWeight = FontWeight.PARAGRAPH2M,
+                        lineHeight = LineHeight.PARAGRAPH2,
+                        color = primary1
+                    )
+                }
+            }
 
-            PillItem("Pill1", onPillClick)
-            PillItem("Pill2", onPillClick)
-            PillItem("Pill3", onPillClick)
-            PillItem("Pill4", onPillClick)
-            PillItem("Pill5", onPillClick)
-            PillItem("Pill6", onPillClick)
-            PillItem("Pill7", onPillClick)
-            PillItem("Pill8", onPillClick)
-            PillItem("Pill9", onPillClick)
-            PillItem("Pill10", onPillClick)
-            PillItem("Pill11", onPillClick)
-            PillItem("Pill12", onPillClick)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ActionChip(
+                    iconRes = R.drawable.pen,
+                    label = "Edit",
+                    onClick = onEditClick,
+                    enabled = actionsEnabled
+                )
+                ActionChip(
+                    iconRes = R.drawable.delete,
+                    label = if (actionsEnabled) "Delete" else "Deleting...",
+                    onClick = onDeleteClick,
+                    enabled = actionsEnabled,
+                    isDestructive = true
+                )
+            }
         }
     }
 }
 
 @Composable
-fun DispenserHeader(
-    onBackClick: () -> Unit,
-    name: String,
-    id: String,
-    onEditClick: () -> Unit,
-){
+fun ContentArea(
+    uiState: DispenserUiState,
+    onPillClick: () -> Unit
+) {
+    when {
+        uiState.isLoading -> {
+            LoadingPlaceholderList()
+        }
 
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+        uiState.errorMessage != null -> {
+            ErrorState(message = uiState.errorMessage)
+        }
+
+        uiState.containers.isEmpty() -> {
+            EmptyState()
+        }
+
+        else -> {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(uiState.containers) { container ->
+                    ContainerRow(
+                        title = container.title,
+                        subtitle = container.subtitle,
+                        status = container.status,
+                        onClick = onPillClick
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ContainerRow(
+    title: String,
+    subtitle: String?,
+    status: DispenserStatus,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Back(onBackClick)
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(){
-            //TODO make it actually editable
-            Text(
-                text = name,
-                fontSize = FontSize.HEADING3,
-                fontWeight = FontWeight.HEADING3,
-                lineHeight = LineHeight.HEADING3,
-                color = primary1
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    color = primary1,
+                    fontSize = FontSize.PARAGRAPH1,
+                    fontWeight = FontWeight.PARAGRAPH1M
+                )
+                subtitle?.let {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = it,
+                        color = secondary4,
+                        fontSize = FontSize.PARAGRAPH2,
+                        fontWeight = FontWeight.PARAGRAPH2M
+                    )
+                }
+            }
             Image(
-                painter = painterResource(R.drawable.pen),
-                contentDescription = "pen",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onEditClick() }
+                painter = painterResource(R.drawable.angl_left),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
             )
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "ID: $id",
-            fontSize = FontSize.PARAGRAPH2,
-            fontWeight = FontWeight.PARAGRAPH2M,
-            lineHeight = LineHeight.PARAGRAPH2,
-            color = primary1
-        )
     }
 }
 
-
-//@Composable
-//fun EditableHeading(
-//    heading: String,
-//    isEditing: Boolean,
-//    draft: String,
-//    onEditClick: () -> Unit,
-//    onDraftChange: (String) -> Unit,
-//    onSaveClick: () -> Unit,
-//    onCancelClick: () -> Unit,
-//) {
-//    Row(verticalAlignment = Alignment.CenterVertically) {
-//        if (!isEditing) {
-//            Text(
-//                text = heading,
-//
-//                fontSize = FontSize.HEADING3,
-//                fontWeight = FontWeight.HEADING3,
-//                lineHeight = LineHeight.HEADING3,
-//                color = primary1,
-//                modifier = Modifier.weight(1f)
-//            )
-//            Image(
-//                painter = painterResource(R.drawable.pen),
-//                contentDescription = "pen",
-//                modifier = Modifier
-//                    .size(20.dp)
-//                    .clickable { onEditClick() }
-//            )
-//        } else {
-//            OutlinedTextField(
-//                value = draft,
-//                onValueChange = onDraftChange,
-//                singleLine = true,
-//                modifier = Modifier.weight(1f)
-//            )
-//            IconButton(onClick = onSaveClick) {
-//                Icon(Icons.Default.Check, contentDescription = "Save")
-//            }
-//            IconButton(onClick = onCancelClick) {
-//                Icon(Icons.Default.Close, contentDescription = "Cancel")
-//            }
-//        }
-//    }
-//}
-
+@Composable
+fun LoadingPlaceholderList() {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        repeat(3) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Color(0xFFE8EEF5))
+            )
+        }
+    }
+}
 
 @Composable
-fun PillItem(text: String, onClick: () -> Unit = {}) {
+fun EmptyState() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F6FA))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "No containers yet",
+                color = primary1,
+                fontSize = FontSize.PARAGRAPH1,
+                fontWeight = FontWeight.PARAGRAPH1M
+            )
+            Text(
+                text = "Add containers to manage schedules and pills for this dispenser.",
+                color = secondary4,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M
+            )
+        }
+    }
+}
+
+@Composable
+fun ErrorState(message: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1F0)),
+        shape = RoundedCornerShape(14.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Something went wrong",
+                color = functionalError,
+                fontSize = FontSize.PARAGRAPH1,
+                fontWeight = FontWeight.PARAGRAPH1M
+            )
+            Text(
+                text = message,
+                color = functionalError,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M
+            )
+        }
+    }
+}
+
+@Composable
+fun DispenserTopBar(onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 12.dp)
-            .padding(start = 12.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Start
     ) {
-        Text(
-            text = text,
-            color = primary1,
-            fontSize = FontSize.PARAGRAPH1,
-            fontWeight = FontWeight.PARAGRAPH1M
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = "Edit/View",
-            color = secondary4,
-            fontSize = FontSize.PARAGRAPH1,
-            fontWeight = FontWeight.PARAGRAPH1M
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Image(
-            painter = painterResource(R.drawable.angl_left),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
-    }
-    Image(
-        painter = painterResource(R.drawable.divider_horizontal),
-        contentDescription = null,
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
-fun Back(
-    onBackClick:() -> Unit,
-){
-    Row{
         Image(
             painter = painterResource(id = R.drawable.backarrow),
             contentDescription = "back",
@@ -215,7 +336,69 @@ fun Back(
                 .size(28.dp)
                 .clickable { onBackClick() }
         )
-        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun ActionChip(
+    iconRes: Int,
+    label: String,
+    onClick: () -> Unit,
+    enabled: Boolean,
+    isDestructive: Boolean = false
+) {
+    val background = if (isDestructive) Color(0xFFFFF4F2) else Color(0xFFEAF2FF)
+    val contentColor = if (isDestructive) functionalError else primary1
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(background)
+            .clickable(enabled = enabled) { onClick() }
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = iconRes),
+            contentDescription = label,
+            modifier = Modifier.size(18.dp)
+        )
+        Text(
+            text = label,
+            color = contentColor,
+            fontSize = FontSize.PARAGRAPH2,
+            fontWeight = FontWeight.PARAGRAPH2M
+        )
+    }
+}
+
+@Composable
+fun StatusBadge(status: DispenserStatus) {
+    val (text, color) = when (status) {
+        DispenserStatus.Online -> "Online" to Color(0xFF22C55E)
+        DispenserStatus.Offline -> "Offline" to functionalError
+        DispenserStatus.Unknown -> "Unknown" to secondary4
+    }
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(color.copy(alpha = 0.12f))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            color = color,
+            fontSize = FontSize.PARAGRAPH2,
+            fontWeight = FontWeight.PARAGRAPH2M
+        )
     }
 }
 

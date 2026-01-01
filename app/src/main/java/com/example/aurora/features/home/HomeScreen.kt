@@ -13,15 +13,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.aurora.features.login.LoginData
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.FontWeight
@@ -29,6 +32,8 @@ import com.example.aurora.ui.theme.base10
 import com.example.aurora.ui.theme.baseBlue
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.theme.secondary4
+
 
 @Composable
 fun HomeScreen(
@@ -36,7 +41,7 @@ fun HomeScreen(
     onAddDispenserClick: () -> Unit,
     name: String,
     onToDispenserClick: (dispenserId: String, dispenserName: String) -> Unit,
-    dispensers: com.example.aurora.features.profile.DispensersData,
+    dispensers: DispensersData,
 ) {
     val scrollState = rememberScrollState()
 
@@ -57,10 +62,10 @@ fun HomeScreen(
             BottomAppBar (
                 containerColor = base10,
                 modifier = Modifier.height(64.dp)
-        ){
+            ){
                 BottomNavigationBar(onToProfileClick = onToProfileClick)
-        }
-       },
+            }
+        },
     )
     { paddingValues ->
         Column(
@@ -81,7 +86,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Your Dispenser:",
+                text = "Your Dispensers:",
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -90,6 +95,15 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            if(dispensers.dispensers.isEmpty()){
+                Text(
+                    text = "You don't have any dispensers! You can add your dispenser by clicking the + button on the bottom right of this page",
+                    color = secondary4,
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2R,
+                    lineHeight = LineHeight.PARAGRAPH2,
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
