@@ -7,12 +7,14 @@ import com.example.aurora.data.entity.ForgotPassEntity
 import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.DeleteUserEntity
 import com.example.aurora.data.entity.UserEntity
+import com.example.aurora.data.entity.DeleteDispenserEntity
 import com.example.aurora.data.mapper.toDispenserMapper
 import com.example.aurora.data.mapper.toDispensersMapper
 import com.example.aurora.data.mapper.toForgotPassMapper
 import com.example.aurora.data.mapper.toLogoutMapper
 import com.example.aurora.data.mapper.toDeleteUserMapper
 import com.example.aurora.data.mapper.toUserEntity
+import com.example.aurora.data.mapper.toDeleteDispenserMapper
 import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.sorce.AuthDataSource
 
@@ -115,8 +117,34 @@ class AuthRepositoryImpl(
 
     override suspend fun deleteUser(email: String): Result<DeleteUserEntity> {
         return data.deleteUser(email).fold(
-            onSuccess = { msg -> Result.success(msg.toDeleteUserMapper()) },
-            onFailure = { Result.failure(it) }
+            onSuccess = { 
+                msg -> Result.success(msg.toDeleteUserMapper())
+             },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun updateNames(firstName: String?, lastName: String?): Result<UserEntity> {
+        return data.updateNames(firstName, lastName).fold(
+            onSuccess = { 
+                user -> Result.success(user.toUserEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun deleteDispenser(name: String): Result<DeleteDispenserEntity> {
+        return data.deleteDispenser(name).fold(
+            onSuccess = {
+                 msg -> Result.success(msg.toDeleteDispenserMapper())
+                 },
+            onFailure = { 
+                Result.failure(it) 
+            }
         )
     }
 }

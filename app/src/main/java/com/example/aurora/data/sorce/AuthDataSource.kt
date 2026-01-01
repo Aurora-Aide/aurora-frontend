@@ -9,6 +9,8 @@ import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.model.Tokens
 import com.example.aurora.data.model.UserModel
 import com.example.aurora.data.model.DeleteUserResponse
+import com.example.aurora.data.model.UpdateNamesRequest
+import com.example.aurora.data.model.DeleteDispenserResponse
 
 interface AuthDataSource {
     suspend fun login(email: String, password: String): Result<Tokens>
@@ -21,4 +23,6 @@ interface AuthDataSource {
     suspend fun getUser(): Result<UserModel>
     suspend fun refreshToken(refreshToken: Refresh): Result<AccessToken>
     suspend fun deleteUser(email: String): Result<DeleteUserResponse>
+    suspend fun updateNames(firstName: String?, lastName: String?): Result<UserModel>
+    suspend fun deleteDispenser(name: String): Result<DeleteDispenserResponse>
 }

@@ -31,13 +31,8 @@ sealed class Routes(val route: String) {
             fun NavController.toGoogle() = navigate("${MainRoute.route}/google")
         }
 
-        data object Profile: Routes("${MainRoute.route}/profile?firstName={firstName}&lastName={lastName}&email={email}&id={id}") {
-            fun NavController.toProfile(firstName: String, lastName: String, email: String, id: String)
-            = navigate("${MainRoute.route}/profile" +
-                    "?name=${Uri.encode(firstName)}" +
-                    "&lastName=$lastName" +
-                    "&email=$email" +
-                    "&id=$id")
+        data object Profile: Routes("${MainRoute.route}/profile") {
+            fun NavController.toProfile() = navigate("${MainRoute.route}/profile")
         }
 
         data object PersonalInformation: Routes("${MainRoute.route}/personalInformation") {

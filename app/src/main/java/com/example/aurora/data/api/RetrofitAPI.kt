@@ -11,16 +11,21 @@ import com.example.aurora.data.model.DeleteUserRequest
 import com.example.aurora.data.model.DeleteUserResponse
 import com.example.aurora.data.model.UserModel
 import com.example.aurora.data.model.urls
+import com.example.aurora.data.model.DeleteDispenserResponse
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.signup.SignupVariables
+import com.example.aurora.data.model.UpdateNamesRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
+import retrofit2.http.PATCH
+import retrofit2.http.DELETE
+import retrofit2.http.Path
 
 interface RetrofitAPI {
 
@@ -43,6 +48,12 @@ interface RetrofitAPI {
 
     @HTTP(method = "DELETE", path = urls.deleteUserURL, hasBody = true)
     suspend fun deleteUser(@Body dataModel: DeleteUserRequest): Response<DeleteUserResponse>
+
+    @PATCH(urls.updateNamesURL)
+    suspend fun updateNames(@Body dataModel: UpdateNamesRequest): Response<UserModel>
+
+    @DELETE("${urls.deleteDispenserURL}{name}/")
+    suspend fun deleteDispenser(@Path("name") name: String): Response<DeleteDispenserResponse>
 
     // dispensers
     @GET(urls.listAllUserDispensersURL)

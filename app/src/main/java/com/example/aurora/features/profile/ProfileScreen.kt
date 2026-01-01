@@ -65,7 +65,7 @@ fun ProfileScreen(
                     .verticalScroll(scrollState)
 
             ) {
-                Header(isNotificationsVisible = false, title = "Profile")
+                Header(title = "Profile")
 
                 Spacer(modifier = Modifier.height(16.dp))
 

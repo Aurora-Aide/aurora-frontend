@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.aurora.features.dispenser.ContainerScreen
 import com.example.aurora.features.dispenser.DispenserScreen
+import com.example.aurora.features.dispenser.DispenserViewModel
 import com.example.aurora.features.forgotPassword.ForgotPasswordScreen
 import com.example.aurora.features.forgotPassword.ForgotViewModel
 import com.example.aurora.features.google.GoogleScreen
@@ -44,7 +45,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Routes.MainRoute.Profile.route) {
+    NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
             val loginData by viewModelLogin.login.collectAsStateWithLifecycle()
@@ -113,7 +114,7 @@ fun MainNavigation() {
             }
             
             HomeScreen(
-                onToProfileClick = { navController.toProfile("", "", "", "") },  //TODO use actual data
+                onToProfileClick = { navController.toProfile() },  //TODO use actual data
                 name = name.orEmpty(),
                 onAddDispenserClick = { navController.toAddDispenser() },
                 onToDispenserClick = { dispenserId, dispenserName -> navController.toDispenser(dispenserId, dispenserName) },
@@ -139,18 +140,26 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.Dispenser.route) { navBackStackEntry ->
             val dispenserId = navBackStackEntry.arguments?.getString("id") ?: "0"
             val dispenserName = navBackStackEntry.arguments?.getString("name") ?: ""
+            val dispenserViewModel = getViewModel<DispenserViewModel>()
             DispenserScreen(
+                viewModel = dispenserViewModel,
                 name = dispenserName,
                 id = dispenserId,
                 onBackClick = { navController.toHome("") },
                 onPillClick = { navController.toContainer() },
-                onEditClick = { }
+                onEditClick = { },
+                onDeleteClick = {
+                    dispenserViewModel.deleteDispenser(
+                        dispenserName,
+                        onSuccess = { navController.toHome("") }
+                    )
+                }
             )
         }
         composable(route = Routes.MainRoute.Container.route){
             ContainerScreen(
                 name = "Pill1",
-                onBackClick = { navController.toDispenser("123", "name") },
+                onBackClick = { navController.navigateUp() },
                 onEditClick = { },
                 onScheduleClick = { navController.toSchedule() }
             )
@@ -193,13 +202,10 @@ fun MainNavigation() {
 
             PersonalInfoScreen(
                 personalInformationData = personalInformationData,
-                onEmailChange = { viewModel.email(it) },
-                onPasswordChange = { viewModel.password(it) },
                 onLastNameChange = { viewModel.lastName(it) },
                 onFirstNameChange = { viewModel.firstName(it) },
-                onDeleteAccountClick = {},
-                onPasswordVisibilityChange = { viewModel.isPasswordVisible() },
-                onBackClick = { navController.navigateUp() }
+                onBackClick = { navController.navigateUp() },
+                onUpdateNamesClick = { viewModel.updateNames { navController.toProfile() }}
             )
         }
     }

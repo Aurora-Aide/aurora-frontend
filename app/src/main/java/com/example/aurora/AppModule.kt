@@ -7,6 +7,8 @@ import com.example.aurora.domain.usecase.ForgotPassUseCase
 import com.example.aurora.domain.usecase.GetUserUseCase
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
 import com.example.aurora.domain.usecase.DeleteUserUseCase
+import com.example.aurora.domain.usecase.UpdateNamesUseCase
+import com.example.aurora.domain.usecase.DeleteDispenserUseCase
 import com.example.aurora.domain.usecase.LoginUseCase
 import com.example.aurora.domain.usecase.LogoutUseCase
 import com.example.aurora.domain.usecase.ResetPassUseCase
@@ -17,6 +19,7 @@ import com.example.aurora.features.home.HomeViewModel
 import com.example.aurora.features.login.LoginViewModel
 import com.example.aurora.features.profile.PersonalInformationViewModel
 import com.example.aurora.features.profile.ProfileViewModel
+import com.example.aurora.features.dispenser.DispenserViewModel
 import com.example.aurora.features.signup.SignupViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -31,7 +34,7 @@ val appModule = module {
     }
 
     viewModel {
-        PersonalInformationViewModel()
+        PersonalInformationViewModel(get(), get())
     }
 
     viewModel {
@@ -48,6 +51,10 @@ val appModule = module {
 
     viewModel {
         HomeViewModel(get())
+    }
+
+    viewModel {
+        DispenserViewModel(get(), get())
     }
 
 
@@ -81,6 +88,14 @@ val appModule = module {
 
     factory{
         DeleteUserUseCase(get())
+    }
+
+    factory{
+        UpdateNamesUseCase(get())
+    }
+
+    factory{
+        DeleteDispenserUseCase(get())
     }
 
     factory {

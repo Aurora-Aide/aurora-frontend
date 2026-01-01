@@ -8,6 +8,8 @@ import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.signup.SignupVariables
+import com.example.aurora.data.model.UpdateNamesRequest
+import com.example.aurora.data.model.DeleteDispenserResponse
 
 class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     override suspend fun login(email: String, password: String): Result<Tokens> {
@@ -60,5 +62,13 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun deleteUser(email: String): Result<DeleteUserResponse> {
         return requestBody(retrofit.deleteUser(DeleteUserRequest(email)))
+    }
+
+    override suspend fun updateNames(firstName: String?, lastName: String?): Result<UserModel> {
+        return requestBody(retrofit.updateNames(UpdateNamesRequest(firstName, lastName)))
+    }
+
+    override suspend fun deleteDispenser(name: String): Result<DeleteDispenserResponse> {
+        return requestBody(retrofit.deleteDispenser(name))
     }
 }
