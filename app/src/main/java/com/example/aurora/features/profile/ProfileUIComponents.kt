@@ -41,47 +41,32 @@ import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
 
-@Composable
-fun Back(
-    onBackClick:() -> Unit,
-){
-    Row{
-        Image(
-            painter = painterResource(id = R.drawable.backarrow),
-            contentDescription = "back",
-            modifier = Modifier
-                .size(28.dp)
-                .clickable { onBackClick() }
-        )
-        Spacer(modifier = Modifier.weight(1f))
-    }
-}
 
 @Composable
 fun Header(
-    //isNotificationsVisible: Boolean = false,
-    //isBackVisible: Boolean = false,
+    isNotificationsVisible: Boolean = false,
+    isBackVisible: Boolean = false,
     title: String,
-    //onBackClick: () -> Unit = {},
+    onBackClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-//        Box(Modifier.size(24.dp)) {
-//            if (isBackVisible) {
-//                Image(
-//                    painter = painterResource(R.drawable.angl_left),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .rotate(180f)
-//                        .size(24.dp)
-//                        .clickable { onBackClick() }
-//                )
-//            }
-//        }
+        Box(Modifier.size(24.dp)) {
+            if (isBackVisible) {
+                Image(
+                    painter = painterResource(R.drawable.angl_left),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .rotate(180f)
+                        .size(24.dp)
+                        .clickable { onBackClick() }
+                )
+            }
+        }
 
         Text(
             text = title,
@@ -91,15 +76,15 @@ fun Header(
             lineHeight = LineHeight.BODY1,
         )
 
-//        Box(Modifier.size(24.dp)) {
-//            if (isNotificationsVisible) {
-//                Image(
-//                    painter = painterResource(R.drawable.notification_icon),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(24.dp)
-//                )
-//            }
-//        }
+        Box(Modifier.size(24.dp)) {
+            if (isNotificationsVisible) {
+                Image(
+                    painter = painterResource(R.drawable.notification_icon),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
     }
 }
 
@@ -126,6 +111,43 @@ fun ProfileItem(text: String, onClick: () -> Unit = {}) {
             modifier = Modifier.size(20.dp)
         )
     }
+}
+
+@Composable
+fun DispenserItem(text1: String, text2: String, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 12.dp)
+            .padding(start = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = text1,
+            color = primary1,
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = text2,
+            color = secondary4,
+            fontSize = FontSize.PARAGRAPH1,
+            fontWeight = FontWeight.PARAGRAPH1M
+        )
+        Image(
+            painter = painterResource(R.drawable.angl_left),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+    Image(
+        painter = painterResource(R.drawable.divider_horizontal),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

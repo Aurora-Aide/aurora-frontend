@@ -4,5 +4,5 @@ import com.example.aurora.data.repository.AuthRepository
 
 class ResetPassUseCase(private val repository: AuthRepository) {
     suspend operator fun invoke(password:String, token: String) =
-        repository.resetPass(password)
+        repository.resetPass(password, token)
 }

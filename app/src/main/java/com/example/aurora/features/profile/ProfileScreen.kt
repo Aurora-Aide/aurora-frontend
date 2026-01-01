@@ -38,10 +38,12 @@ fun ProfileScreen(
     onDeleteAccount: () -> Unit,
     onPersonalInformation: () -> Unit,
     onSettings: () -> Unit,
-    onToHomeClick: () -> Unit,
-    personalInfo: PersonalInformationData
+    onToHomeClick: ()-> Unit,
+    //dispenserData: Unit,
 ) {
+    val dispenser  = "smth"
     val scrollState = rememberScrollState()
+
 
     Scaffold(
         bottomBar = {
@@ -63,17 +65,44 @@ fun ProfileScreen(
                 modifier = Modifier
                     .padding(vertical = 16.dp, horizontal = 16.dp)
                     .verticalScroll(scrollState)
-
             ) {
-                Header(title = "Profile")
+                Header(isNotificationsVisible = false, title = "Profile")
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ProfileItem(stringResource(R.string.personal_information)) {
                     onPersonalInformation()
                 }
-                PersonalInfoItem("Names", personalInfo.firstName + " " + personalInfo.lastName)
-                PersonalInfoItem("Email", personalInfo.email)
+                PersonalInfoItem("Names", "First Last")  // TODO change text2 to actual data
+                PersonalInfoItem(
+                    "Email",
+                    "your_email@mail.com"
+                )  // TODO change text2 to actual data
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.your_dispensers),
+                        color = primary1,
+                        fontSize = FontSize.BODY2,
+                        fontWeight = FontWeight.BODY2,
+                        lineHeight = LineHeight.BODY2,
+                    )
+                }
+
+                // TODO change both texts to real data and place however many dispensers there are
+                // use showAllUserDispensers from backend
+
+                DispenserItem(dispenser, dispenser)
+                DispenserItem("Name2", "Id 2 of dis")
+                DispenserItem("Name3", "Id 3 of dis")
 
                 Spacer(modifier = Modifier.height(20.dp))
 

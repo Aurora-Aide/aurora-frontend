@@ -109,7 +109,7 @@ fun DispenserHeader(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "ID: $id",
+            text = id,
             fontSize = FontSize.PARAGRAPH2,
             fontWeight = FontWeight.PARAGRAPH2M,
             lineHeight = LineHeight.PARAGRAPH2,
