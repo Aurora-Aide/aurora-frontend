@@ -1,5 +1,6 @@
 package com.example.aurora.data.repository
 
+import com.example.aurora.data.entity.ContainerEntity
 import com.example.aurora.data.entity.DeleteUserEntity
 import com.example.aurora.data.entity.DeleteDispenserEntity
 import com.example.aurora.data.entity.DispenserEntity
@@ -20,4 +21,6 @@ interface AuthRepository {
     suspend fun deleteUser(email: String): Result<DeleteUserEntity>
     suspend fun updateNames(firstName: String?, lastName: String?): Result<UserEntity>
     suspend fun deleteDispenser(name: String): Result<DeleteDispenserEntity>
+    suspend fun updatePillName(dispenserName: String, slotNumber: Int, pillName: String): Result<ContainerEntity>
+    suspend fun updateDispenserName(currentName: String, newName: String): Result<DispenserEntity>
 }

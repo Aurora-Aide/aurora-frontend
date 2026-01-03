@@ -4,11 +4,15 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.aurora.features.dispenser.ContainerScreen
+import com.example.aurora.features.dispenser.ContainerViewModel
 import com.example.aurora.features.dispenser.DispenserScreen
 import com.example.aurora.features.dispenser.DispenserViewModel
 import com.example.aurora.features.forgotPassword.ForgotPasswordScreen
@@ -57,7 +61,7 @@ fun MainNavigation() {
                 isLoginSuccessful = {
                     Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.toHome(loginData.firstName)  //TODO id
+                    navController.toHome(loginData.firstName)
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
                 onSignUpClick = { navController.toSignUp() },
@@ -141,27 +145,52 @@ fun MainNavigation() {
             val dispenserId = navBackStackEntry.arguments?.getString("id") ?: "0"
             val dispenserName = navBackStackEntry.arguments?.getString("name") ?: ""
             val dispenserViewModel = getViewModel<DispenserViewModel>()
+            val dispenser by dispenserViewModel.dispenser.collectAsStateWithLifecycle()
+            val showHideRename by dispenserViewModel.showPopUpRename.collectAsStateWithLifecycle()
+            val showHideDelete by dispenserViewModel.showPopUpDelete.collectAsStateWithLifecycle()
+            LaunchedEffect(dispenserId, dispenserName) {
+                dispenserViewModel.loadDispenser(dispenserId, dispenserName)
+            }
             DispenserScreen(
-                viewModel = dispenserViewModel,
-                name = dispenserName,
-                id = dispenserId,
+                dispenser = dispenser,
+                showHideRename = showHideRename,
+                showHideDelete = showHideDelete,
                 onBackClick = { navController.toHome("") },
-                onPillClick = { navController.toContainer() },
-                onEditClick = { },
+                onPillClick = { slot, pillName ->
+                    navController.toContainer(dispenserId, dispenserName, slot, pillName)
+                },
                 onDeleteClick = {
                     dispenserViewModel.deleteDispenser(
                         dispenserName,
                         onSuccess = { navController.toHome("") }
                     )
-                }
+                },
+                onRenameChange = { dispenserViewModel.setRenameDraft(it) },
+                onRenameConfirm = { dispenserViewModel.confirmRename() },
+                isRenameSuccessful = { dispenserViewModel.resetRename() },
+                onBackToDispenserRenameClicked = { dispenserViewModel.showHideRenameBack()},
+                onBackToDispenserDeleteClicked = { dispenserViewModel.showHideDeleteBack()},
             )
         }
-        composable(route = Routes.MainRoute.Container.route){
+        composable(route = Routes.MainRoute.Container.route){ navBackStackEntry ->
+            val dispenserName = navBackStackEntry.arguments?.getString("dispenserName") ?: ""
+            val slot = navBackStackEntry.arguments?.getString("slot")?.toIntOrNull() ?: 0
+            val pillName = navBackStackEntry.arguments?.getString("pillName") ?: ""
+            val containerViewModel = getViewModel<ContainerViewModel>()
+            val container by containerViewModel.container.collectAsStateWithLifecycle()
+            val showHideRename by containerViewModel.showPopUpRename.collectAsStateWithLifecycle()
+            LaunchedEffect(dispenserName, slot, pillName) {
+                containerViewModel.setBaseInfo(dispenserName, slot, pillName)
+            }
             ContainerScreen(
-                name = "Pill1",
+                container = container,
+                showHideRename = showHideRename,
                 onBackClick = { navController.navigateUp() },
-                onEditClick = { },
-                onScheduleClick = { navController.toSchedule() }
+                onScheduleClick = { navController.toSchedule() },
+                onRenameChange = { containerViewModel.setRenameDraft(it) },
+                onRenameConfirm = { containerViewModel.confirmRename() },
+                onBackToContainerRenameClicked = { containerViewModel.showHideRenameBack() },
+                isRenameSuccessful = { containerViewModel.resetRename() },
             )
         }
         composable(route = Routes.MainRoute.Schedule.route){
@@ -191,7 +220,7 @@ fun MainNavigation() {
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
-                onDeleteAccount = { viewModel.showHideDeleteBack() }, //sho popup
+                onDeleteAccount = { viewModel.showHideDeleteBack() }, //show popup
                 onToHomeClick = {navController.toHome("")},
                 personalInfo = user,
             )
@@ -205,7 +234,12 @@ fun MainNavigation() {
                 onLastNameChange = { viewModel.lastName(it) },
                 onFirstNameChange = { viewModel.firstName(it) },
                 onBackClick = { navController.navigateUp() },
-                onUpdateNamesClick = { viewModel.updateNames { navController.toProfile() }}
+                onUpdateNamesClick = { viewModel.validateNames() },
+                isUpdateNamesSuccessful = {
+                    Log.d("TAG", "to profile")
+                    viewModel.resetUpdateNames()
+                    navController.toProfile()
+                },
             )
         }
     }

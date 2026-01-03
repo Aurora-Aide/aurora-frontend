@@ -196,7 +196,7 @@ fun AddDispenserFooter(
 
         ) {
             Text(
-                text = "Add Dispenser",
+                text = "Add Dispenser  ",
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

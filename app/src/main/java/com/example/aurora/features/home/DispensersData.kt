@@ -1,4 +1,4 @@
-package com.example.aurora.features.profile
+package com.example.aurora.features.home
 
 import com.example.aurora.data.model.Dispenser
 

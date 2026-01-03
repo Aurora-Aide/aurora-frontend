@@ -8,6 +8,7 @@ import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.DeleteUserEntity
 import com.example.aurora.data.entity.UserEntity
 import com.example.aurora.data.entity.DeleteDispenserEntity
+import com.example.aurora.data.entity.ContainerEntity
 import com.example.aurora.data.mapper.toDispenserMapper
 import com.example.aurora.data.mapper.toDispensersMapper
 import com.example.aurora.data.mapper.toForgotPassMapper
@@ -15,8 +16,11 @@ import com.example.aurora.data.mapper.toLogoutMapper
 import com.example.aurora.data.mapper.toDeleteUserMapper
 import com.example.aurora.data.mapper.toUserEntity
 import com.example.aurora.data.mapper.toDeleteDispenserMapper
+import com.example.aurora.data.mapper.toContainerEntity
 import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.sorce.AuthDataSource
+import com.example.aurora.data.model.UpdatePillNameRequest
+import com.example.aurora.data.model.UpdateDispenserNameRequest
 
 class AuthRepositoryImpl(
     private val data: AuthDataSource,
@@ -142,6 +146,39 @@ class AuthRepositoryImpl(
             onSuccess = {
                  msg -> Result.success(msg.toDeleteDispenserMapper())
                  },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updatePillName(dispenserName: String, slotNumber: Int, pillName: String): Result<ContainerEntity> {
+        return data.updatePillName(
+            UpdatePillNameRequest(
+                dispenser_name = dispenserName,
+                slot_number = slotNumber,
+                pill_name = pillName
+            )
+        ).fold(
+            onSuccess = { 
+                container -> Result.success(container.toContainerEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updateDispenserName(currentName: String, newName: String): Result<DispenserEntity> {
+        return data.updateDispenserName(
+            UpdateDispenserNameRequest(
+                current_name = currentName,
+                new_name = newName
+            )
+        ).fold(
+            onSuccess = {
+                 dispenser -> Result.success(dispenser.toDispenserMapper()) 
+                },
             onFailure = { 
                 Result.failure(it) 
             }

@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,17 +26,28 @@ import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
+import com.example.aurora.ui.theme.baseBlue
 import com.example.aurora.ui.theme.primary1
 
 @Composable
 fun ContainerScreen(
-    name: String,
+    container: ContainerData,
+    showHideRename: Boolean,
     onScheduleClick: () -> Unit,
     onBackClick: () -> Unit,
-    onEditClick: () -> Unit,
+    onRenameChange: (String) -> Unit,
+    onRenameConfirm: () -> Unit,
+    isRenameSuccessful: () -> Unit,
+    onBackToContainerRenameClicked: () -> Unit,
 )
 {
     val scrollState = rememberScrollState()
+
+    if (container.isRenameSuccessful) {
+        LaunchedEffect(null) {
+            isRenameSuccessful()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -46,15 +59,29 @@ fun ContainerScreen(
                 .padding(vertical = 16.dp, horizontal = 16.dp)
                 .verticalScroll(scrollState)
         ) {
-            ContainerHeader(
-                onBackClick = onBackClick,
-                name = name,
-                onEditClick = onEditClick
+            Back(onBackClick)
+            Spacer(modifier = Modifier.height(16.dp))
+            ContainerHeaderCard(
+                uiState = container,
+                onEditClick = { onBackToContainerRenameClicked() }
             )
             Spacer(modifier = Modifier.height(16.dp))
             Schedule( onScheduleClick )
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    if (showHideRename) {
+        DispenserPopup(
+            onDismiss = { onBackToContainerRenameClicked() },
+            onConfirmEdit = { onRenameConfirm() },
+            title = "Rename pill:",
+            caption = "Enter a new pill name for this slot.",
+            onNameChange = { onRenameChange(it) },
+            value = container.renameDraft,
+            placeHolder = container.pillName,
+            error = container.isRenameError,
+        )
     }
 }
 
@@ -84,44 +111,74 @@ fun Schedule(onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun ContainerHeader(
-    onBackClick: () -> Unit,
-    name: String,
+fun ContainerHeaderCard(
+    uiState: ContainerData,
     onEditClick: () -> Unit,
 ) {
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = baseBlue,
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 2.dp,
     ) {
-        Row {
-            Image(
-                painter = painterResource(id = R.drawable.backarrow),
-                contentDescription = "back",
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable { onBackClick() }
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = uiState.pillName,
+                        fontSize = FontSize.HEADING3,
+                        fontWeight = FontWeight.HEADING3,
+                        lineHeight = LineHeight.HEADING3,
+                        color = primary1
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "ID: ${uiState.slotNumber}",
+                        fontSize = FontSize.PARAGRAPH2,
+                        fontWeight = FontWeight.PARAGRAPH2M,
+                        lineHeight = LineHeight.PARAGRAPH2,
+                        color = primary1
+                    )
+                }
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = name,
-                fontSize = FontSize.HEADING3,
-                fontWeight = FontWeight.HEADING3,
-                lineHeight = LineHeight.HEADING3,
-                color = primary1
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(R.drawable.pen),
-                contentDescription = "pen",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onEditClick() }
-            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ActionChip(
+                    iconRes = R.drawable.pen,
+                    label = "Rename",
+                    onClick = onEditClick,
+                )
+            }
         }
     }
 }
 
+@Composable
+fun Back(
+    onBackClick:() -> Unit,
+){
+    Row{
+        Image(
+            painter = painterResource(id = R.drawable.backarrow),
+            contentDescription = "back",
+            modifier = Modifier
+                .size(28.dp)
+                .clickable { onBackClick() }
+        )
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}

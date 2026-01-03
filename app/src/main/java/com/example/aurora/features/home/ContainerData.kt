@@ -1,4 +1,4 @@
-package com.example.aurora.features.profile
+package com.example.aurora.features.home
 
 data class ContainerData(
     val id: Int,

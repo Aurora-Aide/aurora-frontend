@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,14 +37,14 @@ fun ContainerBox(
     dispenserId: String,
     onContainerClick: () -> Unit,
 ) {
-    Box(
+    Surface (
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
-            .clickable { onContainerClick() }
-            .clip(RoundedCornerShape(12.dp))
-            .border(1.dp, baseBlue, RoundedCornerShape(12.dp))
-            .background(baseBlue)
+            .clickable { onContainerClick() },
+        color = baseBlue,
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 2.dp,
     ){
         Row(
             modifier = Modifier
@@ -69,6 +70,7 @@ fun ContainerBox(
                     lineHeight = LineHeight.BODY2,
                     color = secondary2
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "ID: $dispenserId",
                     fontWeight = FontWeight.PARAGRAPH2M,

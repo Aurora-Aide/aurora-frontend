@@ -13,24 +13,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.aurora.features.login.LoginData
-import com.example.aurora.features.profile.DispensersData
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.base10
-import com.example.aurora.ui.theme.baseBlue
+import com.example.aurora.ui.theme.baseLightBlue
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
@@ -51,10 +47,10 @@ fun HomeScreen(
             FloatingActionButton(
                 modifier = Modifier.size(68.dp),
                 onClick = { onAddDispenserClick() },
-                containerColor = baseBlue,
+                containerColor = baseLightBlue,
                 contentColor = secondary2,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                shape = CircleShape
+                elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                shape = CircleShape,
             ) {
                 Icon(Icons.Filled.Add, "Add Dispenser")
             }
