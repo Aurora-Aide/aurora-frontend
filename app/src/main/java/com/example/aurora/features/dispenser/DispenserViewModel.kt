@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.domain.usecase.DeleteDispenserUseCase
+import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
 import com.example.aurora.domain.usecase.UpdateDispenserNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class DispenserViewModel(
     private val deleteDispenserUseCase: DeleteDispenserUseCase,
+    private val getDispenserUseCase: GetDispenserUseCase,
     private val listAllUserDispensersUseCase: ListAllUserDispensersUseCase,
     private val updateDispenserNameUseCase: UpdateDispenserNameUseCase
 ): ViewModel() {
@@ -39,7 +41,6 @@ class DispenserViewModel(
         name: String,
         id: String,
         containers: List<ContainerItem> = emptyList(),
-        allNames: List<String> = emptyList(),
     ) {
         val normalizedContainers = containers.mapIndexed { index, container ->
             container.copy(
@@ -49,12 +50,26 @@ class DispenserViewModel(
         _dispenser.update {
             it.copy(
                 name = name.ifBlank { "Unnamed dispenser" },
-                id = id.ifBlank { "ID unavailable" },
+                id = id,
                 containers = normalizedContainers,
                 renameDraft = name.ifBlank { "Unnamed dispenser" },
-                allDispenserNames = allNames,
                 isRenameError = AddDispenserNameErrors.NONE,
                 errorMessage = null
+            )
+        }
+    }
+
+    private fun fetchDispenserNames(){
+        viewModelScope.launch {
+            listAllUserDispensersUseCase().fold(
+                onSuccess = { data ->
+                    val names = data.dispensers.map { it.name }
+                    _dispenser.update { it.copy(allDispenserNames = names) }
+
+                },
+                onFailure = {
+                    
+                }
             )
         }
     }
@@ -81,46 +96,32 @@ class DispenserViewModel(
         }
     }
 
-    fun loadDispenser(dispenserId: String, fallbackName: String) {
+    fun loadDispenser(dispenserId: String) {
         viewModelScope.launch {
             _dispenser.update { it.copy(errorMessage = null) }
-            listAllUserDispensersUseCase().fold(
-                onSuccess = { data ->
-                    val dispenser = data.dispensers.firstOrNull { it.id.toString() == dispenserId }
-                    val allNames = data.dispensers.map { it.name }
-                    if (dispenser != null) {
-                        val containers = dispenser.containers.mapIndexed { index, container ->
-                            ContainerItem(
-                                title = container.pillName.ifBlank { "Container ${index + 1}" },
-                                subtitle = "Slot ${container.slotNumber}",
-                                slotNumber = container.slotNumber,
-                            )
-                        }
-                        setBaseInfo(
-                            name = dispenser.name,
-                            id = dispenser.id.toString(),
-                            containers = containers,
-                            allNames = allNames
+
+            getDispenserUseCase(dispenserId).fold(
+                onSuccess = { dispenser ->
+                    val containers = dispenser.containers.mapIndexed { index, container ->
+                        ContainerItem(
+                            title = container.pillName.ifBlank { "Container ${index + 1}" },
+                            subtitle = "Slot ${container.slotNumber}",
+                            slotNumber = container.slotNumber,
+                            containerId = container.id,
                         )
-                    } else {
-                        _dispenser.update {
-                            it.copy(
-                                name = fallbackName.ifBlank { "Unnamed dispenser" },
-                                id = dispenserId.ifBlank { "ID unavailable" },
-                                containers = emptyList(),
-                                allDispenserNames = allNames,
-                                errorMessage = "Dispenser not found"
-                            )
-                        }
                     }
+                    setBaseInfo(
+                        name = dispenser.name,
+                        id = dispenser.id,
+                        containers = containers,
+                    )
+                    fetchDispenserNames()
                 },
                 onFailure = { error ->
                     _dispenser.update {
                         it.copy(
-                            name = fallbackName.ifBlank { "Unnamed dispenser" },
-                            id = dispenserId.ifBlank { "ID unavailable" },
-                            containers = emptyList(),
-                            errorMessage = error.message ?: "Unable to load dispenser"
+                            errorMessage = error.message ?: "Unable to load dispenser",
+                            containers = emptyList()
                         )
                     }
                 }
@@ -142,7 +143,7 @@ class DispenserViewModel(
             AddDispenserNameErrors.INVALID_NAME
         } else if(_dispenser.value.allDispenserNames
                 .any { it == name && it != _dispenser.value.name }){
-            return AddDispenserNameErrors.REPEATING_NAME
+            AddDispenserNameErrors.REPEATING_NAME
         } else{
             AddDispenserNameErrors.NONE
         }

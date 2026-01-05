@@ -4,13 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.aurora.features.dispenser.AddScheduleScreen
 import com.example.aurora.features.dispenser.ContainerScreen
 import com.example.aurora.features.dispenser.ContainerViewModel
 import com.example.aurora.features.dispenser.DispenserScreen
@@ -33,6 +31,7 @@ import com.example.aurora.features.settings.SettingsScreen
 import com.example.aurora.features.signup.SignupScreen
 import com.example.aurora.features.signup.SignupViewModel
 import com.example.aurora.navigation.Routes.MainRoute.AddDispenser.toAddDispenser
+import com.example.aurora.navigation.Routes.MainRoute.AddSchedule.toAddSchedule
 import com.example.aurora.navigation.Routes.MainRoute.Container.toContainer
 import com.example.aurora.navigation.Routes.MainRoute.Dispenser.toDispenser
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
@@ -99,7 +98,7 @@ fun MainNavigation() {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
                     viewModelSignup.validateSecondStep()
-                    navController.toHome(signupData.firstName) // TODO id
+                    navController.toHome(signupData.firstName)
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
@@ -118,7 +117,7 @@ fun MainNavigation() {
             }
             
             HomeScreen(
-                onToProfileClick = { navController.toProfile() },  //TODO use actual data
+                onToProfileClick = { navController.toProfile() },
                 name = name.orEmpty(),
                 onAddDispenserClick = { navController.toAddDispenser() },
                 onToDispenserClick = { dispenserId, dispenserName -> navController.toDispenser(dispenserId, dispenserName) },
@@ -128,6 +127,9 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.AddDispenser.route) {
             val viewModelAddDispenser = getViewModel<AddDispenserViewModel>()
             val dispenserData by viewModelAddDispenser.dispenser.collectAsStateWithLifecycle()
+            LaunchedEffect(Unit) {
+                viewModelAddDispenser.fetchDispenserNames()
+            }
             AddDispenserScreen(
                 dispenser = dispenserData,
                 onIDChange = { viewModelAddDispenser.id(it) },
@@ -136,33 +138,33 @@ fun MainNavigation() {
                 isAddDispenserSuccessful = {
                     Log.d("TAG", "add dispenser")
                     viewModelAddDispenser.resetAdd()
-                    navController.toHome("")
+                    navController.navigateUp()
                 },
-                onBackClick = { navController.toHome("")}
+                onBackClick = { navController.navigateUp() }
             )
         }
         composable(route = Routes.MainRoute.Dispenser.route) { navBackStackEntry ->
-            val dispenserId = navBackStackEntry.arguments?.getString("id") ?: "0"
+            val dispenserId = navBackStackEntry.arguments?.getString("id") ?: ""
             val dispenserName = navBackStackEntry.arguments?.getString("name") ?: ""
             val dispenserViewModel = getViewModel<DispenserViewModel>()
             val dispenser by dispenserViewModel.dispenser.collectAsStateWithLifecycle()
             val showHideRename by dispenserViewModel.showPopUpRename.collectAsStateWithLifecycle()
             val showHideDelete by dispenserViewModel.showPopUpDelete.collectAsStateWithLifecycle()
-            LaunchedEffect(dispenserId, dispenserName) {
-                dispenserViewModel.loadDispenser(dispenserId, dispenserName)
+            LaunchedEffect(dispenserId) {
+                dispenserViewModel.loadDispenser(dispenserId)
             }
             DispenserScreen(
                 dispenser = dispenser,
                 showHideRename = showHideRename,
                 showHideDelete = showHideDelete,
-                onBackClick = { navController.toHome("") },
-                onPillClick = { slot, pillName ->
-                    navController.toContainer(dispenserId, dispenserName, slot, pillName)
+                onBackClick = { navController.navigateUp() },
+                onPillClick = { slot, pillName, containerId ->
+                    navController.toContainer(dispenserId, dispenserName, slot, pillName, containerId)
                 },
                 onDeleteClick = {
                     dispenserViewModel.deleteDispenser(
                         dispenserName,
-                        onSuccess = { navController.toHome("") }
+                        onSuccess = { navController.navigateUp() }
                     )
                 },
                 onRenameChange = { dispenserViewModel.setRenameDraft(it) },
@@ -176,21 +178,44 @@ fun MainNavigation() {
             val dispenserName = navBackStackEntry.arguments?.getString("dispenserName") ?: ""
             val slot = navBackStackEntry.arguments?.getString("slot")?.toIntOrNull() ?: 0
             val pillName = navBackStackEntry.arguments?.getString("pillName") ?: ""
+            val containerId = navBackStackEntry.arguments?.getString("containerId") ?.toIntOrNull() ?: 0
             val containerViewModel = getViewModel<ContainerViewModel>()
             val container by containerViewModel.container.collectAsStateWithLifecycle()
             val showHideRename by containerViewModel.showPopUpRename.collectAsStateWithLifecycle()
-            LaunchedEffect(dispenserName, slot, pillName) {
-                containerViewModel.setBaseInfo(dispenserName, slot, pillName)
+            LaunchedEffect(dispenserName, slot, pillName, containerId) {
+                containerViewModel.setBaseInfo(dispenserName, slot, pillName, containerId)
+                if (containerId != 0) {
+                    containerViewModel.listSchedules()
+                }
             }
             ContainerScreen(
                 container = container,
                 showHideRename = showHideRename,
                 onBackClick = { navController.navigateUp() },
                 onScheduleClick = { navController.toSchedule() },
+                onAddScheduleClick = { navController.toAddSchedule(containerId) },
                 onRenameChange = { containerViewModel.setRenameDraft(it) },
                 onRenameConfirm = { containerViewModel.confirmRename() },
                 onBackToContainerRenameClicked = { containerViewModel.showHideRenameBack() },
                 isRenameSuccessful = { containerViewModel.resetRename() },
+            )
+        }
+        composable(route = Routes.MainRoute.AddSchedule.route){ navBackStackEntry ->
+            val containerId = navBackStackEntry.arguments?.getString("containerId")?.toIntOrNull() ?: 0
+            val addScheduleViewModel = getViewModel<com.example.aurora.features.dispenser.AddScheduleViewModel>()
+            val formState by addScheduleViewModel.state.collectAsStateWithLifecycle()
+            LaunchedEffect(containerId) {
+                addScheduleViewModel.resetSuccess()
+                addScheduleViewModel.loadSchedules(containerId)
+            }
+            AddScheduleScreen(
+                state = formState,
+                onDayChange = { addScheduleViewModel.onDayChange(it) },
+                onHourChange = { addScheduleViewModel.onHourChange(it) },
+                onMinuteChange = { addScheduleViewModel.onMinuteChange(it) },
+                onRepeatChange = { addScheduleViewModel.onRepeatChange(it) },
+                onSave = { addScheduleViewModel.save(containerId) },
+                onBackClick = { navController.navigateUp() }
             )
         }
         composable(route = Routes.MainRoute.Schedule.route){
@@ -221,7 +246,7 @@ fun MainNavigation() {
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //show popup
-                onToHomeClick = {navController.toHome("")},
+                onToHomeClick = {navController.toHome(user.firstName)},
                 personalInfo = user,
             )
         }

@@ -15,6 +15,13 @@ import com.example.aurora.domain.usecase.ResetPassUseCase
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
 import com.example.aurora.domain.usecase.UpdateDispenserNameUseCase
+import com.example.aurora.domain.usecase.ListSchedulesUseCase
+import com.example.aurora.domain.usecase.CreateScheduleUseCase
+import com.example.aurora.domain.usecase.GetScheduleUseCase
+import com.example.aurora.domain.usecase.UpdateScheduleUseCase
+import com.example.aurora.domain.usecase.DeleteScheduleUseCase
+import com.example.aurora.domain.usecase.GetDispenserUseCase
+import com.example.aurora.features.dispenser.AddScheduleViewModel
 import com.example.aurora.features.forgotPassword.ForgotViewModel
 import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.home.HomeViewModel
@@ -49,7 +56,7 @@ val appModule = module {
     }
 
     viewModel{
-        AddDispenserViewModel(get())
+        AddDispenserViewModel(get(), get())
     }
 
     viewModel {
@@ -57,11 +64,15 @@ val appModule = module {
     }
 
     viewModel {
-        DispenserViewModel(get(), get(), get())
+        DispenserViewModel(get(), get(), get(), get())
     }
 
     viewModel {
-        ContainerViewModel(get())
+        AddScheduleViewModel(get(), get())
+    }
+
+    viewModel {
+        ContainerViewModel(get(), get())
     }
 
 
@@ -111,6 +122,30 @@ val appModule = module {
 
     factory{
         UpdateDispenserNameUseCase(get())
+    }
+
+    factory { 
+        ListSchedulesUseCase(get()) 
+    }
+
+    factory {
+         CreateScheduleUseCase(get())
+    }
+
+    factory { 
+        GetScheduleUseCase(get()) 
+    }
+
+    factory {
+         UpdateScheduleUseCase(get())
+    }
+
+    factory { 
+        DeleteScheduleUseCase(get()) 
+    }
+
+    factory { 
+        GetDispenserUseCase(get())
     }
 
     factory {

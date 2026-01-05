@@ -11,29 +11,45 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.baseBlue
+import com.example.aurora.ui.theme.baseLightBlue
 import com.example.aurora.ui.theme.primary1
+import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.theme.secondary4
 
 @Composable
 fun ContainerScreen(
     container: ContainerData,
     showHideRename: Boolean,
     onScheduleClick: () -> Unit,
+    onAddScheduleClick: () -> Unit,
     onBackClick: () -> Unit,
     onRenameChange: (String) -> Unit,
     onRenameConfirm: () -> Unit,
@@ -49,25 +65,42 @@ fun ContainerScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        Arrangement.Top
-    ) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier.size(68.dp),
+                onClick = { onAddScheduleClick() },
+                containerColor = baseLightBlue,
+                contentColor = secondary2,
+                elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                shape = CircleShape,
+            ) {
+                Icon(Icons.Filled.Add, "Add Dispenser")
+            }
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-                .verticalScroll(scrollState)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Back(onBackClick)
-            Spacer(modifier = Modifier.height(16.dp))
-            ContainerHeaderCard(
-                uiState = container,
-                onEditClick = { onBackToContainerRenameClicked() }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Schedule( onScheduleClick )
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                Back(onBackClick)
+                Spacer(modifier = Modifier.height(16.dp))
+                ContainerHeaderCard(
+                    uiState = container,
+                    onEditClick = { onBackToContainerRenameClicked() }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                ScheduleHeader( onScheduleClick )
+                Spacer(modifier = Modifier.height(8.dp))
+                ScheduleList(container)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 
@@ -86,7 +119,7 @@ fun ContainerScreen(
 }
 
 @Composable
-fun Schedule(onClick: () -> Unit = {}) {
+fun ScheduleHeader(onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,6 +141,72 @@ fun Schedule(onClick: () -> Unit = {}) {
             modifier = Modifier.size(20.dp)
         )
     }
+}
+
+@Composable
+fun ScheduleList(container: ContainerData) {
+    if (container.schedules.isEmpty()) {
+        Text(
+            text = "No schedules yet",
+            color = secondary4,
+            fontSize = FontSize.PARAGRAPH2,
+            fontWeight = FontWeight.PARAGRAPH2M,
+            lineHeight = LineHeight.PARAGRAPH2,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+    } else {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            container.schedules.forEach { schedule ->
+                ScheduleRow(schedule)
+            }
+        }
+    }
+}
+
+@Composable
+fun ScheduleRow(schedule: ScheduleData) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = schedule.day.value?.let { stringResource(it) } ?: "Day",
+                    color = primary1,
+                    fontSize = FontSize.PARAGRAPH1,
+                    fontWeight = FontWeight.PARAGRAPH1M
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = formatTime(schedule.hour, schedule.minutes),
+                    color = secondary4,
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2M
+                )
+            }
+            Text(
+                text = if (schedule.repeating) "Repeats" else "Once",
+                color = primary1,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M
+            )
+        }
+    }
+}
+
+private fun formatTime(hour: Int, minute: Int): String {
+    val h = hour.coerceIn(0,23)
+    val m = minute.coerceIn(0,59)
+    return String.format("%02d:%02d", h, m)
 }
 
 @Composable

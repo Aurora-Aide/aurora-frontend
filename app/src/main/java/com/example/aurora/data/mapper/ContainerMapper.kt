@@ -5,7 +5,7 @@ import com.example.aurora.data.model.ContainerModel
 
 fun ContainerModel.toContainerEntity(): ContainerEntity {
     return ContainerEntity(
-        id = this.id,
+        id = this.  id,
         dispenser = this.dispenser,
         slotNumber = this.slotNumber,
         pillName = this.pillName

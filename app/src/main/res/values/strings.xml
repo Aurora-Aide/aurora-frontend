@@ -28,4 +28,12 @@
     <string name="back">Back</string>
     <string name="delete_account">Delete Account</string>
     <string name="update_names">Update Names</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="empty">Empty</string>
 </resources>

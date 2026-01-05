@@ -3,15 +3,19 @@ package com.example.aurora.features.dispenser
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.domain.usecase.ListSchedulesUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
+import com.example.aurora.data.entity.ScheduleEntity
+import com.example.aurora.features.dispenser.DaysOfWeek.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ContainerViewModel(
-    private val updatePillNameUseCase: UpdatePillNameUseCase
+    private val updatePillNameUseCase: UpdatePillNameUseCase,
+    private val listSchedulesUseCase: ListSchedulesUseCase
 ) : ViewModel() {
 
     private val _container = MutableStateFlow(ContainerData())
@@ -27,14 +31,16 @@ class ContainerViewModel(
     fun setBaseInfo(
         dispenserName: String,
         slotNumber: Int,
-        pillName: String
+        pillName: String,
+        containerId: Int
     ) {
         _container.update {
             it.copy(
                 dispenserName = dispenserName,
                 slotNumber = slotNumber,
                 pillName = pillName,
-                renameDraft = pillName
+                renameDraft = pillName,
+                containerId = containerId
             )
         }
     }
@@ -67,6 +73,43 @@ class ContainerViewModel(
             _container.update {
                 it.copy(isRenameError = nameValid)
             }
+        }
+    }
+
+    private fun mapSchedule(model: ScheduleEntity): ScheduleData {
+        val day = when (model.dayOfWeek) {
+            0 -> MONDAY
+            1 -> TUESDAY
+            2 -> WEDNESDAY
+            3 -> THURSDAY
+            4 -> FRIDAY
+            5 -> SATURDAY
+            6 -> SUNDAY
+            else -> DaysOfWeek.EMPTY
+        }
+        return ScheduleData(
+            day = day,
+            hour = model.hour,
+            minutes = model.minute,
+            repeating = model.repeat
+        )
+    }
+
+    fun listSchedules() {
+        viewModelScope.launch {
+            listSchedulesUseCase(_container.value.containerId).fold(
+                onSuccess = { schedules ->
+                    _container.update {
+                        it.copy(
+                            schedules = schedules.map { schedule -> mapSchedule(schedule) }
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Log.e("TAG", "List schedules failed: ${error.message}")
+                    _container.update { it.copy(errorMessage = error.message ?: "Unable to load schedules") }
+                }
+            )
         }
     }
 

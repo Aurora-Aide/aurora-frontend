@@ -2,7 +2,6 @@ package com.example.aurora.data.api
 
 import com.example.aurora.data.model.AccessToken
 import com.example.aurora.data.model.Dispenser
-import com.example.aurora.data.model.Dispensers
 import com.example.aurora.data.model.ForgotPass
 import com.example.aurora.data.model.Logout
 import com.example.aurora.data.model.Refresh
@@ -15,6 +14,9 @@ import com.example.aurora.data.model.DeleteDispenserResponse
 import com.example.aurora.data.model.ContainerModel
 import com.example.aurora.data.model.UpdateDispenserNameRequest
 import com.example.aurora.data.model.UpdatePillNameRequest
+import com.example.aurora.data.model.ScheduleModel
+import com.example.aurora.data.model.CreateScheduleRequest
+import com.example.aurora.data.model.UpdateScheduleRequest
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
@@ -56,11 +58,36 @@ interface RetrofitAPI {
     @DELETE("${urls.deleteDispenserURL}{name}/")
     suspend fun deleteDispenser(@Path("name") name: String): Response<DeleteDispenserResponse>
 
-    @PUT(urls.updatePillNameURL)
-    suspend fun updatePillName(@Body dataModel: UpdatePillNameRequest): Response<ContainerModel>
-
     @PUT(urls.updateDispenserNameURL)
     suspend fun updateDispenserName(@Body dataModel: UpdateDispenserNameRequest): Response<Dispenser>
+
+    @GET("${urls.getDispenserURL}{id}/")
+    suspend fun getDispenser(@Path("id") id: String): Response<Dispenser>
+
+    // containers
+    @PATCH(urls.updatePillNameURL)
+    suspend fun updatePillName(@Body dataModel: UpdatePillNameRequest): Response<ContainerModel>
+
+    @GET("${urls.schedulesByContainerBaseURL}{containerId}/schedules/list/")
+    suspend fun listSchedules(@Path("containerId") containerId: Int): Response<List<ScheduleModel>>
+
+    @POST("${urls.schedulesByContainerBaseURL}{containerId}/schedules/create/")
+    suspend fun createSchedule(
+        @Path("containerId") containerId: Int,
+        @Body dataModel: CreateScheduleRequest
+    ): Response<ScheduleModel>
+
+    @GET("${urls.schedulesBaseURL}{id}/retrieve/")
+    suspend fun getSchedule(@Path("id") id: Int): Response<ScheduleModel>
+
+    @PATCH("${urls.schedulesBaseURL}{id}/update/")
+    suspend fun updateSchedule(
+        @Path("id") id: Int,
+        @Body dataModel: UpdateScheduleRequest
+    ): Response<ScheduleModel>
+
+    @DELETE("${urls.schedulesBaseURL}{id}/delete/")
+    suspend fun deleteSchedule(@Path("id") id: Int): Response<Unit>
 
     // profile
     @POST(urls.logoutURL)

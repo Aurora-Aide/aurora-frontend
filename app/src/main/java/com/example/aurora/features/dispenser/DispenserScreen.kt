@@ -57,7 +57,7 @@ fun DispenserScreen(
     dispenser: DispenserData,
     showHideRename: Boolean,
     showHideDelete: Boolean,
-    onPillClick: (slotNumber: Int, pillName: String) -> Unit,
+    onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRenameChange: (String) -> Unit,
@@ -193,7 +193,7 @@ fun DispenserHeaderCard(
 @Composable
 fun ContentArea(
     uiState: DispenserData,
-    onPillClick: (slotNumber: Int, pillName: String) -> Unit
+    onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit
 ) {
     when {
         uiState.errorMessage != null -> {
@@ -213,7 +213,7 @@ fun ContentArea(
                     ContainerRow(
                         title = container.title,
                         subtitle = container.subtitle,
-                        onClick = { onPillClick(container.slotNumber, container.title) }
+                        onClick = { onPillClick(container.slotNumber, container.title, container.containerId) }
                     )
                 }
             }

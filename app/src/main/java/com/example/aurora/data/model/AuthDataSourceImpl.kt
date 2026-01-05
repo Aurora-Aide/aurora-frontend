@@ -8,11 +8,6 @@ import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.signup.SignupVariables
-import com.example.aurora.data.model.UpdateNamesRequest
-import com.example.aurora.data.model.DeleteDispenserResponse
-import com.example.aurora.data.model.UpdatePillNameRequest
-import com.example.aurora.data.model.UpdateDispenserNameRequest
-import com.example.aurora.data.model.ContainerModel
 
 class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     override suspend fun login(email: String, password: String): Result<Tokens> {
@@ -81,5 +76,29 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun updateDispenserName(request: UpdateDispenserNameRequest): Result<Dispenser> {
         return requestBody(retrofit.updateDispenserName(request))
+    }
+
+    override suspend fun listSchedules(containerId: Int): Result<List<ScheduleModel>> {
+        return requestBody(retrofit.listSchedules(containerId))
+    }
+
+    override suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleModel> {
+        return requestBody(retrofit.createSchedule(containerId, request))
+    }
+
+    override suspend fun getSchedule(id: Int): Result<ScheduleModel> {
+        return requestBody(retrofit.getSchedule(id))
+    }
+
+    override suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleModel> {
+        return requestBody(retrofit.updateSchedule(id, request))
+    }
+
+    override suspend fun deleteSchedule(id: Int): Result<Unit> {
+        return requestBody(retrofit.deleteSchedule(id))
+    }
+
+    override suspend fun getDispenser(id: String): Result<Dispenser> {
+        return requestBody(retrofit.getDispenser(id))
     }
 }

@@ -10,5 +10,7 @@ data class ContainerData(
     val isUpdating: Boolean = false,
     val errorMessage: String? = null,
     val isRenameSuccessful: Boolean = false,
-    val isRenameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE
+    val isRenameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
+    val containerId: Int = 0,
+    val schedules: List<ScheduleData> = emptyList()
 )

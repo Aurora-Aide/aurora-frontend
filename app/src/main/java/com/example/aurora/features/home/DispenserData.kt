@@ -11,4 +11,6 @@ data class DispenserData (
     val isAddDispenserSuccessful: Boolean = false,
     val isIDError: AddDispenserIDErrors = AddDispenserIDErrors.NONE,
     val isNameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
+    val allDispenserNames: List<String> = emptyList(),
+    val allDispenserIds: List<String> = emptyList()
 )

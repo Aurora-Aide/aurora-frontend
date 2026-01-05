@@ -47,9 +47,14 @@ sealed class Routes(val route: String) {
             fun NavController.toDispenser(id: String, name: String) = navigate("${MainRoute.route}/dispenser?id=$id&name=${Uri.encode(name)}")
         }
 
-        data object Container: Routes("${MainRoute.route}/container?dispenserId={dispenserId}&dispenserName={dispenserName}&slot={slot}&pillName={pillName}") {
-            fun NavController.toContainer(dispenserId: String, dispenserName: String, slot: Int, pillName: String) =
-                navigate("${MainRoute.route}/container?dispenserId=$dispenserId&dispenserName=${Uri.encode(dispenserName)}&slot=$slot&pillName=${Uri.encode(pillName)}")
+        data object Container: Routes("${MainRoute.route}/container?dispenserId={dispenserId}&dispenserName={dispenserName}&slot={slot}&pillName={pillName}&containerId={containerId}") {
+            fun NavController.toContainer(dispenserId: String, dispenserName: String, slot: Int, pillName: String, containerId: Int) =
+                navigate("${MainRoute.route}/container?dispenserId=$dispenserId&dispenserName=${Uri.encode(dispenserName)}&slot=$slot&pillName=${Uri.encode(pillName)}&containerId=$containerId")
+        }
+
+        data object AddSchedule: Routes("${MainRoute.route}/addSchedule?containerId={containerId}") {
+            fun NavController.toAddSchedule(containerId: Int) =
+                navigate("${MainRoute.route}/addSchedule?containerId=$containerId")
         }
 
         data object Schedule: Routes("${MainRoute.route}/schedule") {
