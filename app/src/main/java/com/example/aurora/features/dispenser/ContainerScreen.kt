@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,8 +47,8 @@ import com.example.aurora.ui.theme.secondary4
 fun ContainerScreen(
     container: ContainerData,
     showHideRename: Boolean,
-    onScheduleClick: () -> Unit,
     onAddScheduleClick: () -> Unit,
+    onScheduleRowClick: (Int) -> Unit,
     onBackClick: () -> Unit,
     onRenameChange: (String) -> Unit,
     onRenameConfirm: () -> Unit,
@@ -75,7 +74,7 @@ fun ContainerScreen(
                 elevation = FloatingActionButtonDefaults.elevation(4.dp),
                 shape = CircleShape,
             ) {
-                Icon(Icons.Filled.Add, "Add Dispenser")
+                Icon(Icons.Filled.Add, "Add Schedule")
             }
         }
     ) { innerPadding ->
@@ -92,13 +91,20 @@ fun ContainerScreen(
                 Back(onBackClick)
                 Spacer(modifier = Modifier.height(16.dp))
                 ContainerHeaderCard(
-                    uiState = container,
+                    container = container,
                     onEditClick = { onBackToContainerRenameClicked() }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                ScheduleHeader( onScheduleClick )
-                Spacer(modifier = Modifier.height(8.dp))
-                ScheduleList(container)
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "Schedules:",
+                    color = primary1,
+                    fontSize = FontSize.BODY1,
+                    fontWeight = FontWeight.BODY1,
+                    lineHeight = LineHeight.BODY1,
+                    modifier = Modifier.padding(start = 12.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                ScheduleList(container, onScheduleRowClick)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -119,32 +125,10 @@ fun ContainerScreen(
 }
 
 @Composable
-fun ScheduleHeader(onClick: () -> Unit = {}) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = "Schedule",
-            color = primary1,
-            fontSize = FontSize.BODY2,
-            fontWeight = FontWeight.BODY2,
-            lineHeight = LineHeight.BODY2
-        )
-        Image(
-            painter = painterResource(R.drawable.angl_left),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
-    }
-}
-
-@Composable
-fun ScheduleList(container: ContainerData) {
+fun ScheduleList(
+    container: ContainerData,
+    onClick: (Int) -> Unit
+) {
     if (container.schedules.isEmpty()) {
         Text(
             text = "No schedules yet",
@@ -157,16 +141,21 @@ fun ScheduleList(container: ContainerData) {
     } else {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             container.schedules.forEach { schedule ->
-                ScheduleRow(schedule)
+                ScheduleRow(schedule) { onClick(schedule.id) }
             }
         }
     }
 }
 
 @Composable
-fun ScheduleRow(schedule: ScheduleData) {
+fun ScheduleRow(
+    schedule: ScheduleData,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -199,6 +188,12 @@ fun ScheduleRow(schedule: ScheduleData) {
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M
             )
+            Spacer(modifier = Modifier.weight(0.2f))
+            Image(
+                painter = painterResource(R.drawable.angl_left),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }
@@ -211,7 +206,7 @@ private fun formatTime(hour: Int, minute: Int): String {
 
 @Composable
 fun ContainerHeaderCard(
-    uiState: ContainerData,
+    container: ContainerData,
     onEditClick: () -> Unit,
 ) {
     Surface(
@@ -233,21 +228,30 @@ fun ContainerHeaderCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = uiState.pillName,
+                        text = container.pillName,
                         fontSize = FontSize.HEADING3,
                         fontWeight = FontWeight.HEADING3,
                         lineHeight = LineHeight.HEADING3,
                         color = primary1
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "ID: ${uiState.slotNumber}",
+                        text = "Slot: ${container.slotNumber}",
                         fontSize = FontSize.PARAGRAPH2,
                         fontWeight = FontWeight.PARAGRAPH2M,
                         lineHeight = LineHeight.PARAGRAPH2,
                         color = primary1
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = container.dispenserName,
+                    fontSize = FontSize.BODY2,
+                    fontWeight = FontWeight.BODY2,
+                    lineHeight = LineHeight.BODY2,
+                    color = primary1,
+                    modifier = Modifier.align(alignment = Alignment.Top)
+                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))

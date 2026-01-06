@@ -16,28 +16,28 @@ class AddScheduleViewModel(
     private val listSchedulesUseCase: ListSchedulesUseCase
 ): ViewModel() {
 
-    private val _state = MutableStateFlow(ScheduleFormState())
-    val state = _state.asStateFlow()
+    private val _schedule = MutableStateFlow(ScheduleFormState())
+    val schedule = _schedule.asStateFlow()
 
     private var existingSchedules: List<ScheduleEntity> = emptyList()
 
     fun onDayChange(day: Int) {
-        _state.update { it.copy(dayOfWeek = day, errorMessage = null) }
+        _schedule.update { it.copy(dayOfWeek = day, errorMessage = null) }
         updateValidity()
     }
 
     fun onHourChange(hour: Int) {
-        _state.update { it.copy(hour = hour, errorMessage = null) }
+        _schedule.update { it.copy(hour = hour, errorMessage = null) }
         updateValidity()
     }
 
     fun onMinuteChange(minute: Int) {
-        _state.update { it.copy(minute = minute, errorMessage = null) }
+        _schedule.update { it.copy(minute = minute, errorMessage = null) }
         updateValidity()
     }
 
     fun onRepeatChange(repeat: Boolean) {
-        _state.update { it.copy(repeat = repeat) }
+        _schedule.update { it.copy(repeat = repeat) }
     }
 
     fun loadSchedules(containerId: Int) {
@@ -54,60 +54,60 @@ class AddScheduleViewModel(
     }
 
     private fun updateValidity() {
-        val hourValid = _state.value.hour in 0..23
-        val minuteValid = _state.value.minute in 0..59
-        val dayValid = _state.value.dayOfWeek in 0..6
+        val hourValid = _schedule.value.hour in 0..23
+        val minuteValid = _schedule.value.minute in 0..59
+        val dayValid = _schedule.value.dayOfWeek in 0..6
         val valid = hourValid && minuteValid && dayValid
-        _state.update { it.copy(isValid = valid, errorMessage = if (valid) null else it.errorMessage) }
+        _schedule.update { it.copy(isValid = valid, errorMessage = if (valid) null else it.errorMessage) }
     }
 
     private fun validate(): Boolean {
-        val hourValid = _state.value.hour in 0..23
-        val minuteValid = _state.value.minute in 0..59
-        val dayValid = _state.value.dayOfWeek in 0..6
+        val hourValid = _schedule.value.hour in 0..23
+        val minuteValid = _schedule.value.minute in 0..59
+        val dayValid = _schedule.value.dayOfWeek in 0..6
         val baseValid = hourValid && minuteValid && dayValid
         if (!baseValid) {
-            _state.update { it.copy(isValid = false, errorMessage = "Please select a valid day/time") }
+            _schedule.update { it.copy(isValid = false, errorMessage = "Please select a valid day/time") }
             return false
         }
 
         val dup = existingSchedules.any {
-            it.dayOfWeek == _state.value.dayOfWeek &&
-            it.hour == _state.value.hour &&
-            it.minute == _state.value.minute
+            it.dayOfWeek == _schedule.value.dayOfWeek &&
+            it.hour == _schedule.value.hour &&
+            it.minute == _schedule.value.minute
         }
         if (dup) {
-            _state.update { it.copy(isValid = false, errorMessage = "You already have this schedule!") }
+            _schedule.update { it.copy(isValid = false, errorMessage = "You already have this schedule!") }
             return false
         }
 
-        _state.update { it.copy(isValid = true, errorMessage = null) }
+        _schedule.update { it.copy(isValid = true, errorMessage = null) }
         return true
     }
 
     fun save(containerId: Int) {
         if (!validate()) return
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null, isSuccess = false) }
+            _schedule.update { it.copy(isLoading = true, errorMessage = null, isSuccess = false) }
             val req = CreateScheduleRequest(
-                dayOfWeek = _state.value.dayOfWeek.coerceIn(0,6),
-                hour = _state.value.hour.coerceIn(0,23),
-                minute = _state.value.minute.coerceIn(0,59),
-                repeat = _state.value.repeat
+                dayOfWeek = _schedule.value.dayOfWeek.coerceIn(0,6),
+                hour = _schedule.value.hour.coerceIn(0,23),
+                minute = _schedule.value.minute.coerceIn(0,59),
+                repeat = _schedule.value.repeat
             )
             createScheduleUseCase(containerId, req).fold(
                 onSuccess = {
-                    _state.update { it.copy(isLoading = false, isSuccess = true) }
+                    _schedule.update { it.copy(isLoading = false, isSuccess = true) }
                 },
                 onFailure = { error ->
-                    _state.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unable to save schedule") }
+                    _schedule.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unable to save schedule") }
                 }
             )
         }
     }
 
     fun resetSuccess() {
-        _state.update { it.copy(isSuccess = false) }
+        _schedule.update { it.copy(isSuccess = false) }
     }
 }
 

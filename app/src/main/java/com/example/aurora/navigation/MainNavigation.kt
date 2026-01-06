@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.aurora.features.dispenser.AddScheduleScreen
+import com.example.aurora.features.dispenser.AddScheduleViewModel
 import com.example.aurora.features.dispenser.ContainerScreen
 import com.example.aurora.features.dispenser.ContainerViewModel
 import com.example.aurora.features.dispenser.DispenserScreen
@@ -127,8 +128,9 @@ fun MainNavigation() {
         composable(route = Routes.MainRoute.AddDispenser.route) {
             val viewModelAddDispenser = getViewModel<AddDispenserViewModel>()
             val dispenserData by viewModelAddDispenser.dispenser.collectAsStateWithLifecycle()
-            LaunchedEffect(Unit) {
+            LaunchedEffect(Unit, Unit) {
                 viewModelAddDispenser.fetchDispenserNames()
+                //viewModelAddDispenser.dispenserCount()
             }
             AddDispenserScreen(
                 dispenser = dispenserData,
@@ -192,8 +194,14 @@ fun MainNavigation() {
                 container = container,
                 showHideRename = showHideRename,
                 onBackClick = { navController.navigateUp() },
-                onScheduleClick = { navController.toSchedule() },
                 onAddScheduleClick = { navController.toAddSchedule(containerId) },
+                onScheduleRowClick = { scheduleId ->
+                    navController.toSchedule(
+                        scheduleId = scheduleId,
+                        containerName = container.pillName,
+                        dispenserName = dispenserName
+                    )
+                },
                 onRenameChange = { containerViewModel.setRenameDraft(it) },
                 onRenameConfirm = { containerViewModel.confirmRename() },
                 onBackToContainerRenameClicked = { containerViewModel.showHideRenameBack() },
@@ -202,14 +210,14 @@ fun MainNavigation() {
         }
         composable(route = Routes.MainRoute.AddSchedule.route){ navBackStackEntry ->
             val containerId = navBackStackEntry.arguments?.getString("containerId")?.toIntOrNull() ?: 0
-            val addScheduleViewModel = getViewModel<com.example.aurora.features.dispenser.AddScheduleViewModel>()
-            val formState by addScheduleViewModel.state.collectAsStateWithLifecycle()
+            val addScheduleViewModel = getViewModel<AddScheduleViewModel>()
+            val schedule by addScheduleViewModel.schedule.collectAsStateWithLifecycle()
             LaunchedEffect(containerId) {
                 addScheduleViewModel.resetSuccess()
                 addScheduleViewModel.loadSchedules(containerId)
             }
             AddScheduleScreen(
-                state = formState,
+                schedule = schedule,
                 onDayChange = { addScheduleViewModel.onDayChange(it) },
                 onHourChange = { addScheduleViewModel.onHourChange(it) },
                 onMinuteChange = { addScheduleViewModel.onMinuteChange(it) },
@@ -218,8 +226,32 @@ fun MainNavigation() {
                 onBackClick = { navController.navigateUp() }
             )
         }
-        composable(route = Routes.MainRoute.Schedule.route){
-            ScheduleScreen()
+        composable(route = Routes.MainRoute.Schedule.route){ navBackStackEntry ->
+            val scheduleId = navBackStackEntry.arguments?.getString("scheduleId")?.toIntOrNull() ?: 0
+            val containerName = navBackStackEntry.arguments?.getString("containerName")?: ""
+            val dispenserName = navBackStackEntry.arguments?.getString("dispenserName") ?: ""
+            val viewModel = getViewModel<com.example.aurora.features.dispenser.ScheduleViewModel>()
+            val schedule by viewModel.schedule.collectAsStateWithLifecycle()
+            val showHideDelete by viewModel.showPopUpDelete.collectAsStateWithLifecycle()
+            LaunchedEffect(scheduleId, containerName, dispenserName) {
+                viewModel.resetSuccess()
+                if (scheduleId != 0) {
+                    viewModel.load(scheduleId, containerName, dispenserName)
+                }
+            }
+            ScheduleScreen(
+                schedule = schedule,
+                onBackClick = { navController.navigateUp() },
+                onEditToggle = { viewModel.toggleEdit() },
+                onDeleteClick = { viewModel.deleteSchedule() },
+                showHideDelete = showHideDelete,
+                onBackToScheduleDeleteClicked = { viewModel.showHideDelete() },
+                onDayChange = { viewModel.onDayChange(it) },
+                onHourChange = { viewModel.onHourChange(it) },
+                onMinuteChange = { viewModel.onMinuteChange(it) },
+                onRepeatChange = { viewModel.onRepeatChange(it) },
+                onSave = { viewModel.save() }
+            )
         }
         composable(route = Routes.MainRoute.Google.route) {
             GoogleScreen()

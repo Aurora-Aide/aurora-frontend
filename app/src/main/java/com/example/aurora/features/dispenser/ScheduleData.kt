@@ -3,6 +3,7 @@ package com.example.aurora.features.dispenser
 import com.example.aurora.R
 
 data class ScheduleData(
+    val id: Int = 0,
     val day: DaysOfWeek = DaysOfWeek.EMPTY,
     val hour: Int = 0,
     val minutes: Int = 0,

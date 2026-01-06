@@ -95,7 +95,12 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     }
 
     override suspend fun deleteSchedule(id: Int): Result<Unit> {
-        return requestBody(retrofit.deleteSchedule(id))
+        val response = retrofit.deleteSchedule(id)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Throwable(response.errorBody().toString()))
+        }
     }
 
     override suspend fun getDispenser(id: String): Result<Dispenser> {

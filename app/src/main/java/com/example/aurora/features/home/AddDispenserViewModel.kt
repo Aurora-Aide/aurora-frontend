@@ -35,10 +35,16 @@ class AddDispenserViewModel(
             listAllUserDispensersUseCase().fold(
                 onSuccess = { data ->
                     val names = data.dispensers.map { it.name }
-                    val ids = data.dispensers.map { it.id }
+                    val ids = data.dispensers.map { it.serial_id }
                     _dispenser.update {
-                        it.copy(allDispenserNames = names, allDispenserIds = ids)
+                        it.copy(
+                            allDispenserNames = names,
+                            allDispenserIds = ids,
+                            //isCountError = names.size >= 5
+                        )
                     }
+                    Log.d("TAG", "ids ${_dispenser.value.allDispenserIds}")
+                    Log.d("TAG", "names ${_dispenser.value.allDispenserNames}")
                 },
                 onFailure = {
 
@@ -100,7 +106,7 @@ class AddDispenserViewModel(
     fun validate(){
         val idValid = isIDValid()
         val nameValid = isNameValid()
-        if( idValid == AddDispenserIDErrors.NONE && nameValid == AddDispenserNameErrors.NONE){
+        if(idValid == AddDispenserIDErrors.NONE && nameValid == AddDispenserNameErrors.NONE /*&& !_dispenser.value.isCountError*/){
             _dispenser.update {
                 it.copy(isIDError = AddDispenserIDErrors.NONE, isNameError = AddDispenserNameErrors.NONE)
             }

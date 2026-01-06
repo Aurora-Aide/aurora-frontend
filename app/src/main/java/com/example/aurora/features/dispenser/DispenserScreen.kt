@@ -87,7 +87,7 @@ fun DispenserScreen(
                 .padding(horizontal = 16.dp)
         ) {
             DispenserHeaderCard(
-                uiState = dispenser,
+                dispenser = dispenser,
                 onEditClick = { onBackToDispenserRenameClicked() },
                 onDeleteClick = { onBackToDispenserDeleteClicked() },
             )
@@ -95,7 +95,7 @@ fun DispenserScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ContentArea(
-                uiState = dispenser,
+                dispenser = dispenser,
                 onPillClick = onPillClick
             )
         }
@@ -127,7 +127,7 @@ fun DispenserScreen(
 
 @Composable
 fun DispenserHeaderCard(
-    uiState: DispenserData,
+    dispenser: DispenserData,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
@@ -150,24 +150,23 @@ fun DispenserHeaderCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-            Text(
-                        text = uiState.name,
-                fontSize = FontSize.HEADING3,
-                fontWeight = FontWeight.HEADING3,
-                lineHeight = LineHeight.HEADING3,
-                color = primary1
-            )
-                    Spacer(modifier = Modifier.height(6.dp))
-        Text(
-                        text = "ID: ${uiState.id}",
-            fontSize = FontSize.PARAGRAPH2,
-            fontWeight = FontWeight.PARAGRAPH2M,
-            lineHeight = LineHeight.PARAGRAPH2,
-            color = primary1
-        )
-    }
-}
-
+                    Text(
+                        text = dispenser.name,
+                        fontSize = FontSize.HEADING3,
+                        fontWeight = FontWeight.HEADING3,
+                        lineHeight = LineHeight.HEADING3,
+                        color = primary1
+                    )
+                            Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "ID: ${dispenser.id}",
+                        fontSize = FontSize.PARAGRAPH2,
+                        fontWeight = FontWeight.PARAGRAPH2M,
+                        lineHeight = LineHeight.PARAGRAPH2,
+                        color = primary1
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
@@ -192,15 +191,15 @@ fun DispenserHeaderCard(
 
 @Composable
 fun ContentArea(
-    uiState: DispenserData,
+    dispenser: DispenserData,
     onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit
 ) {
     when {
-        uiState.errorMessage != null -> {
-            ErrorState(message = uiState.errorMessage)
+        dispenser.errorMessage != null -> {
+            ErrorState(message = dispenser.errorMessage)
         }
 
-        uiState.containers.isEmpty() -> {
+        dispenser.containers.isEmpty() -> {
             EmptyState()
         }
 
@@ -209,7 +208,7 @@ fun ContentArea(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues( bottom = 32.dp)
             ) {
-                items(uiState.containers) { container ->
+                items(dispenser.containers) { container ->
                     ContainerRow(
                         title = container.title,
                         subtitle = container.subtitle,

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -80,6 +81,16 @@ fun AddDispenserScreen(
                 onNameChange(it)
             },
         )
+//        if (dispenser.isCountError) {
+//            Spacer(modifier = Modifier.height(12.dp))
+//            Text(
+//                text = "You've exceeded the maximum allowed dispensers!" +
+//                        "You have 5 dispensers which is the maximum!",
+//                color = functionalError,
+//                fontSize = FontSize.PARAGRAPH2,
+//                fontWeight = FontWeight.PARAGRAPH2M
+//            )
+//        }
         Spacer(modifier = Modifier.weight(1f))
         AddDispenserFooter(
             onAddDispenserClick = {
@@ -144,7 +155,8 @@ fun AddDispenserFields(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            errorText = dispenser.isIDError.value?.let { stringResource(it) } ?: ""
+            errorText = dispenser.isIDError.value?.let { stringResource(it) } ?: "",
+            //enabled = !dispenser.isCountError
         )
 
         Spacer(modifier = Modifier.height((10.dp)))
@@ -170,7 +182,8 @@ fun AddDispenserFields(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            errorText = dispenser.isNameError.value?.let { stringResource(it) } ?: ""
+            errorText = dispenser.isNameError.value?.let { stringResource(it) } ?: "",
+            //enabled = !dispenser.isCountError
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -224,6 +237,7 @@ fun TextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     trailingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
+    //enabled: Boolean
 ) {
     OutlinedTextField(
         value = value,
@@ -235,6 +249,7 @@ fun TextField(
         placeholder = {
             Text(text = placeholder, color = primary1)
         },
+        //enabled = enabled,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         trailingIcon = trailingIcon,

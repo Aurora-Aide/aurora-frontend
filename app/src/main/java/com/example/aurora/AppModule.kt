@@ -22,6 +22,7 @@ import com.example.aurora.domain.usecase.UpdateScheduleUseCase
 import com.example.aurora.domain.usecase.DeleteScheduleUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.features.dispenser.AddScheduleViewModel
+import com.example.aurora.features.dispenser.ScheduleViewModel
 import com.example.aurora.features.forgotPassword.ForgotViewModel
 import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.home.HomeViewModel
@@ -69,6 +70,10 @@ val appModule = module {
 
     viewModel {
         AddScheduleViewModel(get(), get())
+    }
+
+    viewModel {
+        ScheduleViewModel(get(), get(), get())
     }
 
     viewModel {

@@ -57,8 +57,9 @@ sealed class Routes(val route: String) {
                 navigate("${MainRoute.route}/addSchedule?containerId=$containerId")
         }
 
-        data object Schedule: Routes("${MainRoute.route}/schedule") {
-            fun NavController.toSchedule() = navigate("${MainRoute.route}/schedule")
+        data object Schedule: Routes("${MainRoute.route}/schedule?scheduleId={scheduleId}&containerName={containerName}&dispenserName={dispenserName}") {
+            fun NavController.toSchedule(scheduleId: Int, containerName: String, dispenserName: String) =
+                navigate("${MainRoute.route}/schedule?scheduleId=$scheduleId&containerName=${Uri.encode(containerName)}&dispenserName=${Uri.encode(dispenserName)}")
         }
     }
 }

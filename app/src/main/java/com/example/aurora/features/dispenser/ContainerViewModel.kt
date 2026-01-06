@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.aurora.domain.usecase.ListSchedulesUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
-import com.example.aurora.data.entity.ScheduleEntity
 import com.example.aurora.features.dispenser.DaysOfWeek.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,11 +34,13 @@ class ContainerViewModel(
         containerId: Int
     ) {
         _container.update {
+            // Avoid overwriting a renamed pill when coming back from another screen
+            val keepExistingName = it.containerId == containerId && it.pillName.isNotBlank()
             it.copy(
                 dispenserName = dispenserName,
                 slotNumber = slotNumber,
-                pillName = pillName,
-                renameDraft = pillName,
+                pillName = if (keepExistingName) it.pillName else pillName,
+                renameDraft = if (keepExistingName) it.renameDraft else pillName,
                 containerId = containerId
             )
         }
@@ -66,7 +67,7 @@ class ContainerViewModel(
         val nameValid = isNameValid(_container.value.renameDraft)
         if (nameValid == AddDispenserNameErrors.NONE) {
             _container.update {
-                it.copy(isRenameError = nameValid)
+                it.copy(isRenameError = nameValid, pillName = _container.value.renameDraft)
             }
             updatePillName()
         } else {
@@ -76,7 +77,7 @@ class ContainerViewModel(
         }
     }
 
-    private fun mapSchedule(model: ScheduleEntity): ScheduleData {
+    private fun mapSchedule(model: com.example.aurora.data.entity.ScheduleEntity): ScheduleData {
         val day = when (model.dayOfWeek) {
             0 -> MONDAY
             1 -> TUESDAY
@@ -88,6 +89,7 @@ class ContainerViewModel(
             else -> DaysOfWeek.EMPTY
         }
         return ScheduleData(
+            id = model.id,
             day = day,
             hour = model.hour,
             minutes = model.minute,

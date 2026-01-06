@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -29,14 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import android.app.TimePickerDialog
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,13 +39,11 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimeInput
-import androidx.compose.ui.draw.clip
 import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
@@ -72,7 +62,7 @@ import com.example.aurora.ui.theme.secondary6
 
 @Composable
 fun AddScheduleScreen(
-    state: ScheduleFormState,
+    schedule: ScheduleFormState,
     onDayChange: (Int) -> Unit,
     onHourChange: (Int) -> Unit,
     onMinuteChange: (Int) -> Unit,
@@ -80,8 +70,8 @@ fun AddScheduleScreen(
     onSave: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) onBackClick()
+    LaunchedEffect(schedule.isSuccess) {
+        if (schedule.isSuccess) onBackClick()
     }
 
     Scaffold { innerPadding ->
@@ -104,65 +94,42 @@ fun AddScheduleScreen(
             )
             Spacer(modifier = Modifier.weight(0.2f))
             DayDropdown(
-                selected = state.dayOfWeek,
-                onSelected = onDayChange
+                selected = schedule.dayOfWeek,
+                onSelected = onDayChange,
+                enabled = true
             )
-
-            TimePickerField(
-                hour = state.hour,
-                minute = state.minute,
-                onTimeSelected = { h, m ->
-                    onHourChange(h)
-                    onMinuteChange(m)
-                }
-            )
-
-            Text(
-                text = "*Times are in 24h!",
-                color = secondary4,
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2M
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                horizontalAlignment = Alignment.Start
             ) {
-                Column {
-                    Text(
-                        text = "Repeat weekly",
-                        color = primary1,
-                        fontSize = FontSize.PARAGRAPH1,
-                        fontWeight = FontWeight.PARAGRAPH1M
-                    )
-                    Text(
-                        text = "Runs every week on selected day",
-                        color = secondary4,
-                        fontSize = FontSize.PARAGRAPH2,
-                        fontWeight = FontWeight.PARAGRAPH2M
-                    )
-                }
-                Switch(
-                    checked = state.repeat,
-                    onCheckedChange = onRepeatChange,
-                    colors = SwitchDefaults.colors(
-                        checkedTrackColor = baseLightBlue,
-                        uncheckedTrackColor = baseTransparentBlue,
-                        checkedThumbColor = secondary2,
-                        uncheckedThumbColor = secondary2,
-
-                        disabledCheckedTrackColor = baseLightBlue.copy(alpha = 0.3f),
-                        disabledUncheckedTrackColor = baseTransparentBlue.copy(alpha = 0.3f),
-                        disabledCheckedThumbColor = secondary2.copy(alpha = 0.3f),
-                        disabledUncheckedThumbColor = secondary2.copy(alpha = 0.3f),
-                    )
+                TimePickerField(
+                    hour = schedule.hour,
+                    minute = schedule.minute,
+                    onTimeSelected = { h, m ->
+                        onHourChange(h)
+                        onMinuteChange(m)
+                    },
+                    enabled = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "*Times are in 24h!",
+                    color = secondary4,
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2M,
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
 
-            if (!state.errorMessage.isNullOrEmpty()) {
+
+            Switch(
+                repeat = schedule.repeat,
+                onRepeatChange = onRepeatChange,
+                enabled = true
+            )
+
+            if (!schedule.errorMessage.isNullOrEmpty()) {
                 Text(
-                    text = state.errorMessage,
+                    text = schedule.errorMessage,
                     color = Color.Red,
                     fontSize = FontSize.PARAGRAPH2,
                     fontWeight = FontWeight.PARAGRAPH2M
@@ -177,12 +144,12 @@ fun AddScheduleScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(8.dp),
-                enabled = state.isValid && (state.dayOfWeek in 0..6) && (state.hour in 0..23) && (state.minute in 0..59) && !state.isLoading,
+                enabled = schedule.isValid && (schedule.dayOfWeek in 0..6) && (schedule.hour in 0..23) && (schedule.minute in 0..59) && !schedule.isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
             ) {
                 Text(
-                    text = if (state.isLoading) "Saving...  " else "Save  ",
+                    text = if (schedule.isLoading) "Saving...  " else "Save  ",
                     fontSize = FontSize.PARAGRAPH1,
                     fontWeight = FontWeight.PARAGRAPH1M,
                     lineHeight = LineHeight.PARAGRAPH1,
@@ -190,7 +157,7 @@ fun AddScheduleScreen(
                 )
                 Image(
                     painter = painterResource(id = R.drawable.add_circle),
-                    contentDescription = "add_dispenser",
+                    contentDescription = "add",
                     modifier = Modifier
                         .size(20.dp)
                 )
@@ -202,9 +169,10 @@ fun AddScheduleScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DayDropdown(
+fun DayDropdown(
     selected: Int,
-    onSelected: (Int) -> Unit
+    onSelected: (Int) -> Unit,
+    enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
     val baseDays = listOf(
@@ -222,12 +190,13 @@ private fun DayDropdown(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { if(enabled) expanded = !expanded }
     ) {
         OutlinedTextField(
             value = label,
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text("Day of week") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
@@ -256,7 +225,7 @@ private fun DayDropdown(
                         .fillMaxWidth()
                         .background(baseBlue),
                     colors = MenuDefaults.itemColors(
-                        textColor = secondary4
+                        textColor = secondary6
                     ),
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
@@ -285,10 +254,22 @@ private fun AuroraTimePickerDialog(
         containerColor = Color.White,
         titleContentColor = primary1,
         textContentColor = primary1,
-        title = { Text("Select time", color = primary1) },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ){
+                Text("Select time",
+                    color = primary1,
+                    fontSize = FontSize.BODY1,
+                    fontWeight = FontWeight.BODY1,
+                    lineHeight = LineHeight.BODY1
+                )
+            }
+
+        },
         text = { content() },
 
-        // 👇 Make ONE custom bottom row (toggle on left, buttons on right)
         confirmButton = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -317,17 +298,17 @@ private fun AuroraTimePickerDialog(
             }
         },
 
-        // 👇 keep empty because we rendered Cancel ourselves
         dismissButton = {}
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TimePickerField(
+fun TimePickerField(
     hour: Int,
     minute: Int,
-    onTimeSelected: (Int, Int) -> Unit
+    onTimeSelected: (Int, Int) -> Unit,
+    enabled: Boolean
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showDial by remember { mutableStateOf(true) }
@@ -373,9 +354,10 @@ private fun TimePickerField(
         value = display,
         onValueChange = {},
         readOnly = true,
+        enabled = enabled,
         label = { Text("Time (24h)") },
         trailingIcon = {
-            IconButton(onClick = { showDialog = true }) {
+            IconButton(onClick = { if(enabled) showDialog = true }) {
                 Icon(
                     painter = painterResource(id = R.drawable.pen),
                     contentDescription = "Pick time"
@@ -389,4 +371,48 @@ private fun TimePickerField(
             focusedLabelColor = secondary2
         )
     )
+}
+
+@Composable
+fun Switch(
+    repeat: Boolean,
+    onRepeatChange: (Boolean) -> Unit,
+    enabled: Boolean
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(
+                text = "Repeat weekly",
+                color = if(enabled) primary1 else secondary4,
+                fontSize = FontSize.PARAGRAPH1,
+                fontWeight = FontWeight.PARAGRAPH1M
+            )
+            Text(
+                text = "Runs every week on selected day",
+                color = secondary4,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M
+            )
+        }
+        Switch(
+            checked = repeat,
+            onCheckedChange = onRepeatChange,
+            enabled = enabled,
+            colors = SwitchDefaults.colors(
+                checkedTrackColor = baseLightBlue,
+                uncheckedTrackColor = baseTransparentBlue,
+                checkedThumbColor = secondary2,
+                uncheckedThumbColor = secondary2,
+
+                disabledCheckedTrackColor = baseLightBlue.copy(alpha = 0.3f),
+                disabledUncheckedTrackColor = baseTransparentBlue.copy(alpha = 0.3f),
+                disabledCheckedThumbColor = secondary2.copy(alpha = 0.3f),
+                disabledUncheckedThumbColor = secondary2.copy(alpha = 0.3f),
+            )
+        )
+    }
 }
