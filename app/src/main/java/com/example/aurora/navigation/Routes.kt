@@ -19,8 +19,11 @@ sealed class Routes(val route: String) {
             fun NavController.toSignUp() = navigate("${MainRoute.route}/signUp")
         }
 
-        data object Home : Routes("${MainRoute.route}/home?name={name}&id={id}") {
+        data object Home : Routes("${MainRoute.route}/home?name={name}") {
             fun NavController.toHome(name: String) = navigate("${MainRoute.route}/home?name=${Uri.encode(name)}")
+
+            fun createRoute(name: String, id: String = "") =
+                "${MainRoute.route}/home?name=${Uri.encode(name)}&id=${Uri.encode(id)}"
         }
 
         data object AddDispenser : Routes("${MainRoute.route}/addDispenser") {
@@ -44,12 +47,15 @@ sealed class Routes(val route: String) {
         }
 
         data object Dispenser: Routes("${MainRoute.route}/dispenser?id={id}&name={name}") {
-            fun NavController.toDispenser(id: String, name: String) = navigate("${MainRoute.route}/dispenser?id=$id&name=${Uri.encode(name)}")
+            fun NavController.toDispenser(id: String, name: String) =
+                navigate("${MainRoute.route}/dispenser?id=$id&name=${Uri.encode(name)}")
         }
 
-        data object Container: Routes("${MainRoute.route}/container?dispenserId={dispenserId}&dispenserName={dispenserName}&slot={slot}&pillName={pillName}&containerId={containerId}") {
+        data object Container: Routes("${MainRoute.route}/container?dispenserId={dispenserId}" +
+                "&dispenserName={dispenserName}&slot={slot}&pillName={pillName}&containerId={containerId}") {
             fun NavController.toContainer(dispenserId: String, dispenserName: String, slot: Int, pillName: String, containerId: Int) =
-                navigate("${MainRoute.route}/container?dispenserId=$dispenserId&dispenserName=${Uri.encode(dispenserName)}&slot=$slot&pillName=${Uri.encode(pillName)}&containerId=$containerId")
+                navigate("${MainRoute.route}/container?dispenserId=$dispenserId" +
+                        "&dispenserName=${Uri.encode(dispenserName)}&slot=$slot&pillName=${Uri.encode(pillName)}&containerId=$containerId")
         }
 
         data object AddSchedule: Routes("${MainRoute.route}/addSchedule?containerId={containerId}") {
@@ -57,9 +63,11 @@ sealed class Routes(val route: String) {
                 navigate("${MainRoute.route}/addSchedule?containerId=$containerId")
         }
 
-        data object Schedule: Routes("${MainRoute.route}/schedule?scheduleId={scheduleId}&containerName={containerName}&dispenserName={dispenserName}") {
+        data object Schedule: Routes("${MainRoute.route}/schedule?scheduleId={scheduleId}" +
+                "&containerName={containerName}&dispenserName={dispenserName}") {
             fun NavController.toSchedule(scheduleId: Int, containerName: String, dispenserName: String) =
-                navigate("${MainRoute.route}/schedule?scheduleId=$scheduleId&containerName=${Uri.encode(containerName)}&dispenserName=${Uri.encode(dispenserName)}")
+                navigate("${MainRoute.route}/schedule?scheduleId=$scheduleId" +
+                        "&containerName=${Uri.encode(containerName)}&dispenserName=${Uri.encode(dispenserName)}")
         }
     }
 }

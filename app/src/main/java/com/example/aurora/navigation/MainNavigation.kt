@@ -1,12 +1,20 @@
 package com.example.aurora.navigation
 
+import android.app.Activity
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.aurora.features.dispenser.AddScheduleScreen
 import com.example.aurora.features.dispenser.AddScheduleViewModel
@@ -35,7 +43,6 @@ import com.example.aurora.navigation.Routes.MainRoute.AddDispenser.toAddDispense
 import com.example.aurora.navigation.Routes.MainRoute.AddSchedule.toAddSchedule
 import com.example.aurora.navigation.Routes.MainRoute.Container.toContainer
 import com.example.aurora.navigation.Routes.MainRoute.Dispenser.toDispenser
-import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
 import com.example.aurora.navigation.Routes.MainRoute.ForgotPassword.toForgotPassword
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.aurora.navigation.Routes.MainRoute.Home.toHome
@@ -44,11 +51,45 @@ import com.example.aurora.navigation.Routes.MainRoute.Profile.toProfile
 import com.example.aurora.navigation.Routes.MainRoute.Schedule.toSchedule
 import com.example.aurora.navigation.Routes.MainRoute.Settings.toSettings
 import com.example.aurora.navigation.Routes.MainRoute.SignUp.toSignUp
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
+
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val doubleBackRoutes = setOf(
+        Routes.MainRoute.Login.route,
+        Routes.MainRoute.SignUp.route,
+        Routes.MainRoute.Home.route
+    )
+
+    val isDoubleBackScreen = currentRoute in doubleBackRoutes
+
+    var backPressedOnce by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(backPressedOnce) {
+        if (backPressedOnce) {
+            delay(1500)
+            backPressedOnce = false
+        }
+    }
+
+    BackHandler(enabled = isDoubleBackScreen) {
+        if (backPressedOnce) {
+            activity?.moveTaskToBack(true)
+        } else {
+            backPressedOnce = true
+            Toast.makeText(context, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     NavHost(navController, startDestination = Routes.MainRoute.Login.route) {
         composable(route = Routes.MainRoute.Login.route) {
             val viewModelLogin = getViewModel<LoginViewModel>()
@@ -61,7 +102,10 @@ fun MainNavigation() {
                 isLoginSuccessful = {
                     Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.toHome(loginData.firstName)
+                    navController.navigate(Routes.MainRoute.Home.createRoute(loginData.firstName)) {
+                        popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
                 onSignUpClick = { navController.toSignUp() },
@@ -80,7 +124,7 @@ fun MainNavigation() {
                 onSendClick = {viewModelPass.validateEmail()},
                 onResetClick = {viewModelPass.validatePassword()},
                 isResetSuccessful = {},
-                onBackClick = {navController.toLogIn()},
+                onBackClick = {navController.navigateUp()},
             )
         }
         composable(route = Routes.MainRoute.SignUp.route) {
@@ -99,7 +143,10 @@ fun MainNavigation() {
                     Log.d("TAG", "to home")
                     viewModelSignup.resetSignup()
                     viewModelSignup.validateSecondStep()
-                    navController.toHome(signupData.firstName)
+                    navController.navigate(Routes.MainRoute.Home.createRoute(signupData.firstName)) {
+                        popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
 
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
@@ -270,8 +317,22 @@ fun MainNavigation() {
             ProfileScreen(
                 showPopupLogOut = showHideLogOut,
                 showPopupDelete = showHideDelete,
-                onLogOutClicked = { viewModel.performLogout { navController.toLogIn() } },
-                onDeleteAccountClicked = { viewModel.performDelete { navController.toSignUp()  }},
+                onLogOutClicked = {
+                    viewModel.performLogout {
+                        navController.navigate(Routes.MainRoute.Login.route) {
+                            popUpTo(Routes.MainRoute.Home.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                },
+                onDeleteAccountClicked = {
+                    viewModel.performDelete {
+                        navController.navigate(Routes.MainRoute.SignUp.route) {
+                            popUpTo(Routes.MainRoute.Home.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                },
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
