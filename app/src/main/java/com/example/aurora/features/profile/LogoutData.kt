@@ -1,6 +1,7 @@
 package com.example.aurora.features.profile
 
 data class LogoutData (
-    val refresh: String = "",
-    val isLoggedOut: Boolean = false,
+    val refreshToken: String = "",
+    val accessToken: String = "",
+    // val user: UserModel,
 )
