@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.domain.usecase.UpdateNamesUseCase
 import com.example.aurora.domain.usecase.GetUserUseCase
+import com.example.aurora.features.signup.SignupNamesErrors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -33,7 +34,24 @@ class PersonalInformationViewModel(
         }
     }
 
-    fun updateNames(onSuccess: () -> Unit) {
+    private fun isNameValid( name: String): SignupNamesErrors {
+        return if(name.isEmpty()){
+            SignupNamesErrors.EMPTY_NAME
+        } else if (!Regex("^[\\p{L}\\p{N} _-]{3,}$")
+                .matches(name)){
+            SignupNamesErrors.INVALID_NAME
+        } else{
+            SignupNamesErrors.NONE
+        }
+    }
+
+    fun resetUpdateNames(){
+        _personalInformation.update {
+            it.copy(isUpdateNamesSuccessful = false)
+        }
+    }
+
+    private fun updateNames() {
         viewModelScope.launch {
             updateNamesUseCase.invoke(_personalInformation.value.firstName, _personalInformation.value.lastName).fold(
                 onSuccess = { user ->
@@ -42,15 +60,31 @@ class PersonalInformationViewModel(
                         it.copy(
                             firstName = user.firstName,
                             lastName = user.lastName,
-                            email = user.email
+                            email = user.email,
+                            isUpdateNamesSuccessful = true
                         )
                     }
-                    onSuccess()
                 },
                 onFailure = { error ->
                     Log.e("TAG", "Update names request failed: ${error.message}")
                 }
             )
+        }
+    }
+
+    fun validateNames(){
+        val firstNameValid = isNameValid(_personalInformation.value.firstName)
+        val lastNameValid = isNameValid(_personalInformation.value.lastName)
+        if(firstNameValid == SignupNamesErrors.NONE &&
+            lastNameValid == SignupNamesErrors.NONE){
+            _personalInformation.update {
+                it.copy(isFirstNameError = SignupNamesErrors.NONE, isLastNameError = SignupNamesErrors.NONE)
+            }
+            updateNames()
+        } else{
+            _personalInformation.update {
+                it.copy(isFirstNameError = firstNameValid, isLastNameError = lastNameValid)
+            }
         }
     }
 

@@ -9,8 +9,13 @@ import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.model.Tokens
 import com.example.aurora.data.model.UserModel
 import com.example.aurora.data.model.DeleteUserResponse
-import com.example.aurora.data.model.UpdateNamesRequest
 import com.example.aurora.data.model.DeleteDispenserResponse
+import com.example.aurora.data.model.UpdatePillNameRequest
+import com.example.aurora.data.model.UpdateDispenserNameRequest
+import com.example.aurora.data.model.ContainerModel
+import com.example.aurora.data.model.ScheduleModel
+import com.example.aurora.data.model.CreateScheduleRequest
+import com.example.aurora.data.model.UpdateScheduleRequest
 
 interface AuthDataSource {
     suspend fun login(email: String, password: String): Result<Tokens>
@@ -25,4 +30,12 @@ interface AuthDataSource {
     suspend fun deleteUser(email: String): Result<DeleteUserResponse>
     suspend fun updateNames(firstName: String?, lastName: String?): Result<UserModel>
     suspend fun deleteDispenser(name: String): Result<DeleteDispenserResponse>
+    suspend fun updatePillName(request: UpdatePillNameRequest): Result<ContainerModel>
+    suspend fun updateDispenserName(request: UpdateDispenserNameRequest): Result<Dispenser>
+    suspend fun listSchedules(containerId: Int): Result<List<ScheduleModel>>
+    suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleModel>
+    suspend fun getSchedule(id: Int): Result<ScheduleModel>
+    suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleModel>
+    suspend fun deleteSchedule(id: Int): Result<Unit>
+    suspend fun getDispenser(id: String): Result<Dispenser>
 }

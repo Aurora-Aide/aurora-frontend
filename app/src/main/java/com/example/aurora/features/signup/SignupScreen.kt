@@ -1,6 +1,5 @@
 package com.example.aurora.features.signup
 
-import androidx.compose.foundation.BorderStroke
 import com.example.aurora.features.login.LoginEmailErrors
 import com.example.aurora.features.login.LoginPasswordErrors
 import androidx.compose.foundation.Image
@@ -36,10 +35,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,13 +49,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
-import com.example.aurora.navigation.Routes.MainRoute.Home.toHome
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
-import com.example.aurora.navigation.Routes.MainRoute.Profile.toProfile
 import com.example.aurora.ui.theme.*
 
 @Composable

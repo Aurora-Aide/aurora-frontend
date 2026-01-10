@@ -8,8 +8,6 @@ import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
 import com.example.aurora.features.login.LoginVariables
 import com.example.aurora.features.signup.SignupVariables
-import com.example.aurora.data.model.UpdateNamesRequest
-import com.example.aurora.data.model.DeleteDispenserResponse
 
 class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
     override suspend fun login(email: String, password: String): Result<Tokens> {
@@ -70,5 +68,42 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun deleteDispenser(name: String): Result<DeleteDispenserResponse> {
         return requestBody(retrofit.deleteDispenser(name))
+    }
+
+    override suspend fun updatePillName(request: UpdatePillNameRequest): Result<ContainerModel> {
+        return requestBody(retrofit.updatePillName(request))
+    }
+
+    override suspend fun updateDispenserName(request: UpdateDispenserNameRequest): Result<Dispenser> {
+        return requestBody(retrofit.updateDispenserName(request))
+    }
+
+    override suspend fun listSchedules(containerId: Int): Result<List<ScheduleModel>> {
+        return requestBody(retrofit.listSchedules(containerId))
+    }
+
+    override suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleModel> {
+        return requestBody(retrofit.createSchedule(containerId, request))
+    }
+
+    override suspend fun getSchedule(id: Int): Result<ScheduleModel> {
+        return requestBody(retrofit.getSchedule(id))
+    }
+
+    override suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleModel> {
+        return requestBody(retrofit.updateSchedule(id, request))
+    }
+
+    override suspend fun deleteSchedule(id: Int): Result<Unit> {
+        val response = retrofit.deleteSchedule(id)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Throwable(response.errorBody().toString()))
+        }
+    }
+
+    override suspend fun getDispenser(id: String): Result<Dispenser> {
+        return requestBody(retrofit.getDispenser(id))
     }
 }

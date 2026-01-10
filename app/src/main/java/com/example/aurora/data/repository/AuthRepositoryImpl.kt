@@ -8,6 +8,8 @@ import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.DeleteUserEntity
 import com.example.aurora.data.entity.UserEntity
 import com.example.aurora.data.entity.DeleteDispenserEntity
+import com.example.aurora.data.entity.ContainerEntity
+import com.example.aurora.data.entity.ScheduleEntity
 import com.example.aurora.data.mapper.toDispenserMapper
 import com.example.aurora.data.mapper.toDispensersMapper
 import com.example.aurora.data.mapper.toForgotPassMapper
@@ -15,8 +17,14 @@ import com.example.aurora.data.mapper.toLogoutMapper
 import com.example.aurora.data.mapper.toDeleteUserMapper
 import com.example.aurora.data.mapper.toUserEntity
 import com.example.aurora.data.mapper.toDeleteDispenserMapper
+import com.example.aurora.data.mapper.toContainerEntity
+import com.example.aurora.data.mapper.toScheduleEntity
 import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.sorce.AuthDataSource
+import com.example.aurora.data.model.UpdatePillNameRequest
+import com.example.aurora.data.model.UpdateDispenserNameRequest
+import com.example.aurora.data.model.CreateScheduleRequest
+import com.example.aurora.data.model.UpdateScheduleRequest
 
 class AuthRepositoryImpl(
     private val data: AuthDataSource,
@@ -82,8 +90,6 @@ class AuthRepositoryImpl(
                 msg.toLogoutMapper()
             }
         } catch (e: java.net.ProtocolException) {
-            // Handle HTTP 205 with body (backend bug, but logout succeeds)
-            // HTTP 205 means "Reset Content" - action succeeded
             if (e.message?.contains("HTTP 205") == true) {
                 tokenStorage.clearTokens()
                 Result.success(LogoutEntity(message = "Logged out successfully"))
@@ -142,6 +148,98 @@ class AuthRepositoryImpl(
             onSuccess = {
                  msg -> Result.success(msg.toDeleteDispenserMapper())
                  },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updatePillName(dispenserName: String, slotNumber: Int, pillName: String): Result<ContainerEntity> {
+        return data.updatePillName(
+            UpdatePillNameRequest(
+                dispenser_name = dispenserName,
+                slot_number = slotNumber,
+                pill_name = pillName
+            )
+        ).fold(
+            onSuccess = { 
+                container -> Result.success(container.toContainerEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updateDispenserName(currentName: String, newName: String): Result<DispenserEntity> {
+        return data.updateDispenserName(
+            UpdateDispenserNameRequest(
+                current_name = currentName,
+                new_name = newName
+            )
+        ).fold(
+            onSuccess = {
+                 dispenser -> Result.success(dispenser.toDispenserMapper()) 
+                },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun listSchedules(containerId: Int): Result<List<ScheduleEntity>> {
+        return data.listSchedules(containerId).fold(
+            onSuccess = { 
+                list -> Result.success(list.map { it.toScheduleEntity() })
+             },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleEntity> {
+        return data.createSchedule(containerId, request).fold(
+            onSuccess = { 
+                schedule -> Result.success(schedule.toScheduleEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun getSchedule(id: Int): Result<ScheduleEntity> {
+        return data.getSchedule(id).fold(
+            onSuccess = {
+                 schedule -> Result.success(schedule.toScheduleEntity())
+                 },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleEntity> {
+        return data.updateSchedule(id, request).fold(
+            onSuccess = { 
+                schedule -> Result.success(schedule.toScheduleEntity())
+             },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun deleteSchedule(id: Int): Result<Unit> {
+        return data.deleteSchedule(id)
+    }
+
+    override suspend fun getDispenser(id: String): Result<DispenserEntity> {
+        return data.getDispenser(id).fold(
+            onSuccess = { 
+                dispenser -> Result.success(dispenser.toDispenserMapper()) 
+            },
             onFailure = { 
                 Result.failure(it) 
             }

@@ -313,7 +313,7 @@ fun LogoutPopup(
             Box(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .background(Color.White, RoundedCornerShape(4.dp))
+                    .background(Color.White, RoundedCornerShape(12.dp))
                     .padding(24.dp)
             ) {
                 Column(
@@ -349,11 +349,11 @@ fun LogoutPopup(
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .clickable { onDismiss() }
-                                .padding(vertical = 12.dp),
+                                .padding(vertical = 16.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = stringResource(R.string.back_to_profile),
+                                text = stringResource(R.string.back),
                                 color = primary1,
                                 fontSize = FontSize.PARAGRAPH2,
                                 fontWeight = FontWeight.PARAGRAPH2M,
@@ -370,7 +370,7 @@ fun LogoutPopup(
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .clickable { onConfirmLogout() }
-                                .padding(vertical = 12.dp),
+                                .padding(vertical = 16.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(

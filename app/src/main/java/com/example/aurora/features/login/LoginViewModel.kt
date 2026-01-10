@@ -33,7 +33,6 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = { result ->
-                    // Tokens are already saved in AuthRepositoryImpl, no need to save again
                     _login.update {
                         it.copy(
                             isLoginSuccessful = true,

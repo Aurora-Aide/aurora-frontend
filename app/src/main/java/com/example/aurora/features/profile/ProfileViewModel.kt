@@ -36,11 +36,11 @@ class ProfileViewModel(
         viewModelScope.launch {
             logoutUseCase.invoke().fold(
                 onSuccess = {
+                    _showPopUpLogOut.update { false }
                     Log.d("TAG", "log out request successful")
                     _logout.update {
                         it.copy(refresh = "", isLoggedOut = true)
                     }
-                    _showPopUpLogOut.update { false }
                     onSuccess()
                 },
                 onFailure = { error ->

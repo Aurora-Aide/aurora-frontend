@@ -1,8 +1,8 @@
 package com.example.aurora.data.model
 
 data class Dispenser(
-    val id : Int,
+    val id : String = "",
     val name: String = "",
-    //val owner: UserModel,
+    val serial_id: String = "",
     val containers: List<ContainerModel>,
 )
