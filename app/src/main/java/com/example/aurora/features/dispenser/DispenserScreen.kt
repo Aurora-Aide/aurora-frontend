@@ -74,18 +74,15 @@ fun DispenserScreen(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            DispenserTopBar(onBackClick = onBackClick)
-        }
-    ) { innerPadding ->
-    Column(
-        modifier = Modifier
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+                .padding(vertical = 16.dp, horizontal = 16.dp)
         ) {
+            Back(onBackClick = onBackClick)
+            Spacer(modifier = Modifier.height(16.dp))
             DispenserHeaderCard(
                 dispenser = dispenser,
                 onEditClick = { onBackToDispenserRenameClicked() },
@@ -334,25 +331,6 @@ fun ErrorState(message: String) {
                 fontWeight = FontWeight.PARAGRAPH2M
             )
         }
-    }
-}
-
-@Composable
-fun DispenserTopBar(onBackClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.backarrow),
-            contentDescription = "back",
-            modifier = Modifier
-                .size(28.dp)
-                .clickable { onBackClick() }
-        )
     }
 }
 

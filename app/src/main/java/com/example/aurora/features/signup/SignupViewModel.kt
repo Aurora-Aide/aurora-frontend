@@ -51,20 +51,28 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     }
 
     fun signup(){
+        _signup.update { it.copy(isLoading = true) }
         viewModelScope.launch{
             signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.firstName, _signup.value.lastName).fold(
                 onSuccess = { result ->
-                    // Tokens are already saved in AuthRepositoryImpl, no need to save again
                     Log.d("TAG", "signup request")
                     _signup.update {
                         it.copy(
                             isSignupSuccessful = true,
                             firstName = result.firstName,
-                            lastName = result.lastName
+                            lastName = result.lastName,
+                            isLoading = false
                         )
                     }
                 },
-                onFailure = {
+                onFailure = { error ->
+                    _signup.update {
+                        it.copy(
+                            isSignupSuccessful = false,
+                            isLoading = false,
+                            error = error.message.toString()
+                        )
+                    }
 
                 }
             )
@@ -129,10 +137,12 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
             passwordRepeatValid == LoginPasswordErrors.NONE )
         {
             _signup.update {
-                it.copy(isEmailError = LoginEmailErrors.NONE,
+                it.copy(
+                    isEmailError = LoginEmailErrors.NONE,
                     isPasswordError = LoginPasswordErrors.NONE,
                     isPasswordRepeatError = LoginPasswordErrors.NONE,
-                    isFirstStep = false)
+                    isFirstStep = false
+                )
             }
         } else{
             _signup.update {

@@ -8,5 +8,6 @@ data class DispenserData (
     val isNameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
     val allDispenserNames: List<String> = emptyList(),
     val allDispenserIds: List<String> = emptyList(),
+    val isLoading: Boolean = false,
     //val isCountError: Boolean = false,
 )

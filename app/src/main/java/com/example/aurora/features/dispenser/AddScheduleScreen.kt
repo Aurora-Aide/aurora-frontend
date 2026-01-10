@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,6 +60,7 @@ import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberTimePickerState
 import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.secondary6
+import org.koin.dsl.module
 
 @Composable
 fun AddScheduleScreen(
@@ -79,7 +81,7 @@ fun AddScheduleScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(vertical = 16.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -144,7 +146,11 @@ fun AddScheduleScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(8.dp),
-                enabled = schedule.isValid && (schedule.dayOfWeek in 0..6) && (schedule.hour in 0..23) && (schedule.minute in 0..59) && !schedule.isLoading,
+                enabled = schedule.isValid &&
+                        (schedule.dayOfWeek in 0..6) &&
+                        (schedule.hour in 0..23) &&
+                        (schedule.minute in 0..59) &&
+                        !schedule.isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
             ) {
@@ -340,9 +346,17 @@ fun TimePickerField(
             onToggleMode = { showDial = !showDial }
         ) {
             if (showDial) {
-                TimePicker(state = pickerState, colors = pickerColors)
+                Box(
+                    contentAlignment = Alignment.Center
+                ){
+                    TimePicker(state = pickerState, colors = pickerColors)
+                }
             } else {
-                TimeInput(state = pickerState, colors = pickerColors)
+                Box(
+                    contentAlignment = Alignment.Center
+                ){
+                    TimeInput(state = pickerState, colors = pickerColors)
+                }
             }
         }
     }

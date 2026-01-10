@@ -3,6 +3,7 @@ package com.example.aurora.features.dispenser
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.data.model.UpdateScheduleRequest
 import com.example.aurora.domain.usecase.GetScheduleUseCase
 import com.example.aurora.domain.usecase.UpdateScheduleUseCase
 import com.example.aurora.domain.usecase.DeleteScheduleUseCase
@@ -129,7 +130,7 @@ class ScheduleViewModel(
             _schedule.update { it.copy(isSaving = true, errorMessage = null) }
             updateScheduleUseCase(
                 _schedule.value.id,
-                com.example.aurora.data.model.UpdateScheduleRequest(
+                UpdateScheduleRequest(
                     dayOfWeek = _schedule.value.dayOfWeek,
                     hour = _schedule.value.hour,
                     minute = _schedule.value.minute,

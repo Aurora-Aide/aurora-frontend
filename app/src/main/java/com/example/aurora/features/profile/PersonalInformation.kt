@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,89 +50,95 @@ fun PersonalInfoScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Back(onBackClick)
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Header(title = "Change your name/s:")
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        TextField(
-            value = personalInformationData.firstName,
-            onValueChange = onFirstNameChange,
-            label = "First Name",
-            placeholder = personalInformationData.firstName,
-            errorText = personalInformationData.isFirstNameError.value?.let { stringResource(it) }?: "",
-            error = personalInformationData.isFirstNameError != SignupNamesErrors.NONE,
-            trailingIcon = {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.pen),
-                        contentDescription = "pen",
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = personalInformationData.lastName,
-            onValueChange = onLastNameChange,
-            label = "Last name",
-            placeholder = personalInformationData.lastName,
-            errorText =  personalInformationData.isLastNameError.value?.let { stringResource(it) }?: "",
-            error = personalInformationData.isLastNameError != SignupNamesErrors.NONE,
-            trailingIcon = {
-                IconButton(
-                    onClick = {}
-                ){
-                    Image(
-                        painter = painterResource(id = R.drawable.pen),
-                        contentDescription = "pen",
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Button(
-            onClick = {
-                onUpdateNamesClick()
-            },
+    Scaffold { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = base0),
-            border = BorderStroke(1.dp, primary1)
-
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
+                .padding(16.dp, 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "Change Names  ",
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2M,
-                lineHeight = LineHeight.PARAGRAPH2,
-                color = primary1
+            Back(onBackClick)
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Header(title = "Change your name/s:")
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            TextField(
+                value = personalInformationData.firstName,
+                onValueChange = onFirstNameChange,
+                label = "First Name",
+                placeholder = personalInformationData.firstName,
+                errorText = personalInformationData.isFirstNameError.value?.let { stringResource(it) }?: "",
+                error = personalInformationData.isFirstNameError != SignupNamesErrors.NONE,
+                trailingIcon = {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.pen),
+                            contentDescription = "pen",
+                        )
+                    }
+                }
             )
-            Image(
-                painter = painterResource(id = R.drawable.upload),
-                contentDescription = "update_names",
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = personalInformationData.lastName,
+                onValueChange = onLastNameChange,
+                label = "Last name",
+                placeholder = personalInformationData.lastName,
+                errorText =  personalInformationData.isLastNameError.value?.let { stringResource(it) }?: "",
+                error = personalInformationData.isLastNameError != SignupNamesErrors.NONE,
+                trailingIcon = {
+                    IconButton(
+                        onClick = {}
+                    ){
+                        Image(
+                            painter = painterResource(id = R.drawable.pen),
+                            contentDescription = "pen",
+                        )
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    onUpdateNamesClick()
+                },
                 modifier = Modifier
-                    .size(20.dp)
-            )
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = base0),
+                border = BorderStroke(1.dp, primary1),
+                enabled = !personalInformationData.isLoading,
+
+            ) {
+                Text(
+                    text = if (personalInformationData.isLoading) "Changing names...  " else "Change Names  ",
+                    fontSize = FontSize.PARAGRAPH2,
+                    fontWeight = FontWeight.PARAGRAPH2M,
+                    lineHeight = LineHeight.PARAGRAPH2,
+                    color = primary1
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.upload),
+                    contentDescription = "update_names",
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.weight(0.3f))
         }
-        Spacer(modifier = Modifier.weight(0.3f))
     }
+
+
 }

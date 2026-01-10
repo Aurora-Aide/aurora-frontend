@@ -52,6 +52,7 @@ class PersonalInformationViewModel(
     }
 
     private fun updateNames() {
+        _personalInformation.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             updateNamesUseCase.invoke(_personalInformation.value.firstName, _personalInformation.value.lastName).fold(
                 onSuccess = { user ->
@@ -61,12 +62,14 @@ class PersonalInformationViewModel(
                             firstName = user.firstName,
                             lastName = user.lastName,
                             email = user.email,
-                            isUpdateNamesSuccessful = true
+                            isUpdateNamesSuccessful = true,
+                            isLoading = false,
                         )
                     }
                 },
                 onFailure = { error ->
                     Log.e("TAG", "Update names request failed: ${error.message}")
+                    _personalInformation.update { it.copy(isLoading = false, isUpdateNamesSuccessful = false) }
                 }
             )
         }

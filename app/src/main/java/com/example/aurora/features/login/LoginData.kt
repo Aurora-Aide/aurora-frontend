@@ -9,4 +9,6 @@ data class LoginData(
     val firstName: String = "",  // TODO use this in home
     val lastName: String = "",
     val id: String = "",
+    val isLoading: Boolean = false,
+    val error: String = "",
 )

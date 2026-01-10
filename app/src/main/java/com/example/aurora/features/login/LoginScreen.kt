@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -94,6 +95,7 @@ fun LoginScreen(
             onForgotPasswordClick = { onForgotPasswordClick() }
         )
         LoginFooter(
+            login = login,
             onLogInClick = {
                 onLoginClick()
             },
@@ -179,6 +181,17 @@ fun LoginFields(
             errorText = login.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
 
+        if(login.error.isNotEmpty()){
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = login.error,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M,
+                lineHeight = LineHeight.PARAGRAPH2,
+                color = functionalError
+            )
+        }
+
         TextButton(onClick = onForgotPasswordClick, modifier = Modifier.align(Alignment.End)) {
             Text(
                 text = "Forgot Password?",
@@ -196,6 +209,7 @@ fun LoginFields(
 
 @Composable
 fun LoginFooter(
+    login: LoginData,
     onLogInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onGoogleClick: () -> Unit,
@@ -215,7 +229,7 @@ fun LoginFooter(
 
         ) {
             Text(
-                text = "Log In",
+                text = if (login.isLoading) "Logging In..." else "Log In",
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

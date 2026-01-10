@@ -11,7 +11,7 @@
     <string name="error_wrong_id">Please enter a valid ID. Expected format: SIZE–YYYYMMDD–XXXX
                     ( Size - YearMonthDate - Serial number) (e.g., S–20250524–0001)</string>
     <string name="error_existing_dispenser">This dispenser has already been registered you cant register it again</string>
-    <string name="error_empty_name">Name for Dispenser is empty</string>
+    <string name="error_empty_name">Name is empty</string>
     <string name="error_wrong_name">Name must be at least 3 characters long and can
                     only contain letters, numbers, spaces, hyphens, and underscores</string>
     <string name="error_repeating_name">Your already have a dispenser with this name. Please chose another one</string>

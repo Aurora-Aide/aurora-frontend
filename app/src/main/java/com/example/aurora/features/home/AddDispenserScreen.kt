@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
+import com.example.aurora.features.dispenser.ScheduleDetailData
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -60,27 +62,29 @@ fun AddDispenserScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Back(onBackClick = { onBackClick() })
-        Spacer(modifier = Modifier.weight(1f))
-        AddDispenserHeader()
-        Spacer(modifier = Modifier.height(30.dp))
-        AddDispenserFields(
-            dispenser,
-            onIDChange = {
-                onIDChange(it)
-            },
-            onNameChange = {
-                onNameChange(it)
-            },
-        )
+    Scaffold { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp, 16.dp)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Back(onBackClick = { onBackClick() })
+            Spacer(modifier = Modifier.weight(1f))
+            AddDispenserHeader()
+            Spacer(modifier = Modifier.height(30.dp))
+            AddDispenserFields(
+                dispenser,
+                onIDChange = {
+                    onIDChange(it)
+                },
+                onNameChange = {
+                    onNameChange(it)
+                },
+            )
 //        if (dispenser.isCountError) {
 //            Spacer(modifier = Modifier.height(12.dp))
 //            Text(
@@ -91,15 +95,21 @@ fun AddDispenserScreen(
 //                fontWeight = FontWeight.PARAGRAPH2M
 //            )
 //        }
-        Spacer(modifier = Modifier.weight(1f))
-        AddDispenserFooter(
-            onAddDispenserClick = {
-                onAddDispenserClick()
-            },
-            enabled = dispenser.id.isNotEmpty() && dispenser.name.isNotEmpty()
-        )
-        Spacer(modifier = Modifier.weight(0.3f))
+            Spacer(modifier = Modifier.weight(1f))
+            AddDispenserFooter(
+                dispenser = dispenser,
+                onAddDispenserClick = {
+                    onAddDispenserClick()
+                },
+                enabled = dispenser.id.isNotEmpty() &&
+                        dispenser.name.isNotEmpty() &&
+                        !dispenser.isLoading
+            )
+            Spacer(modifier = Modifier.weight(0.3f))
+        }
     }
+
+
 }
 
 @Composable
@@ -192,6 +202,7 @@ fun AddDispenserFields(
 
 @Composable
 fun AddDispenserFooter(
+    dispenser: DispenserData,
     onAddDispenserClick: () -> Unit,
     enabled: Boolean,
 ) {
@@ -209,7 +220,7 @@ fun AddDispenserFooter(
 
         ) {
             Text(
-                text = "Add Dispenser  ",
+                text = if (dispenser.isLoading) "Adding Dispenser...  " else "Add Dispenser  ",
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

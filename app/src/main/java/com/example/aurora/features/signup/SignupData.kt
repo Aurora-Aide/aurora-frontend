@@ -16,5 +16,7 @@ data class SignupData (
     val isFirstNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     var isFirstStep: Boolean = true,
+    val isLoading: Boolean = false,
+    val error: String = "",
     //val id: String = "",
 )

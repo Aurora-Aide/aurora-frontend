@@ -54,16 +54,17 @@ class AddDispenserViewModel(
     }
 
     private fun addDispenser(){
+        _dispenser.update { it.copy(isLoading = true) }
         viewModelScope.launch{
             addDispenserUseCase.invoke(_dispenser.value.id, _dispenser.value.name, "").fold(
                 onSuccess = {
                     Log.d("TAG", "add dispenser request")
                     _dispenser.update {
-                        it.copy(isAddDispenserSuccessful = true)
+                        it.copy(isAddDispenserSuccessful = true, isLoading = false)
                     }
                 },
                 onFailure = {
-
+                    _dispenser.update { it.copy(isLoading = false) }
                 }
             )
         }

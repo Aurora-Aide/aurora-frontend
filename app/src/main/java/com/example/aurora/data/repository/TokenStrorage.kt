@@ -2,9 +2,6 @@ package com.example.aurora.data.repository
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
 class TokenStorage(context: Context) {
 
     private val prefs = context.getSharedPreferences("auth_tokens", Context.MODE_PRIVATE)
@@ -15,16 +12,16 @@ class TokenStorage(context: Context) {
         const val TAG = "TokenStorage"
     }
 
-    suspend fun saveTokens(access: String, refresh: String) = withContext(Dispatchers.IO) {
+    fun saveTokens(access: String, refresh: String) {
         val success = prefs.edit()
             .putString(KEY_ACCESS, access)
             .putString(KEY_REFRESH, refresh)
-            .commit() // commit() is safe here since we're on IO dispatcher
+            .apply()
         Log.d(TAG, "saveTokens: success=$success, accessLen=${access.length}, refreshLen=${refresh.length}")
     }
 
-    suspend fun saveAccessToken(access: String) = withContext(Dispatchers.IO) {
-        val success = prefs.edit().putString(KEY_ACCESS, access).commit()
+    fun saveAccessToken(access: String) {
+        val success = prefs.edit().putString(KEY_ACCESS, access).apply()
         Log.d(TAG, "saveAccessToken: success=$success, accessLen=${access.length}")
     }
 
@@ -40,7 +37,7 @@ class TokenStorage(context: Context) {
         return token
     }
 
-    suspend fun clearTokens() = withContext(Dispatchers.IO) {
+    fun clearTokens() {
         prefs.edit().clear().apply()
         Log.d(TAG, "clearTokens")
     }

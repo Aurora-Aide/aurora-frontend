@@ -138,21 +138,19 @@ fun MainNavigation() {
                 onFirstNameChange = { viewModelSignup.firstName(it) },
                 onLastNameChange = { viewModelSignup.lastName(it) },
                 onContinueClick = { viewModelSignup.validateFirstStep() },
-                isSignupSuccessful = { viewModelSignup.resetSignup() },
-                onCreateAccountClick = {
-                    Log.d("TAG", "to home")
+                isSignupSuccessful = {
                     viewModelSignup.resetSignup()
-                    viewModelSignup.validateSecondStep()
                     navController.navigate(Routes.MainRoute.Home.createRoute(signupData.firstName)) {
                         popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
                         launchSingleTop = true
                     }
-
+                    Log.d("TAG", "to home")
+                },
+                onCreateAccountClick = {
+                    viewModelSignup.validateSecondStep()
                 },
                 onBackClick = { viewModelSignup.onBackClick() },
                 onSecondPasswordChange = { viewModelSignup.passwordRepeat(it) },
-                onOneClick = {},
-                onTwoClick = {},
             )
         }
         composable(route = Routes.MainRoute.Home.route) { navBackStackEntry ->

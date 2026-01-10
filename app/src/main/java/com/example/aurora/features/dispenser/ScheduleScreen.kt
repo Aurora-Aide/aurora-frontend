@@ -53,26 +53,16 @@ fun ScheduleScreen(
         if (schedule.isSuccess || schedule.isDeleted) onBackClick()
     }
 
-    Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Back(onBackClick)
-            }
-        }
-    ) { innerPadding ->
+    Scaffold{ innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Back(onBackClick)
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
                 text = "Schedule:",

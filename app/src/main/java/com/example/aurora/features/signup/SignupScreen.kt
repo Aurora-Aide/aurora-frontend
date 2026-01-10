@@ -54,6 +54,8 @@ import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
 import com.example.aurora.ui.theme.*
+import org.koin.core.module._singleInstanceFactory
+import kotlin.math.sign
 
 @Composable
 fun SignupScreen(
@@ -69,8 +71,6 @@ fun SignupScreen(
     onCreateAccountClick: () -> Unit,
     isSignupSuccessful: () -> Unit,
     onBackClick:() ->Unit,
-    onOneClick:() ->Unit,
-    onTwoClick:() ->Unit,
     ){
     val scrollState = rememberScrollState()
 
@@ -89,7 +89,11 @@ fun SignupScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         if(signup.isFirstStep){
-            SignupHeader(isBackVisible = false, onBackClick)
+            SignupHeader(
+                signup,
+                isBackVisible = false,
+                onBackClick
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -104,24 +108,11 @@ fun SignupScreen(
                 onSecondPasswordChange = {
                     onSecondPasswordChange(it)
                 },
-                onOneClick = {
-                    onOneClick()
-                },
-                onTwoClick = {
-                    onTwoClick()
-                },
             )
 
             SignupFooter(
                 onSignupClick = {
-                    //if(signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty() && (signup.password == signup.passwordRepeat)){
-                        onContinueClick()
-                    //} //else {
-//                        if(signup.email.isEmpty()){
-//                            isEmailValid()
-//                        }
-//                    }
-
+                    onContinueClick()
                 },
                 onLoginClick = {
                     navController.toLogIn()
@@ -132,7 +123,11 @@ fun SignupScreen(
                 enabled = (signup.email.isNotEmpty() && signup.password.isNotEmpty() && signup.passwordRepeat.isNotEmpty())
             )
         } else{
-            SignupHeader(isBackVisible = true, onBackClick)
+            SignupHeader(
+                signup,
+                isBackVisible = true,
+                onBackClick
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -143,26 +138,27 @@ fun SignupScreen(
                 },
                 onLastNameChange = {
                     onLastNameChange(it)
-                },
-                onOneClick = {
-                    onOneClick()
-                },
-                onTwoClick = {
-                    onTwoClick()
                 }
             )
             LogNamesFooter(
+                signup,
                 onCreateAccountClick = {
                     onCreateAccountClick()
                 },
-                enabled = (signup.firstName.isNotEmpty() && signup.lastName.isNotEmpty())
+                enabled = (signup.firstName.isNotEmpty() &&
+                        signup.lastName.isNotEmpty()) &&
+                        !signup.isLoading
             )
         }
     }
 }
 
 @Composable
-fun SignupHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
+fun SignupHeader(
+    signup: SignupData,
+    isBackVisible: Boolean,
+    onBackClick:() -> Unit
+) {
     if(isBackVisible){
         Row(
             modifier = Modifier
@@ -189,8 +185,12 @@ fun SignupHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
                 .width(150.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Create Account", fontSize = FontSize.HEADING1,
-            fontWeight = FontWeight.HEADING1, color = primary1)
+        Text(
+            text = "Create Account",
+            fontSize = FontSize.HEADING1,
+            fontWeight = FontWeight.HEADING1,
+            color = primary1
+        )
     }
 }
 
@@ -200,8 +200,6 @@ fun SignupFields(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSecondPasswordChange: (String) -> Unit,
-    onOneClick: () -> Unit,
-    onTwoClick: () -> Unit,
 ) {
     Column {
         Row(
@@ -215,8 +213,7 @@ fun SignupFields(
                     modifier = Modifier
                         .size(32.dp)
                         .clip(shape = CircleShape)
-                        .background(color = secondary2)
-                        .clickable { onOneClick() },
+                        .background(color = secondary2),
                     contentAlignment = Alignment.Center
                 ){
                     Text(text = "1",
@@ -236,7 +233,7 @@ fun SignupFields(
                         )
                         .clip(shape = CircleShape)
                         .background(color = base0)
-                        .clickable { onTwoClick() },
+                        .clickable { signup.isFirstStep = false },
                     contentAlignment = Alignment.Center,
 
                 ){
@@ -340,8 +337,6 @@ fun AddNamesFields(
     signup: SignupData,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
-    onOneClick: () -> Unit,
-    onTwoClick: () -> Unit,
 ) {
     Column {
         Row(
@@ -361,7 +356,7 @@ fun AddNamesFields(
                         .size(32.dp)
                         .clip(shape = CircleShape)
                         .background(color = secondary2)
-                        .clickable { onOneClick() },
+                        .clickable { signup.isFirstStep = true },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(text = "1",
@@ -375,8 +370,7 @@ fun AddNamesFields(
                     modifier = Modifier
                         .size(32.dp)
                         .clip(shape = CircleShape)
-                        .background(color = secondary2)
-                        .clickable { onTwoClick() },
+                        .background(color = secondary2),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(text = "2",
@@ -391,14 +385,14 @@ fun AddNamesFields(
         TextField(
             value = signup.firstName,
             label = "First Name",
-            error = false,
+            error = signup.isFirstNameError != SignupNamesErrors.NONE,
             placeholder = "First Name",
             onValueChange = onFirstNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            errorText = ""
+            errorText = signup.isFirstNameError.value?.let{ stringResource(it) } ?: ""
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -406,15 +400,26 @@ fun AddNamesFields(
         TextField(
             value = signup.lastName,
             label = "Last Name",
-            error = false,
+            error = signup.isLastNameError != SignupNamesErrors.NONE,
             placeholder = "Last Name",
             onValueChange = onLastNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            errorText = ""
+            errorText = signup.isLastNameError.value?.let{ stringResource(it) } ?: ""
         )
+
+        if(signup.error.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = signup.error,
+                fontSize = FontSize.PARAGRAPH2,
+                fontWeight = FontWeight.PARAGRAPH2M,
+                lineHeight = LineHeight.PARAGRAPH2,
+                color = functionalError
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
     }
@@ -518,6 +523,7 @@ fun SignupFooter(
 
 @Composable
 fun LogNamesFooter(
+    signup: SignupData,
     onCreateAccountClick: () -> Unit,
     enabled: Boolean
 ) {
@@ -535,51 +541,12 @@ fun LogNamesFooter(
 
         ) {
             Text(
-                text = "Create Account",
+                text = if (signup.isLoading) "Creating Account..." else "Create Account",
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
                 color = base0
             )
         }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TextField(
-    value: String,
-    label: String,
-    error: Boolean,
-    errorText: String,
-    placeholder: String,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    onValueChange: (String) -> Unit,
-) {
-    OutlinedTextField(
-        value = value,
-        isError = error,
-        onValueChange = onValueChange,
-        label = {
-            Text(text = label)
-        },
-        placeholder = {
-            Text(text = placeholder, color = primary1)
-        },
-        visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-        trailingIcon = trailingIcon,
-        modifier = Modifier.fillMaxWidth(),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = secondary2,
-            unfocusedBorderColor = secondary2
-        )
-
-    )
-    if (error) {
-        Text(text = errorText, color = functionalError)
     }
 }

@@ -30,6 +30,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
     }
 
     fun login() {
+        _login.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = { result ->
@@ -37,12 +38,19 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
                         it.copy(
                             isLoginSuccessful = true,
                             firstName = result.firstName,
-                            lastName = result.lastName
+                            lastName = result.lastName,
+                            isLoading = false,
                         )
                     }
                 },
-                onFailure = {
-
+                onFailure = { error ->
+                    _login.update {
+                        it.copy(
+                            isLoginSuccessful = false,
+                            isLoading = false,
+                            error = error.cause.toString(),
+                        )
+                    }
                 }
             )
         }

@@ -9,4 +9,5 @@ data class PersonalInformationData(
     val isUpdateNamesSuccessful: Boolean = false,
     val isFirstNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
+    val isLoading: Boolean = false,
 )
