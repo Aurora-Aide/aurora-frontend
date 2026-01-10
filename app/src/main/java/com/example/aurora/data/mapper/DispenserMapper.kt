@@ -1,12 +1,11 @@
 package com.example.aurora.data.mapper
 
 import com.example.aurora.data.entity.DispenserEntity
-import com.example.aurora.data.model.Dispensers
+import com.example.aurora.data.model.Dispenser
 
-fun Dispensers.toDispenserMapper(): DispenserEntity {
+fun Dispenser.toDispenserMapper(): DispenserEntity {
     return DispenserEntity(
         id = this.id,
-        owner = this.owner,
         name = this.name,
         containers = this.containers
     )
