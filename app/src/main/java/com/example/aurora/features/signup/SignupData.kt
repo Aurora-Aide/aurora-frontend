@@ -18,5 +18,6 @@ data class SignupData (
     var isFirstStep: Boolean = true,
     val isLoading: Boolean = false,
     val error: String = "",
+    val isAdmin: Boolean = false,
     //val id: String = "",
 )

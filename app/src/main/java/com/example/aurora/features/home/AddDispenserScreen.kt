@@ -75,7 +75,7 @@ fun AddDispenserScreen(
             Back(onBackClick = { onBackClick() })
             Spacer(modifier = Modifier.weight(1f))
             AddDispenserHeader()
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             AddDispenserFields(
                 dispenser,
                 onIDChange = {

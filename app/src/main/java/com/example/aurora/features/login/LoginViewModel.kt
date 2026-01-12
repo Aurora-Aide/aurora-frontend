@@ -39,6 +39,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
                             isLoginSuccessful = true,
                             firstName = result.firstName,
                             lastName = result.lastName,
+                            isAdmin = result.isSuperuser,
                             isLoading = false,
                         )
                     }

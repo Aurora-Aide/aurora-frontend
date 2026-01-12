@@ -61,6 +61,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
                             isSignupSuccessful = true,
                             firstName = result.firstName,
                             lastName = result.lastName,
+                            isAdmin = result.isSuperuser,
                             isLoading = false
                         )
                     }

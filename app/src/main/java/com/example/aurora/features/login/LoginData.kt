@@ -9,6 +9,7 @@ data class LoginData(
     val firstName: String = "",  // TODO use this in home
     val lastName: String = "",
     val id: String = "",
+    val isAdmin: Boolean = false,
     val isLoading: Boolean = false,
     val error: String = "",
 )

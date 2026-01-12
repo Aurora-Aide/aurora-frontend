@@ -8,14 +8,24 @@
                     one uppercase letter, one lowercase letter, one digit,
                     and one special symbol.</string>
     <string name="error_empty_id">Dispenser ID is empty</string>
-    <string name="error_wrong_id">Please enter a valid ID. Expected format: SIZE–YYYYMMDD–XXXX
-                    ( Size - YearMonthDate - Serial number) (e.g., S–20250524–0001)</string>
+    <string name="error_wrong_id">Please enter a valid ID. Expected format: CODE–YYYYMMDD–XXXX
+                    ( Code - YearMonthDate - Serial number) (e.g., S–20250524–0001)</string>
     <string name="error_existing_dispenser">This dispenser has already been registered you cant register it again</string>
     <string name="error_empty_name">Name is empty</string>
+    <string name="error_invalid_name">Name must not be more than 100 characters long</string>
     <string name="error_wrong_name">Name must be at least 3 characters long and can
                     only contain letters, numbers, spaces, hyphens, and underscores</string>
     <string name="error_repeating_name">Your already have a dispenser with this name. Please chose another one</string>
     <string name="error_mismatch_passwords">Passwords are not the same</string>
+    <string name="error_empty_code">Code is empty</string>
+    <string name="error_invalid_code">Code must be less than 10 characters long and contain only capital letters and numbers</string>
+    <string name="error_repeating_code">This code already exists</string>
+    <string name="error_empty_prefix">Serial prefix is empty</string>
+    <string name="error_invalid_prefix">Serial prefix must be less than 10 characters long and contain only capital letters and numbers</string>
+    <string name="error_repeating_prefix">This serial prefix already exists</string>
+    <string name="error_empty_slot">Slot count is empty</string>
+    <string name="error_invalid_slot">Slot count must be a number</string>
+    <string name="error_negative_slot">Slot count must be non negative( >0 (more than 0) )</string>
     // Profile
     <string name="personal_information">Personal Information</string>
     <string name="your_dispensers">Your Dispensers</string>
@@ -28,6 +38,7 @@
     <string name="back">Back</string>
     <string name="delete_account">Delete Account</string>
     <string name="update_names">Update Names</string>
+    // Weekdays
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
     <string name="wednesday">Wednesday</string>

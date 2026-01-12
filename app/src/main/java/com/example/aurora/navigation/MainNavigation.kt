@@ -2,6 +2,7 @@ package com.example.aurora.navigation
 
 import android.app.Activity
 import android.util.Log
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -39,6 +40,13 @@ import com.example.aurora.features.profile.ProfileViewModel
 import com.example.aurora.features.settings.SettingsScreen
 import com.example.aurora.features.signup.SignupScreen
 import com.example.aurora.features.signup.SignupViewModel
+import com.example.aurora.features.admin.AdminHomeScreen
+import com.example.aurora.features.admin.AdminHomeViewModel
+import com.example.aurora.features.admin.AdminCreateDispenserModelScreen
+import com.example.aurora.features.admin.AdminCreateDispenserModelViewModel
+import com.example.aurora.features.dispenser.ScheduleViewModel
+import com.example.aurora.navigation.Routes.MainRoute.AdminHome.toAdminHome
+import com.example.aurora.navigation.Routes.MainRoute.AdminCreateDispenserModel.toAdminCreateDispenserModel
 import com.example.aurora.navigation.Routes.MainRoute.AddDispenser.toAddDispenser
 import com.example.aurora.navigation.Routes.MainRoute.AddSchedule.toAddSchedule
 import com.example.aurora.navigation.Routes.MainRoute.Container.toContainer
@@ -67,7 +75,8 @@ fun MainNavigation() {
     val doubleBackRoutes = setOf(
         Routes.MainRoute.Login.route,
         Routes.MainRoute.SignUp.route,
-        Routes.MainRoute.Home.route
+        Routes.MainRoute.Home.route,
+        Routes.MainRoute.AdminHome.route
     )
 
     val isDoubleBackScreen = currentRoute in doubleBackRoutes
@@ -102,9 +111,17 @@ fun MainNavigation() {
                 isLoginSuccessful = {
                     Log.d("TAG", "to home ${loginData.email}")
                     viewModelLogin.resetLogin()
-                    navController.navigate(Routes.MainRoute.Home.createRoute(loginData.firstName)) {
-                        popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
-                        launchSingleTop = true
+                    val name = loginData.firstName
+                    if (loginData.isAdmin) {
+                        navController.navigate("${Routes.MainRoute.AdminHome.route.replace("{name}", Uri.encode(name))}") {
+                            popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.navigate(Routes.MainRoute.Home.createRoute(name)) {
+                            popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
@@ -140,9 +157,16 @@ fun MainNavigation() {
                 onContinueClick = { viewModelSignup.validateFirstStep() },
                 isSignupSuccessful = {
                     viewModelSignup.resetSignup()
-                    navController.navigate(Routes.MainRoute.Home.createRoute(signupData.firstName)) {
-                        popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
-                        launchSingleTop = true
+                    if (signupData.isAdmin) {
+                        navController.navigate("${Routes.MainRoute.AdminHome.route.replace("{name}", Uri.encode(signupData.firstName))}") {
+                            popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.navigate(Routes.MainRoute.Home.createRoute(signupData.firstName)) {
+                            popUpTo(Routes.MainRoute.Login.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
                     Log.d("TAG", "to home")
                 },
@@ -168,6 +192,32 @@ fun MainNavigation() {
                 onAddDispenserClick = { navController.toAddDispenser() },
                 onToDispenserClick = { dispenserId, dispenserName -> navController.toDispenser(dispenserId, dispenserName) },
                 dispensers = dispensers,
+            )
+        }
+        composable(route = Routes.MainRoute.AdminHome.route) { navBackStackEntry ->
+            val name = navBackStackEntry.arguments?.getString("name") ?: ""
+            val viewModel = getViewModel<AdminHomeViewModel>()
+            val data by viewModel.data.collectAsStateWithLifecycle()
+            val refreshModels = navBackStackEntry.savedStateHandle.getStateFlow("refreshModels", false).collectAsStateWithLifecycle().value
+            LaunchedEffect(name) {
+                viewModel.setName(name)
+                viewModel.loadDispensers()
+            }
+            LaunchedEffect(refreshModels) {
+                if (refreshModels) {
+                    viewModel.loadModels()
+                    navBackStackEntry.savedStateHandle["refreshModels"] = false
+                }
+            }
+            AdminHomeScreen(
+                data = data,
+                onTabChange = { viewModel.setTab(it) },
+                onReloadDispensers = { viewModel.loadDispensers() },
+                onReloadModels = { viewModel.loadModels() },
+                onReloadUsers = { viewModel.loadUsers() },
+                onAddModelClick = { navController.toAdminCreateDispenserModel() },
+                onToProfileClick = { navController.toProfile() },
+                onDispenserClick = { id, dispenserName -> navController.toDispenser(id, dispenserName) }
             )
         }
         composable(route = Routes.MainRoute.AddDispenser.route) {
@@ -275,7 +325,7 @@ fun MainNavigation() {
             val scheduleId = navBackStackEntry.arguments?.getString("scheduleId")?.toIntOrNull() ?: 0
             val containerName = navBackStackEntry.arguments?.getString("containerName")?: ""
             val dispenserName = navBackStackEntry.arguments?.getString("dispenserName") ?: ""
-            val viewModel = getViewModel<com.example.aurora.features.dispenser.ScheduleViewModel>()
+            val viewModel = getViewModel<ScheduleViewModel>()
             val schedule by viewModel.schedule.collectAsStateWithLifecycle()
             val showHideDelete by viewModel.showPopUpDelete.collectAsStateWithLifecycle()
             LaunchedEffect(scheduleId, containerName, dispenserName) {
@@ -296,6 +346,26 @@ fun MainNavigation() {
                 onMinuteChange = { viewModel.onMinuteChange(it) },
                 onRepeatChange = { viewModel.onRepeatChange(it) },
                 onSave = { viewModel.save() }
+            )
+        }
+        composable(route = Routes.MainRoute.AdminCreateDispenserModel.route) {
+            val viewModel = getViewModel<AdminCreateDispenserModelViewModel>()
+            val state by viewModel.dispenseModel.collectAsStateWithLifecycle()
+            LaunchedEffect(Unit) {
+                viewModel.loadModels()
+            }
+            AdminCreateDispenserModelScreen(
+                modelData = state,
+                onCodeChange = { viewModel.onCodeChange(it) },
+                onNameChange = { viewModel.onNameChange(it) },
+                onSlotCountChange = { viewModel.onSlotCountChange(it) },
+                onSerialPrefixChange = { viewModel.onSerialPrefixChange(it) },
+                onAddModel = { viewModel.save() },
+                onBackClick = {
+                    viewModel.resetSuccess()
+                    navController.previousBackStackEntry?.savedStateHandle?.set("refreshModels", true)
+                    navController.navigateUp()
+                }
             )
         }
         composable(route = Routes.MainRoute.Google.route) {
@@ -337,7 +407,13 @@ fun MainNavigation() {
                 onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //show popup
-                onToHomeClick = {navController.toHome(user.firstName)},
+                onToHomeClick = {
+                    if (user.isAdmin) {
+                        navController.toAdminHome(user.firstName)
+                    } else {
+                        navController.toHome(user.firstName)
+                    }
+                },
                 personalInfo = user,
             )
         }

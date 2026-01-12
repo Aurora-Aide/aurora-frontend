@@ -26,6 +26,10 @@ sealed class Routes(val route: String) {
                 "${MainRoute.route}/home?name=${Uri.encode(name)}&id=${Uri.encode(id)}"
         }
 
+        data object AdminHome : Routes("${MainRoute.route}/adminHome?name={name}") {
+            fun NavController.toAdminHome(name: String) = navigate("${MainRoute.route}/adminHome?name=${Uri.encode(name)}")
+        }
+
         data object AddDispenser : Routes("${MainRoute.route}/addDispenser") {
             fun NavController.toAddDispenser() = navigate("${MainRoute.route}/addDispenser")
         }
@@ -68,6 +72,10 @@ sealed class Routes(val route: String) {
             fun NavController.toSchedule(scheduleId: Int, containerName: String, dispenserName: String) =
                 navigate("${MainRoute.route}/schedule?scheduleId=$scheduleId" +
                         "&containerName=${Uri.encode(containerName)}&dispenserName=${Uri.encode(dispenserName)}")
+        }
+
+        data object AdminCreateDispenserModel: Routes("${MainRoute.route}/adminDispenserModel/create") {
+            fun NavController.toAdminCreateDispenserModel() = navigate("${MainRoute.route}/adminDispenserModel/create")
         }
     }
 }

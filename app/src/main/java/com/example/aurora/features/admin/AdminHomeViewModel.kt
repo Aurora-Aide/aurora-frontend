@@ -1,0 +1,82 @@
+package com.example.aurora.features.admin
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
+import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
+import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class AdminHomeViewModel(
+    private val listDispensersUseCase: AdminListDispensersUseCase,
+    private val listModelsUseCase: AdminListDispenserModelsUseCase,
+    private val listUsersUseCase: AdminListUsersUseCase
+) : ViewModel() {
+
+    private val _data = MutableStateFlow(AdminHomeData())
+    val data = _data.asStateFlow()
+
+    fun setName(name: String) {
+        _data.update { it.copy(name = name) }
+    }
+
+    fun setTab(tab: AdminHomeTab) {
+        _data.update { it.copy(activeTab = tab, error = null) }
+        when (tab) {
+            AdminHomeTab.DISPENSERS -> {
+                if (_data.value.dispensers.isEmpty()) loadDispensers()
+            }
+            AdminHomeTab.MODELS -> {
+                if (_data.value.models.isEmpty()) loadModels()
+            }
+            AdminHomeTab.USERS -> {
+                if (_data.value.users.isEmpty()) loadUsers()
+            }
+        }
+    }
+
+    fun loadDispensers() {
+        viewModelScope.launch {
+            _data.update { it.copy(isLoading = true, error = null) }
+            listDispensersUseCase().fold(
+                onSuccess = { list ->
+                    _data.update { it.copy(isLoading = false, dispensers = list) }
+                },
+                onFailure = { err ->
+                    _data.update { it.copy(isLoading = false, error = err.message ?: "Failed to load dispensers") }
+                }
+            )
+        }
+    }
+
+    fun loadModels() {
+        viewModelScope.launch {
+            _data.update { it.copy(isLoading = true, error = null) }
+            listModelsUseCase().fold(
+                onSuccess = { list ->
+                    _data.update { it.copy(isLoading = false, models = list) }
+                },
+                onFailure = { err ->
+                    _data.update { it.copy(isLoading = false, error = err.message ?: "Failed to load models") }
+                }
+            )
+        }
+    }
+
+    fun loadUsers() {
+        viewModelScope.launch {
+            _data.update { it.copy(isLoading = true, error = null) }
+            listUsersUseCase().fold(
+                onSuccess = { list ->
+                    _data.update { it.copy(isLoading = false, users = list) }
+                },
+                onFailure = { err ->
+                    _data.update { it.copy(isLoading = false, error = err.message ?: "Failed to load users") }
+                }
+            )
+        }
+    }
+}

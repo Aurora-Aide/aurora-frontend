@@ -12,14 +12,14 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_foreground"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Djigit"
+        android:theme="@style/Theme.Aurora"
         android:name=".MainApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Djigit">
+            android:theme="@style/Theme.Aurora">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
