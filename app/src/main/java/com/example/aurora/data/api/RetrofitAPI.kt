@@ -118,12 +118,6 @@ interface RetrofitAPI {
     @GET(urls.adminDispensersURL)
     suspend fun adminListDispensers(): Response<List<AdminDispenserModel>>
 
-    @PATCH("${urls.adminDispenserRenameURL}{id}/rename/")
-    suspend fun adminRenameDispenser(
-        @Path("id") id: Int,
-        @Body dataModel: AdminRenameDispenserRequest
-    ): Response<AdminDispenserModel>
-
     @GET(urls.adminDispenserModelsURL)
     suspend fun adminListDispenserModels(): Response<List<AdminDispenserModelModel>>
 

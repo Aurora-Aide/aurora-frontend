@@ -23,7 +23,6 @@ import com.example.aurora.domain.usecase.DeleteScheduleUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
-import com.example.aurora.domain.usecase.admin.AdminRenameDispenserUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
 import com.example.aurora.domain.usecase.admin.AdminCreateDispenserModelUseCase
 import com.example.aurora.features.dispenser.AddScheduleViewModel
@@ -179,10 +178,6 @@ val appModule = module {
 
     factory {
         AdminListDispensersUseCase(get())
-    }
-
-    factory {
-        AdminRenameDispenserUseCase(get())
     }
 
     factory {

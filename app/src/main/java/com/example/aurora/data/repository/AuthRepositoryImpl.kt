@@ -266,10 +266,6 @@ class AuthRepositoryImpl(
         return data.adminListDispensers()
     }
 
-    override suspend fun adminRenameDispenser(id: Int, name: String): Result<AdminDispenserModel> {
-        return data.adminRenameDispenser(id, name)
-    }
-
     override suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>> {
         return data.adminListDispenserModels()
     }

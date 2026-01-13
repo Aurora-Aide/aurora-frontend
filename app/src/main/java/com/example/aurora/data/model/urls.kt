@@ -1,7 +1,7 @@
 package com.example.aurora.data.model
 
 object urls {
-    const val baseURL = "http://192.168.0.111:8000"
+    const val baseURL = "http://192.168.1.123:8000"
 
     //authentication
     const val loginURL = "$baseURL/authentication/login/"
@@ -32,6 +32,5 @@ object urls {
     // admin
     const val adminUsersURL = "$baseURL/api/admin/users/"
     const val adminDispensersURL = "$baseURL/api/admin/dispensers/"
-    const val adminDispenserRenameURL = "$baseURL/api/admin/dispensers/"
     const val adminDispenserModelsURL = "$baseURL/api/admin/dispenser-models/"
 }

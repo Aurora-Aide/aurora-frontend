@@ -116,10 +116,6 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.adminListDispensers())
     }
 
-    override suspend fun adminRenameDispenser(id: Int, name: String): Result<AdminDispenserModel> {
-        return requestBody(retrofit.adminRenameDispenser(id, AdminRenameDispenserRequest(name)))
-    }
-
     override suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>> {
         return requestBody(retrofit.adminListDispenserModels())
     }

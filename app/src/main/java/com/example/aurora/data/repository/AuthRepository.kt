@@ -39,7 +39,6 @@ interface AuthRepository {
     // admin
     suspend fun adminListUsers(): Result<List<AdminUserModel>>
     suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>
-    suspend fun adminRenameDispenser(id: Int, name: String): Result<AdminDispenserModel>
     suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>>
     suspend fun adminCreateDispenserModel(request: AdminCreateDispenserModelRequest): Result<AdminDispenserModelModel>
 }
