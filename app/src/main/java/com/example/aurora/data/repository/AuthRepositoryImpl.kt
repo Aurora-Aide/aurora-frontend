@@ -1,0 +1,276 @@
+package com.example.aurora.data.repository
+
+import android.util.Log
+import com.example.aurora.data.entity.DispenserEntity
+import com.example.aurora.data.entity.DispensersEntity
+import com.example.aurora.data.entity.ForgotPassEntity
+import com.example.aurora.data.entity.LogoutEntity
+import com.example.aurora.data.entity.DeleteUserEntity
+import com.example.aurora.data.entity.UserEntity
+import com.example.aurora.data.entity.DeleteDispenserEntity
+import com.example.aurora.data.entity.ContainerEntity
+import com.example.aurora.data.entity.ScheduleEntity
+import com.example.aurora.data.mapper.toDispenserMapper
+import com.example.aurora.data.mapper.toDispensersMapper
+import com.example.aurora.data.mapper.toForgotPassMapper
+import com.example.aurora.data.mapper.toLogoutMapper
+import com.example.aurora.data.mapper.toDeleteUserMapper
+import com.example.aurora.data.mapper.toUserEntity
+import com.example.aurora.data.mapper.toDeleteDispenserMapper
+import com.example.aurora.data.mapper.toContainerEntity
+import com.example.aurora.data.mapper.toScheduleEntity
+import com.example.aurora.data.model.AdminCreateDispenserModelRequest
+import com.example.aurora.data.model.AdminDispenserModel
+import com.example.aurora.data.model.AdminDispenserModelModel
+import com.example.aurora.data.model.AdminUserModel
+import com.example.aurora.data.sorce.AuthDataSource
+import com.example.aurora.data.model.UpdatePillNameRequest
+import com.example.aurora.data.model.UpdateDispenserNameRequest
+import com.example.aurora.data.model.CreateScheduleRequest
+import com.example.aurora.data.model.Refresh
+import com.example.aurora.data.model.UpdateScheduleRequest
+
+class AuthRepositoryImpl(
+    private val data: AuthDataSource,
+    private val tokenStorage: TokenStorage
+): AuthRepository {
+
+    override suspend fun login(email: String, password: String): Result<UserEntity> {
+        return data.login(email, password).map { token ->
+            Log.d("TOKEN_SAVE", "access len=${token.access.length}, refresh len=${token.refresh.length}")
+            tokenStorage.saveTokens(token.access, token.refresh)
+            token.user.toUserEntity().copy(
+                accessToken = token.access,
+                refreshToken = token.refresh
+            )
+        }
+    }
+
+    override suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<UserEntity> {
+        return data.signup(email, password, firstName, lastName).map { token ->
+            Log.d("TOKEN_SAVE", "access len=${token.access.length}, refresh len=${token.refresh.length}")
+            tokenStorage.saveTokens(token.access, token.refresh)
+            token.user.toUserEntity().copy(
+                accessToken = token.access,
+                refreshToken = token.refresh
+            )
+        }
+
+    }
+
+    override suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity> {
+        return data.addDispenser(modelNumber, name).fold(
+            onSuccess = {
+                dispenser -> Result.success(dispenser.toDispenserMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun forgotPass(email: String): Result<Unit> {
+        return data.forgotPass(email).fold(
+            onSuccess = {
+                    msg -> Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun resetPass(password: String): Result<ForgotPassEntity> {
+        return data.resetPass(password).fold(
+            onSuccess = {
+                    msg -> Result.success(msg.toForgotPassMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun logout(): Result<LogoutEntity> {
+        val refreshToken = tokenStorage.getRefreshToken()
+            ?: return Result.failure(Exception("No refresh token"))
+
+        return try {
+            data.logout(Refresh(refreshToken)).map { msg ->
+                tokenStorage.clearTokens()
+                msg.toLogoutMapper()
+            }
+        } catch (e: java.net.ProtocolException) {
+            if (e.message?.contains("HTTP 205") == true) {
+                tokenStorage.clearTokens()
+                Result.success(LogoutEntity(message = "Logged out successfully"))
+            } else {
+                Result.failure(e)
+            }
+        }
+    }
+
+    override suspend fun getUser(): Result<UserEntity> {
+        return data.getUser().fold(
+            onSuccess = {
+                    user -> Result.success(user.toUserEntity())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun listAllUserDispensers(): Result<DispensersEntity> {
+        return data.listAllUserDispensers().fold(
+            onSuccess = {
+                    dispenser -> Result.success(dispenser.toDispensersMapper())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
+    override suspend fun deleteUser(email: String): Result<DeleteUserEntity> {
+        return data.deleteUser(email).fold(
+            onSuccess = { 
+                msg -> Result.success(msg.toDeleteUserMapper())
+             },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun updateNames(firstName: String?, lastName: String?): Result<UserEntity> {
+        return data.updateNames(firstName, lastName).fold(
+            onSuccess = { 
+                user -> Result.success(user.toUserEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun deleteDispenser(name: String): Result<DeleteDispenserEntity> {
+        return data.deleteDispenser(name).fold(
+            onSuccess = {
+                 msg -> Result.success(msg.toDeleteDispenserMapper())
+                 },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updatePillName(dispenserName: String, slotNumber: Int, pillName: String): Result<ContainerEntity> {
+        return data.updatePillName(
+            UpdatePillNameRequest(
+                dispenser_name = dispenserName,
+                slot_number = slotNumber,
+                pill_name = pillName
+            )
+        ).fold(
+            onSuccess = { 
+                container -> Result.success(container.toContainerEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updateDispenserName(currentName: String, newName: String): Result<DispenserEntity> {
+        return data.updateDispenserName(
+            UpdateDispenserNameRequest(
+                current_name = currentName,
+                new_name = newName
+            )
+        ).fold(
+            onSuccess = {
+                 dispenser -> Result.success(dispenser.toDispenserMapper()) 
+                },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun listSchedules(containerId: Int): Result<List<ScheduleEntity>> {
+        return data.listSchedules(containerId).fold(
+            onSuccess = { 
+                list -> Result.success(list.map { it.toScheduleEntity() })
+             },
+            onFailure = { 
+                Result.failure(it)
+             }
+        )
+    }
+
+    override suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleEntity> {
+        return data.createSchedule(containerId, request).fold(
+            onSuccess = { 
+                schedule -> Result.success(schedule.toScheduleEntity()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun getSchedule(id: Int): Result<ScheduleEntity> {
+        return data.getSchedule(id).fold(
+            onSuccess = {
+                 schedule -> Result.success(schedule.toScheduleEntity())
+                 },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleEntity> {
+        return data.updateSchedule(id, request).fold(
+            onSuccess = { 
+                schedule -> Result.success(schedule.toScheduleEntity())
+             },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    override suspend fun deleteSchedule(id: Int): Result<Unit> {
+        return data.deleteSchedule(id)
+    }
+
+    override suspend fun getDispenser(id: String): Result<DispenserEntity> {
+        return data.getDispenser(id).fold(
+            onSuccess = { 
+                dispenser -> Result.success(dispenser.toDispenserMapper()) 
+            },
+            onFailure = { 
+                Result.failure(it) 
+            }
+        )
+    }
+
+    // admin
+    override suspend fun adminListUsers(): Result<List<AdminUserModel>> {
+        return data.adminListUsers()
+    }
+
+    override suspend fun adminListDispensers(): Result<List<AdminDispenserModel>> {
+        return data.adminListDispensers()
+    }
+
+    override suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>> {
+        return data.adminListDispenserModels()
+    }
+
+    override suspend fun adminCreateDispenserModel(request: AdminCreateDispenserModelRequest): Result<AdminDispenserModelModel> {
+        return data.adminCreateDispenserModel(request)
+    }
+}
