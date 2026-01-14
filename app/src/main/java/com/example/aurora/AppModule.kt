@@ -21,12 +21,18 @@ import com.example.aurora.domain.usecase.GetScheduleUseCase
 import com.example.aurora.domain.usecase.UpdateScheduleUseCase
 import com.example.aurora.domain.usecase.DeleteScheduleUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
+import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
+import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
+import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
+import com.example.aurora.domain.usecase.admin.AdminCreateDispenserModelUseCase
 import com.example.aurora.features.dispenser.AddScheduleViewModel
 import com.example.aurora.features.dispenser.ScheduleViewModel
 import com.example.aurora.features.forgotPassword.ForgotViewModel
 import com.example.aurora.features.home.AddDispenserViewModel
 import com.example.aurora.features.home.HomeViewModel
 import com.example.aurora.features.login.LoginViewModel
+import com.example.aurora.features.admin.AdminHomeViewModel
+import com.example.aurora.features.admin.AdminCreateDispenserModelViewModel
 import com.example.aurora.features.profile.PersonalInformationViewModel
 import com.example.aurora.features.profile.ProfileViewModel
 import com.example.aurora.features.dispenser.DispenserViewModel
@@ -78,6 +84,14 @@ val appModule = module {
 
     viewModel {
         ContainerViewModel(get(), get())
+    }
+
+    viewModel {
+        AdminHomeViewModel(get(), get(), get())
+    }
+
+    viewModel {
+        AdminCreateDispenserModelViewModel(get(), get())
     }
 
 
@@ -157,42 +171,24 @@ val appModule = module {
         GetUserUseCase(get())
     }
 
+    // admin
+    factory {
+        AdminListUsersUseCase(get())
+    }
+
+    factory {
+        AdminListDispensersUseCase(get())
+    }
+
+    factory {
+        AdminListDispenserModelsUseCase(get())
+    }
+
+    factory {
+        AdminCreateDispenserModelUseCase(get())
+    }
 
     single<AuthRepository>{
         AuthRepositoryImpl(get(), get())
     }
-
-    // single<AuthDataSource>{
-    //     AuthDataSourceImpl(get())
-    // }
-
-//    single<RetrofitAPI>{
-//        get<Retrofit>().create(RetrofitAPI::class.java)
-//    }
-//
-//
-//   single<OkHttpClient> {
-//       val interceptor = HttpLoggingInterceptor()
-//       interceptor.level = HttpLoggingInterceptor.Level.BODY
-//       val apiService: AuthDataSource
-//       val sharedPreferences: SharedPreferences
-//
-//        OkHttpClient
-//            .Builder()
-//            .addInterceptor(interceptor)
-//            .authenticator(com.example.aurora.data.repository.TokenAuthenticator(apiService, sharedPreferences))
-//            .readTimeout(60, TimeUnit.SECONDS)
-//            .connectTimeout(60, TimeUnit.SECONDS)
-//            .build()
-//    }
-//
-//    single{
-//        val okHttpClient = get<OkHttpClient>()
-//        Retrofit.Builder()
-//            .baseUrl(urls.baseURL)
-//            .client(okHttpClient)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//    }
-
 }

@@ -78,7 +78,12 @@ class ProfileViewModel(
                 onSuccess = { user ->
                     Log.d("TAG", "Get user request")
                     _personalInformation.update {
-                        it.copy(firstName = user.firstName, lastName = user.lastName, email = user.email)
+                        it.copy(
+                            firstName = user.firstName,
+                            lastName = user.lastName,
+                            email = user.email,
+                            isAdmin = user.isSuperuser
+                        )
                     }
                 },
                 onFailure = {

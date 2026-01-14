@@ -54,7 +54,7 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return requestBody(retrofit.refreshToken(refreshToken))
     }
 
-    override suspend fun addDispenser(modelNumber: String, name: String, accessToken: String): Result<Dispenser> {
+    override suspend fun addDispenser(modelNumber: String, name: String): Result<Dispenser> {
         return requestBody(retrofit.registerDispenser(DispenserVariables(modelNumber, name)))
     }
 
@@ -105,5 +105,22 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun getDispenser(id: String): Result<Dispenser> {
         return requestBody(retrofit.getDispenser(id))
+    }
+
+    // admin
+    override suspend fun adminListUsers(): Result<List<AdminUserModel>> {
+        return requestBody(retrofit.adminListUsers())
+    }
+
+    override suspend fun adminListDispensers(): Result<List<AdminDispenserModel>> {
+        return requestBody(retrofit.adminListDispensers())
+    }
+
+    override suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>> {
+        return requestBody(retrofit.adminListDispenserModels())
+    }
+
+    override suspend fun adminCreateDispenserModel(request: AdminCreateDispenserModelRequest): Result<AdminDispenserModelModel> {
+        return requestBody(retrofit.adminCreateDispenserModel(request))
     }
 }

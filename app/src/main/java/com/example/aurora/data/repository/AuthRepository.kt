@@ -9,13 +9,17 @@ import com.example.aurora.data.entity.ForgotPassEntity
 import com.example.aurora.data.entity.LogoutEntity
 import com.example.aurora.data.entity.UserEntity
 import com.example.aurora.data.entity.ScheduleEntity
+import com.example.aurora.data.model.AdminCreateDispenserModelRequest
+import com.example.aurora.data.model.AdminDispenserModel
+import com.example.aurora.data.model.AdminDispenserModelModel
+import com.example.aurora.data.model.AdminUserModel
 import com.example.aurora.data.model.CreateScheduleRequest
 import com.example.aurora.data.model.UpdateScheduleRequest
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): Result<UserEntity>
     suspend fun signup(email: String, password: String, firstName: String, lastName: String): Result<UserEntity>
-    suspend fun addDispenser(modelNumber: String, name: String, token: String): Result<DispenserEntity>
+    suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity>
     suspend fun forgotPass(email: String): Result<Unit>
     suspend fun resetPass(password: String): Result<ForgotPassEntity>
     suspend fun logout(): Result<LogoutEntity>
@@ -32,4 +36,9 @@ interface AuthRepository {
     suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleEntity>
     suspend fun deleteSchedule(id: Int): Result<Unit>
     suspend fun getDispenser(id: String): Result<DispenserEntity>
+    // admin
+    suspend fun adminListUsers(): Result<List<AdminUserModel>>
+    suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>
+    suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>>
+    suspend fun adminCreateDispenserModel(request: AdminCreateDispenserModelRequest): Result<AdminDispenserModelModel>
 }

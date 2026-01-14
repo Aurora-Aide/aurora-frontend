@@ -19,22 +19,30 @@ import com.example.aurora.data.mapper.toUserEntity
 import com.example.aurora.data.mapper.toDeleteDispenserMapper
 import com.example.aurora.data.mapper.toContainerEntity
 import com.example.aurora.data.mapper.toScheduleEntity
-import com.example.aurora.data.model.Refresh
+import com.example.aurora.data.model.AdminCreateDispenserModelRequest
+import com.example.aurora.data.model.AdminDispenserModel
+import com.example.aurora.data.model.AdminDispenserModelModel
+import com.example.aurora.data.model.AdminUserModel
 import com.example.aurora.data.sorce.AuthDataSource
 import com.example.aurora.data.model.UpdatePillNameRequest
 import com.example.aurora.data.model.UpdateDispenserNameRequest
 import com.example.aurora.data.model.CreateScheduleRequest
+import com.example.aurora.data.model.Refresh
 import com.example.aurora.data.model.UpdateScheduleRequest
 
 class AuthRepositoryImpl(
     private val data: AuthDataSource,
-    private val tokenStorage: TokenStorage): AuthRepository {
+    private val tokenStorage: TokenStorage
+): AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<UserEntity> {
         return data.login(email, password).map { token ->
             Log.d("TOKEN_SAVE", "access len=${token.access.length}, refresh len=${token.refresh.length}")
             tokenStorage.saveTokens(token.access, token.refresh)
-            token.user.toUserEntity()
+            token.user.toUserEntity().copy(
+                accessToken = token.access,
+                refreshToken = token.refresh
+            )
         }
     }
 
@@ -42,13 +50,16 @@ class AuthRepositoryImpl(
         return data.signup(email, password, firstName, lastName).map { token ->
             Log.d("TOKEN_SAVE", "access len=${token.access.length}, refresh len=${token.refresh.length}")
             tokenStorage.saveTokens(token.access, token.refresh)
-            token.user.toUserEntity()
+            token.user.toUserEntity().copy(
+                accessToken = token.access,
+                refreshToken = token.refresh
+            )
         }
 
     }
 
-    override suspend fun addDispenser(modelNumber: String, name: String, token: String): Result<DispenserEntity> {
-        return data.addDispenser(modelNumber, name, token).fold(
+    override suspend fun addDispenser(modelNumber: String, name: String): Result<DispenserEntity> {
+        return data.addDispenser(modelNumber, name).fold(
             onSuccess = {
                 dispenser -> Result.success(dispenser.toDispenserMapper())
             },
@@ -244,5 +255,22 @@ class AuthRepositoryImpl(
                 Result.failure(it) 
             }
         )
+    }
+
+    // admin
+    override suspend fun adminListUsers(): Result<List<AdminUserModel>> {
+        return data.adminListUsers()
+    }
+
+    override suspend fun adminListDispensers(): Result<List<AdminDispenserModel>> {
+        return data.adminListDispensers()
+    }
+
+    override suspend fun adminListDispenserModels(): Result<List<AdminDispenserModelModel>> {
+        return data.adminListDispenserModels()
+    }
+
+    override suspend fun adminCreateDispenserModel(request: AdminCreateDispenserModelRequest): Result<AdminDispenserModelModel> {
+        return data.adminCreateDispenserModel(request)
     }
 }

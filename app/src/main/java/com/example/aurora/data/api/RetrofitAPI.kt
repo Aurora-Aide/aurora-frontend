@@ -17,6 +17,11 @@ import com.example.aurora.data.model.UpdatePillNameRequest
 import com.example.aurora.data.model.ScheduleModel
 import com.example.aurora.data.model.CreateScheduleRequest
 import com.example.aurora.data.model.UpdateScheduleRequest
+import com.example.aurora.data.model.AdminUserModel
+import com.example.aurora.data.model.AdminDispenserModel
+import com.example.aurora.data.model.AdminRenameDispenserRequest
+import com.example.aurora.data.model.AdminDispenserModelModel
+import com.example.aurora.data.model.AdminCreateDispenserModelRequest
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
@@ -105,4 +110,19 @@ interface RetrofitAPI {
     // tokens
     @POST(urls.refreshURL)
     suspend fun refreshToken(@Body refresh: Refresh): Response<AccessToken>
+
+    // admin
+    @GET(urls.adminUsersURL)
+    suspend fun adminListUsers(): Response<List<AdminUserModel>>
+
+    @GET(urls.adminDispensersURL)
+    suspend fun adminListDispensers(): Response<List<AdminDispenserModel>>
+
+    @GET(urls.adminDispenserModelsURL)
+    suspend fun adminListDispenserModels(): Response<List<AdminDispenserModelModel>>
+
+    @POST(urls.adminDispenserModelsURL)
+    suspend fun adminCreateDispenserModel(
+        @Body dataModel: AdminCreateDispenserModelRequest
+    ): Response<AdminDispenserModelModel>
 }

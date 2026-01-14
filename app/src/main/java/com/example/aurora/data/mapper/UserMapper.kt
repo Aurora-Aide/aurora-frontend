@@ -9,5 +9,6 @@ fun UserModel.toUserEntity(): UserEntity {
         email = this.email,
         firstName = this.firstName,
         lastName = this.lastName,
+        isSuperuser = this.isSuperuser
     )
 }

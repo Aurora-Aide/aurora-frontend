@@ -56,7 +56,7 @@ class AddDispenserViewModel(
     private fun addDispenser(){
         _dispenser.update { it.copy(isLoading = true) }
         viewModelScope.launch{
-            addDispenserUseCase.invoke(_dispenser.value.id, _dispenser.value.name, "").fold(
+            addDispenserUseCase.invoke(_dispenser.value.id, _dispenser.value.name).fold(
                 onSuccess = {
                     Log.d("TAG", "add dispenser request")
                     _dispenser.update {
@@ -79,7 +79,7 @@ class AddDispenserViewModel(
     private fun isIDValid(): AddDispenserIDErrors {
         return if( _dispenser.value.id.isEmpty()){
             AddDispenserIDErrors.EMPTY_ID
-        } else if (!Regex("^[A-Za-z][–-](\\d{4})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])[–-]\\d{4}$")
+        } else if (!Regex("^[A-Z0-9]+-\\d{8}-\\d{4}$")
             .matches(_dispenser.value.id)){
             AddDispenserIDErrors.INVALID_ID
         } else if(_dispenser.value.allDispenserIds
