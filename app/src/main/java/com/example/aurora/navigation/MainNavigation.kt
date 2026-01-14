@@ -126,7 +126,7 @@ fun MainNavigation() {
                 },
                 onForgotPasswordClick = { navController.toForgotPassword() },
                 onSignUpClick = { navController.toSignUp() },
-                onGoogleClick =  { navController.toGoogle()}
+                //onGoogleClick =  { navController.toGoogle()}
             )
         }
         composable(route = Routes.MainRoute.ForgotPassword.route) {
@@ -404,7 +404,7 @@ fun MainNavigation() {
                 onPersonalInformation = { navController.toPersonalInformation() },
                 onBackToProfileLogClicked = { viewModel.showHideLogOutBack() },  //hide popup
                 onBackToProfileDeleteClicked = { viewModel.showHideDeleteBack()},  //hide popup
-                onSettings = { navController.toSettings() },
+                //onSettings = { navController.toSettings() },
                 onLogOut = { viewModel.showHideLogOutBack() }, // show popup
                 onDeleteAccount = { viewModel.showHideDeleteBack() }, //show popup
                 onToHomeClick = {

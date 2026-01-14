@@ -474,50 +474,50 @@ fun SignupFooter(
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "line",
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = " or ",
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2R,
-                lineHeight = LineHeight.PARAGRAPH2,
-                color = base90
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "line",
-                modifier = Modifier
-                    .weight(1f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Image(painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google",
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        onGoogleClick()
-                    }
-            )
-        }
+//        Spacer(modifier = Modifier.height(10.dp))
+//
+//        Row(
+//            horizontalArrangement = Arrangement.Center,
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.line),
+//                contentDescription = "line",
+//                modifier = Modifier
+//                    .weight(1f)
+//            )
+//            Spacer(modifier = Modifier.width(4.dp))
+//            Text(
+//                text = " or ",
+//                fontSize = FontSize.PARAGRAPH2,
+//                fontWeight = FontWeight.PARAGRAPH2R,
+//                lineHeight = LineHeight.PARAGRAPH2,
+//                color = base90
+//            )
+//            Spacer(modifier = Modifier.width(4.dp))
+//            Image(
+//                painter = painterResource(id = R.drawable.line),
+//                contentDescription = "line",
+//                modifier = Modifier
+//                    .weight(1f)
+//            )
+//        }
+//
+//        Spacer(modifier = Modifier.height(30.dp))
+//
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceEvenly
+//        ) {
+//            Image(painter = painterResource(id = R.drawable.google),
+//                contentDescription = "Google",
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .clickable {
+//                        onGoogleClick()
+//                    }
+//            )
+//        }
     }
 }
 

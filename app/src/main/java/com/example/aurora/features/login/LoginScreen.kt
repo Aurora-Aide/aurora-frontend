@@ -64,7 +64,7 @@ fun LoginScreen(
     isLoginSuccessful: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onGoogleClick: () -> Unit,
+    //onGoogleClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -102,7 +102,7 @@ fun LoginScreen(
             onSignUpClick = {
                 onSignUpClick()
             },
-            onGoogleClick = { onGoogleClick() },
+            //onGoogleClick = { onGoogleClick() },
             enabled = login.email.isNotEmpty() && login.password.isNotEmpty()
         )
     }
@@ -192,16 +192,18 @@ fun LoginFields(
             )
         }
 
-        TextButton(onClick = onForgotPasswordClick, modifier = Modifier.align(Alignment.End)) {
-            Text(
-                text = "Forgot Password?",
-                textDecoration = TextDecoration.Underline,
-                fontSize = FontSize.PARAGRAPH3,
-                fontWeight = FontWeight.PARAGRAPH3R,
-                lineHeight = LineHeight.PARAGRAPH3,
-                color = primary1
-            )
-        }
+        Spacer(modifier = Modifier.height(20.dp))
+
+//        TextButton(onClick = onForgotPasswordClick, modifier = Modifier.align(Alignment.End)) {
+//            Text(
+//                text = "Forgot Password?",
+//                textDecoration = TextDecoration.Underline,
+//                fontSize = FontSize.PARAGRAPH3,
+//                fontWeight = FontWeight.PARAGRAPH3R,
+//                lineHeight = LineHeight.PARAGRAPH3,
+//                color = primary1
+//            )
+//        }
 
         Spacer(modifier = Modifier.height(10.dp))
     }
@@ -212,7 +214,7 @@ fun LoginFooter(
     login: LoginData,
     onLogInClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onGoogleClick: () -> Unit,
+    //onGoogleClick: () -> Unit,
     enabled: Boolean,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -257,48 +259,48 @@ fun LoginFooter(
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "line",
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = " or ", fontSize = FontSize.PARAGRAPH2, fontWeight = FontWeight.PARAGRAPH2R,
-                lineHeight = LineHeight.PARAGRAPH2, color = base90
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "line",
-                modifier = Modifier
-                    .weight(1f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google",
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        onGoogleClick()
-                    }
-            )
-        }
+//        Spacer(modifier = Modifier.height(10.dp))
+//
+//        Row(
+//            horizontalArrangement = Arrangement.Center,
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.line),
+//                contentDescription = "line",
+//                modifier = Modifier
+//                    .weight(1f)
+//            )
+//            Spacer(modifier = Modifier.width(4.dp))
+//            Text(
+//                text = " or ", fontSize = FontSize.PARAGRAPH2, fontWeight = FontWeight.PARAGRAPH2R,
+//                lineHeight = LineHeight.PARAGRAPH2, color = base90
+//            )
+//            Spacer(modifier = Modifier.width(4.dp))
+//            Image(
+//                painter = painterResource(id = R.drawable.line),
+//                contentDescription = "line",
+//                modifier = Modifier
+//                    .weight(1f)
+//            )
+//        }
+//
+//        Spacer(modifier = Modifier.height(30.dp))
+//
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceEvenly
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.google),
+//                contentDescription = "Google",
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .clickable {
+//                        onGoogleClick()
+//                    }
+//            )
+//        }
     }
 }
 

@@ -37,7 +37,7 @@ fun ProfileScreen(
     onLogOut: () -> Unit,
     onDeleteAccount: () -> Unit,
     onPersonalInformation: () -> Unit,
-    onSettings: () -> Unit,
+    //onSettings: () -> Unit,
     onToHomeClick: () -> Unit,
     personalInfo: PersonalInformationData
 ) {
@@ -77,9 +77,9 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                ProfileItem("Settings") {
-                    onSettings()
-                } // TODO: Theme change, Notifications, Other???
+//                ProfileItem("Settings") {
+//                    onSettings()
+//                } // TODO: Theme change, Notifications, Other???
             }
 
             Spacer(modifier = Modifier.weight(1f))
