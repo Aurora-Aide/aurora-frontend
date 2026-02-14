@@ -60,6 +60,7 @@ import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberTimePickerState
 import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.secondary6
+import com.example.aurora.ui.components.ErrorBanner
 import org.koin.dsl.module
 
 @Composable
@@ -129,14 +130,7 @@ fun AddScheduleScreen(
                 enabled = true
             )
 
-            if (!schedule.errorMessage.isNullOrEmpty()) {
-                Text(
-                    text = schedule.errorMessage,
-                    color = Color.Red,
-                    fontSize = FontSize.PARAGRAPH2,
-                    fontWeight = FontWeight.PARAGRAPH2M
-                )
-            }
+            ErrorBanner(schedule.errorMessage)
 
             Spacer(modifier = Modifier.weight(0.3f))
 

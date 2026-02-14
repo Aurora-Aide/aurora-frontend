@@ -26,8 +26,8 @@ val networkModule = module {
     single(named("authOkHttp")) {
         OkHttpClient.Builder()
             .addInterceptor(get<HttpLoggingInterceptor>())
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(5, TimeUnit.SECONDS)
             .build()
     }
 
@@ -55,8 +55,8 @@ val networkModule = module {
             .addInterceptor(get<HttpLoggingInterceptor>())
             .addInterceptor(AuthInterceptor(get()))     // adds access token
             .authenticator(get<TokenAuthenticator>())   // refresh on 401
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(5, TimeUnit.SECONDS)
             .build()
     }
 

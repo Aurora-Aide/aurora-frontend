@@ -3,6 +3,7 @@ package com.example.aurora.features.dispenser
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.ListSchedulesUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
@@ -48,7 +49,7 @@ class ContainerViewModel(
 
     fun setRenameDraft(text: String) {
         _container.update {
-            it.copy(renameDraft = text)
+            it.copy(renameDraft = text, errorMessage = "")
         }
     }
 
@@ -64,6 +65,7 @@ class ContainerViewModel(
     }
 
     fun confirmRename() {
+        _container.update { it.copy(errorMessage = "") }
         val nameValid = isNameValid(_container.value.renameDraft)
         if (nameValid == AddDispenserNameErrors.NONE) {
             _container.update {
@@ -99,17 +101,19 @@ class ContainerViewModel(
 
     fun listSchedules() {
         viewModelScope.launch {
+            _container.update { it.copy(errorMessage = "") }
             listSchedulesUseCase(_container.value.containerId).fold(
                 onSuccess = { schedules ->
                     _container.update {
                         it.copy(
-                            schedules = schedules.map { schedule -> mapSchedule(schedule) }
+                            schedules = schedules.map { schedule -> mapSchedule(schedule) },
+                            errorMessage = ""
                         )
                     }
                 },
                 onFailure = { error ->
                     Log.e("TAG", "List schedules failed: ${error.message}")
-                    _container.update { it.copy(errorMessage = error.message ?: "Unable to load schedules") }
+                    _container.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -119,14 +123,17 @@ class ContainerViewModel(
         _showPopUpRename.update { value -> value.not() }
 
         viewModelScope.launch {
-            updatePillNameUseCase(_container.value.dispenserName, _container.value.slotNumber, _container.value.renameDraft).fold(
+            _container.update { it.copy(errorMessage = "") }
+            updatePillNameUseCase(_container.value.dispenserName,
+                _container.value.slotNumber, _container.value.renameDraft).fold(
                 onSuccess = { container ->
                     Log.d("TAG", "Update pill name successful")
                     _container.update {
                         it.copy(
                             pillName = container.pillName,
                             renameDraft = container.pillName,
-                            isUpdating = false
+                            isUpdating = false,
+                            errorMessage = ""
                         )
                     }
                 },
@@ -135,7 +142,7 @@ class ContainerViewModel(
                     _container.update {
                         it.copy(
                             isUpdating = false,
-                            errorMessage = error.message ?: "Unable to update pill name"
+                            errorMessage = error.toUiMessage()
                         )
                     }
                 }

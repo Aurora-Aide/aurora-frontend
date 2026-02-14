@@ -5,6 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,18 +20,18 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
 
     fun email(text: String) {
         _login.update{
-            it.copy(email = text)
+            it.copy(email = text, error = "")
         }
     }
 
     fun password(text: String) {
         _login.update{
-            it.copy(password = text)
+            it.copy(password = text, error = "")
         }
     }
 
     fun login() {
-        _login.update { it.copy(isLoading = true) }
+        _login.update { it.copy(isLoading = true, error = "") }
         viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = { result ->
@@ -41,6 +42,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
                             lastName = result.lastName,
                             isAdmin = result.isSuperuser,
                             isLoading = false,
+                            error = "",
                         )
                     }
                 },
@@ -49,7 +51,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
                         it.copy(
                             isLoginSuccessful = false,
                             isLoading = false,
-                            error = error.cause.toString(),
+                            error = error.toUiMessage(),
                         )
                     }
                 }

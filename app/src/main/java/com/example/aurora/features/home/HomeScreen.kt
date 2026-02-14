@@ -38,6 +38,7 @@ import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
 import com.example.aurora.ui.theme.secondary4
+import com.example.aurora.ui.components.ErrorBanner
 
 
 @Composable
@@ -89,6 +90,8 @@ fun HomeScreen(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
+
+            ErrorBanner(dispensers.errorMessage)
 
             Text(
                 text = "Your Dispensers:",

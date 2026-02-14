@@ -12,5 +12,5 @@ data class AdminHomeData(
     val models: List<AdminDispenserModelModel> = emptyList(),
     val users: List<com.example.aurora.data.model.AdminUserModel> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val errorMessage: String = ""
 )

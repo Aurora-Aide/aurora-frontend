@@ -8,6 +8,6 @@ data class ScheduleFormState(
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val isValid: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String = ""
 )
 

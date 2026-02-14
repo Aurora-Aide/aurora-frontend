@@ -51,9 +51,10 @@ import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.base100
 import com.example.aurora.ui.theme.base90
-import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.components.ErrorBanner
+import com.example.aurora.ui.theme.functionalError
 
 @Composable
 fun LoginScreen(
@@ -181,16 +182,7 @@ fun LoginFields(
             errorText = login.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
 
-        if(login.error.isNotEmpty()){
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = login.error,
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2M,
-                lineHeight = LineHeight.PARAGRAPH2,
-                color = functionalError
-            )
-        }
+        ErrorBanner(login.error)
 
         Spacer(modifier = Modifier.height(20.dp))
 

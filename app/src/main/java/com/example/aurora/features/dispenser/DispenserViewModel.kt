@@ -3,6 +3,7 @@ package com.example.aurora.features.dispenser
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.DeleteDispenserUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
@@ -54,21 +55,22 @@ class DispenserViewModel(
                 containers = normalizedContainers,
                 renameDraft = name.ifBlank { "Unnamed dispenser" },
                 isRenameError = AddDispenserNameErrors.NONE,
-                errorMessage = null
+                errorMessage = ""
             )
         }
     }
 
     private fun fetchDispenserNames(){
         viewModelScope.launch {
+            _dispenser.update { it.copy(errorMessage = "") }
             listAllUserDispensersUseCase().fold(
                 onSuccess = { data ->
                     val names = data.dispensers.map { it.name }
                     _dispenser.update { it.copy(allDispenserNames = names) }
 
                 },
-                onFailure = {
-                    
+                onFailure = { error ->
+                    _dispenser.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -78,7 +80,7 @@ class DispenserViewModel(
         _showPopUpDelete.update { value -> value.not() }
 
         viewModelScope.launch {
-            _dispenser.update { it.copy(errorMessage = null) }
+            _dispenser.update { it.copy(errorMessage = "") }
             deleteDispenserUseCase(name).fold(
                 onSuccess = {
                     Log.d("TAG", "Delete dispenser request successful")
@@ -88,7 +90,7 @@ class DispenserViewModel(
                     Log.e("TAG", "Delete dispenser request failed: ${error.message}")
                     _dispenser.update {
                         it.copy(
-                            errorMessage = error.message ?: "Unable to delete dispenser"
+                            errorMessage = error.toUiMessage()
                         )
                     }
                 }
@@ -98,7 +100,7 @@ class DispenserViewModel(
 
     fun loadDispenser(dispenserId: String) {
         viewModelScope.launch {
-            _dispenser.update { it.copy(errorMessage = null) }
+            _dispenser.update { it.copy(errorMessage = "") }
 
             getDispenserUseCase(dispenserId).fold(
                 onSuccess = { dispenser ->
@@ -120,7 +122,7 @@ class DispenserViewModel(
                 onFailure = { error ->
                     _dispenser.update {
                         it.copy(
-                            errorMessage = error.message ?: "Unable to load dispenser",
+                            errorMessage = error.toUiMessage(),
                             containers = emptyList()
                         )
                     }
@@ -131,7 +133,7 @@ class DispenserViewModel(
 
     fun setRenameDraft(text: String) {
         _dispenser.update {
-            it.copy(renameDraft = text)
+            it.copy(renameDraft = text, errorMessage = "")
         }
     }
 
@@ -150,6 +152,7 @@ class DispenserViewModel(
     }
 
     fun confirmRename() {
+        _dispenser.update { it.copy(errorMessage = "") }
         val nameValid = isNameValid(_dispenser.value.renameDraft)
         if (nameValid == AddDispenserNameErrors.NONE) {
             _dispenser.update {
@@ -167,6 +170,7 @@ class DispenserViewModel(
         _showPopUpRename.update { value -> value.not() }
 
         viewModelScope.launch {
+            _dispenser.update { it.copy(errorMessage = "") }
             updateDispenserNameUseCase.invoke(_dispenser.value.name, _dispenser.value.renameDraft).fold(
                 onSuccess = { dispenser ->
                     _dispenser.update {
@@ -176,12 +180,13 @@ class DispenserViewModel(
                             allDispenserNames = _dispenser.value.allDispenserNames
                                 .map{ dispenser.name },
                             isRenameSuccessful = true,
+                            errorMessage = ""
                         )
                     }
                 },
                 onFailure = { error ->
                     _dispenser.update {
-                        it.copy(errorMessage = error.toString())
+                        it.copy(errorMessage = error.toUiMessage())
                     }
                 }
             )
@@ -193,6 +198,4 @@ class DispenserViewModel(
             it.copy(isRenameSuccessful = false)
         }
     }
-
 }
-

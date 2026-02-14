@@ -9,7 +9,7 @@ data class AdminCreateDispenserModelData(
     val serialPrefix: String = "",
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val error: String? = null,
+    val errorMessage: String = "",
     val isCodeError: AddModelCodeErrors = AddModelCodeErrors.NONE,
     val isNameError: AddModelNameErrors = AddModelNameErrors.NONE,
     val isSerialPrefixError: AddModelSerialPrefixErrors = AddModelSerialPrefixErrors.NONE,

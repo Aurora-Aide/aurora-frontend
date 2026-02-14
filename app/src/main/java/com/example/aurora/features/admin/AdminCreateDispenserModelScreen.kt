@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.features.home.Back
 import com.example.aurora.features.login.TextField
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -137,15 +138,7 @@ fun AddModelFields(
             error = modelData.isSerialPrefixError != AddModelSerialPrefixErrors.NONE,
             errorText = modelData.isSerialPrefixError.value?.let { stringResource(it) } ?: ""
         )
-        if (!modelData.error.isNullOrEmpty()) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = modelData.error.orEmpty(),
-                color = secondary4,
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2M
-            )
-        }
+        ErrorBanner(modelData.errorMessage)
         Spacer(modifier = Modifier.weight(1f))
     }
 }

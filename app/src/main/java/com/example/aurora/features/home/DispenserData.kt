@@ -9,5 +9,6 @@ data class DispenserData (
     val allDispenserNames: List<String> = emptyList(),
     val allDispenserIds: List<String> = emptyList(),
     val isLoading: Boolean = false,
+    val errorMessage: String = "",
     //val isCountError: Boolean = false,
 )

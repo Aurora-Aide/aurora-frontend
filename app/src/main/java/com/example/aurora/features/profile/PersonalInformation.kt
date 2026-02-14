@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.features.signup.SignupNamesErrors
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -108,6 +109,8 @@ fun PersonalInfoScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
+
+            ErrorBanner(personalInformationData.errorMessage)
 
             Button(
                 onClick = {

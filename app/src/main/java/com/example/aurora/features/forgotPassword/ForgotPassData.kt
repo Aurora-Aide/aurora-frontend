@@ -11,4 +11,5 @@ data class ForgotPassData(
     val token: String = "",
     val resultPageGood: Boolean = false,
     val resultPageBad: Boolean = false,
+    val errorMessage: String = "",
 )

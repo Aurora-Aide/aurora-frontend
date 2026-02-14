@@ -6,6 +6,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.SignupUseCase
 import com.example.aurora.features.login.LoginEmailErrors
 import com.example.aurora.features.login.LoginPasswordErrors
@@ -22,38 +23,41 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
 
     fun email(text: String) {
         _signup.update{
-            it.copy(email = text)
+            it.copy(email = text, error = "")
         }
     }
 
     fun password(text: String) {
         _signup.update{
-            it.copy(password = text)
+            it.copy(password = text, error = "")
         }
     }
 
     fun passwordRepeat(text: String) {
         _signup.update{
-            it.copy(passwordRepeat = text)
+            it.copy(passwordRepeat = text, error = "")
         }
     }
 
     fun firstName(text: String) {
         _signup.update{
-            it.copy(firstName = text)
+            it.copy(firstName = text, error = "")
         }
     }
 
     fun lastName(text: String) {
         _signup.update{
-            it.copy(lastName = text)
+            it.copy(lastName = text, error = "")
         }
     }
 
     fun signup(){
-        _signup.update { it.copy(isLoading = true) }
+        _signup.update { it.copy(isLoading = true, error = "") }
         viewModelScope.launch{
-            signupUseCase.invoke(_signup.value.email, _signup.value.password, _signup.value.firstName, _signup.value.lastName).fold(
+            signupUseCase.invoke(_signup.value.email,
+                _signup.value.password,
+                _signup.value.firstName,
+                _signup.value.lastName).fold(
                 onSuccess = { result ->
                     Log.d("TAG", "signup request")
                     _signup.update {
@@ -62,7 +66,8 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
                             firstName = result.firstName,
                             lastName = result.lastName,
                             isAdmin = result.isSuperuser,
-                            isLoading = false
+                            isLoading = false,
+                            error = ""
                         )
                     }
                 },
@@ -71,7 +76,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
                         it.copy(
                             isSignupSuccessful = false,
                             isLoading = false,
-                            error = error.message.toString()
+                            error = error.toUiMessage()
                         )
                     }
 
@@ -129,6 +134,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     }
 
     fun validateFirstStep(){
+        _signup.update { it.copy(error = "") }
         val emailValid = isEmailValid()
         val passwordValid = isPasswordValid()
         val passwordRepeatValid = passwordsMatch()
@@ -157,6 +163,7 @@ class SignupViewModel(private val signupUseCase: SignupUseCase): ViewModel() {
     }
 
     fun validateSecondStep(){
+        _signup.update { it.copy(error = "") }
         val firstNameValid = isNameValid(_signup.value.firstName)
         val lastNameValid = isNameValid(_signup.value.lastName)
 

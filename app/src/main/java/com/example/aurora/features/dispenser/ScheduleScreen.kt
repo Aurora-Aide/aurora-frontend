@@ -22,11 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.features.profile.LogoutPopup
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -82,14 +82,7 @@ fun ScheduleScreen(
                 onRepeatChange = onRepeatChange
             )
 
-            if (!schedule.errorMessage.isNullOrEmpty()) {
-                Text(
-                    text = schedule.errorMessage,
-                    color = Color.Red,
-                    fontSize = FontSize.PARAGRAPH2,
-                    fontWeight = FontWeight.PARAGRAPH2M
-                )
-            }
+            ErrorBanner(schedule.errorMessage)
 
             Spacer(modifier = Modifier.weight(0.1f))
 

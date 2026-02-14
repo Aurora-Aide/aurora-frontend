@@ -65,10 +65,8 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
-
     val context = LocalContext.current
     val activity = context as? Activity
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -80,7 +78,6 @@ fun MainNavigation() {
     )
 
     val isDoubleBackScreen = currentRoute in doubleBackRoutes
-
     var backPressedOnce by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(backPressedOnce) {
@@ -89,7 +86,6 @@ fun MainNavigation() {
             backPressedOnce = false
         }
     }
-
     BackHandler(enabled = isDoubleBackScreen) {
         if (backPressedOnce) {
             activity?.moveTaskToBack(true)

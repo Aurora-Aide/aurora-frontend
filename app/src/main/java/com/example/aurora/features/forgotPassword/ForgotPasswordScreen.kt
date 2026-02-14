@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.aurora.R
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.*
 
 @Composable
@@ -197,6 +198,7 @@ fun ForgotPassFields(
             ),
             errorText = data.isEmailError.value?.let { stringResource(it) } ?: ""
         )
+        ErrorBanner(data.errorMessage)
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
@@ -269,6 +271,7 @@ fun ResetPassFields(
             },
             errorText = data.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
+        ErrorBanner(data.errorMessage)
         Spacer(modifier = Modifier.height(20.dp))
     }
 }

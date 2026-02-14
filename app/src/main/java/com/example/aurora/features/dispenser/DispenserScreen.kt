@@ -192,7 +192,7 @@ fun ContentArea(
     onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit
 ) {
     when {
-        dispenser.errorMessage != null -> {
+        dispenser.errorMessage.isNotEmpty() -> {
             ErrorState(message = dispenser.errorMessage)
         }
 
