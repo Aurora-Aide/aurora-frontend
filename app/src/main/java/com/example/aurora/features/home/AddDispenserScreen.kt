@@ -44,6 +44,7 @@ import com.example.aurora.ui.theme.base0
 import com.example.aurora.ui.theme.functionalError
 import com.example.aurora.ui.theme.primary1
 import com.example.aurora.ui.theme.secondary2
+import com.example.aurora.ui.components.ErrorBanner
 
 @Composable
 fun AddDispenserScreen(
@@ -85,6 +86,7 @@ fun AddDispenserScreen(
                     onNameChange(it)
                 },
             )
+            ErrorBanner(dispenser.errorMessage)
 //        if (dispenser.isCountError) {
 //            Spacer(modifier = Modifier.height(12.dp))
 //            Text(

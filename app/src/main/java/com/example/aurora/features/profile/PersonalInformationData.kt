@@ -11,4 +11,5 @@ data class PersonalInformationData(
     val isFirstNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLoading: Boolean = false,
+    val errorMessage: String = "",
 )

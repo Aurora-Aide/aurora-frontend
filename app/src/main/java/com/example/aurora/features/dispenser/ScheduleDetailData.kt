@@ -11,7 +11,7 @@ data class ScheduleDetailData(
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val isSaving: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessage: String = "",
     val isSuccess: Boolean = false,
     val isDeleted: Boolean = false
 )

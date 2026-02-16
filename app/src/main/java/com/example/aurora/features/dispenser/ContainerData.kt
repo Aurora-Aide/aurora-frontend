@@ -8,7 +8,7 @@ data class ContainerData(
     val pillName: String = "",
     val renameDraft: String = "",
     val isUpdating: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessage: String = "",
     val isRenameSuccessful: Boolean = false,
     val isRenameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
     val containerId: Int = 0,

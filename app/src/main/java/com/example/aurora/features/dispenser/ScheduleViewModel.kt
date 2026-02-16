@@ -3,6 +3,7 @@ package com.example.aurora.features.dispenser
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.data.model.UpdateScheduleRequest
 import com.example.aurora.domain.usecase.GetScheduleUseCase
 import com.example.aurora.domain.usecase.UpdateScheduleUseCase
@@ -38,7 +39,7 @@ class ScheduleViewModel(
             _schedule.update {
                 it.copy(
                     isLoading = true,
-                    errorMessage = null,
+                    errorMessage = "",
                     isDeleted = false,
                     isSuccess = false,
                     id = scheduleId,
@@ -59,12 +60,12 @@ class ScheduleViewModel(
                             minute = schedule.minute,
                             repeat = schedule.repeat,
                             isLoading = false,
-                            errorMessage = null
+                            errorMessage = ""
                         )
                     }
                 },
                 onFailure = { error ->
-                    _schedule.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unable to load schedule") }
+                    _schedule.update { it.copy(isLoading = false, errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -77,7 +78,7 @@ class ScheduleViewModel(
             _schedule.update {
                 it.copy(
                     isEditing = false,
-                    errorMessage = null,
+                    errorMessage = "",
                     dayOfWeek = originalDay,
                     hour = originalHour,
                     minute = originalMinute,
@@ -85,31 +86,31 @@ class ScheduleViewModel(
                 )
             }
         } else {
-            _schedule.update { it.copy(isEditing = true, errorMessage = null) }
+            _schedule.update { it.copy(isEditing = true, errorMessage = "") }
         }
     }
 
     fun onDayChange(day: Int) {
         _schedule.update {
-            it.copy(dayOfWeek = day, errorMessage = null)
+            it.copy(dayOfWeek = day, errorMessage = "")
         }
     }
 
     fun onHourChange(hour: Int) {
         _schedule.update {
-            it.copy(hour = hour, errorMessage = null)
+            it.copy(hour = hour, errorMessage = "")
         }
     }
 
     fun onMinuteChange(minute: Int) {
         _schedule.update {
-            it.copy(minute = minute, errorMessage = null)
+            it.copy(minute = minute, errorMessage = "")
         }
     }
 
     fun onRepeatChange(repeat: Boolean) {
         _schedule.update {
-            it.copy(repeat = repeat)
+            it.copy(repeat = repeat, errorMessage = "")
         }
     }
 
@@ -127,7 +128,7 @@ class ScheduleViewModel(
     fun save() {
         if (!validate()) return
         viewModelScope.launch {
-            _schedule.update { it.copy(isSaving = true, errorMessage = null) }
+            _schedule.update { it.copy(isSaving = true, errorMessage = "") }
             updateScheduleUseCase(
                 _schedule.value.id,
                 UpdateScheduleRequest(
@@ -142,10 +143,10 @@ class ScheduleViewModel(
                     originalHour = _schedule.value.hour
                     originalMinute = _schedule.value.minute
                     originalRepeat = _schedule.value.repeat
-                    _schedule.update { it.copy(isSaving = false, isEditing = false, isSuccess = true) }
+                    _schedule.update { it.copy(isSaving = false, isEditing = false, isSuccess = true, errorMessage = "") }
                 },
                 onFailure = { error ->
-                    _schedule.update { it.copy(isSaving = false, errorMessage = error.message ?: "Unable to save") }
+                    _schedule.update { it.copy(isSaving = false, errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -155,7 +156,7 @@ class ScheduleViewModel(
         _showPopUpDelete.update { value -> value.not() }
 
         viewModelScope.launch {
-            _schedule.update { it.copy(errorMessage = null) }
+            _schedule.update { it.copy(errorMessage = "") }
             deleteScheduleUseCase(_schedule.value.id).fold(
                 onSuccess = {
                     Log.d("TAG", "Delete schedule request successful")
@@ -163,7 +164,7 @@ class ScheduleViewModel(
                 },
                 onFailure = { error ->
                     Log.d("TAG", "Delete schedule request NOT successful")
-                    _schedule.update { it.copy(errorMessage = error.message ?: "Unable to delete") }
+                    _schedule.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }

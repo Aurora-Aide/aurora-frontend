@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.aurora.features.home.BottomNavigationBar
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -144,13 +145,8 @@ fun AdminHomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (data.error != null) {
-                Text(
-                    text = data.error,
-                    color = secondary4,
-                    fontSize = FontSize.PARAGRAPH2,
-                    fontWeight = FontWeight.PARAGRAPH2M
-                )
+            if (data.errorMessage.isNotEmpty()) {
+                ErrorBanner(data.errorMessage)
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {

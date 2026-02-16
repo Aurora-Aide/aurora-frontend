@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -104,6 +105,7 @@ fun ContainerScreen(
                     modifier = Modifier.padding(start = 12.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
+                ErrorBanner(container.errorMessage)
                 ScheduleList(container, onScheduleRowClick)
                 Spacer(modifier = Modifier.height(16.dp))
             }

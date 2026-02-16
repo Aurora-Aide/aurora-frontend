@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -68,6 +69,8 @@ fun ProfileScreen(
                 Header(title = "Profile")
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                ErrorBanner(personalInfo.errorMessage)
 
                 ProfileItem(stringResource(R.string.personal_information)) {
                     onPersonalInformation()

@@ -1,7 +1,7 @@
 package com.example.aurora.data.model
 
 object urls {
-    const val baseURL = "http://172.26.238.42:8000"
+    const val baseURL = "http://192.168.1.129:8000"
 
     //authentication
     const val loginURL = "$baseURL/authentication/login/"
@@ -9,7 +9,6 @@ object urls {
     const val forgotPasswordURL = "$baseURL/authentication/forgot-password/"
     const val resetPasswordURL = "$baseURL/authentication/reset-password/"
     const val refreshURL = "$baseURL/authentication/token/refresh/"
-    // const val obtainTokenURL = "$baseURL/authentication/token/"
 
     //profile
     const val userURL = "$baseURL/authentication/user/" // get user email first and last name

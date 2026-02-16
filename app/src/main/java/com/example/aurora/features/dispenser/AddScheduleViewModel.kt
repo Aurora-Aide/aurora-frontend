@@ -2,6 +2,7 @@ package com.example.aurora.features.dispenser
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.data.model.CreateScheduleRequest
 import com.example.aurora.domain.usecase.CreateScheduleUseCase
 import com.example.aurora.domain.usecase.ListSchedulesUseCase
@@ -22,22 +23,22 @@ class AddScheduleViewModel(
     private var existingSchedules: List<ScheduleEntity> = emptyList()
 
     fun onDayChange(day: Int) {
-        _schedule.update { it.copy(dayOfWeek = day, errorMessage = null) }
+        _schedule.update { it.copy(dayOfWeek = day, errorMessage = "") }
         updateValidity()
     }
 
     fun onHourChange(hour: Int) {
-        _schedule.update { it.copy(hour = hour, errorMessage = null) }
+        _schedule.update { it.copy(hour = hour, errorMessage = "") }
         updateValidity()
     }
 
     fun onMinuteChange(minute: Int) {
-        _schedule.update { it.copy(minute = minute, errorMessage = null) }
+        _schedule.update { it.copy(minute = minute, errorMessage = "") }
         updateValidity()
     }
 
     fun onRepeatChange(repeat: Boolean) {
-        _schedule.update { it.copy(repeat = repeat) }
+        _schedule.update { it.copy(repeat = repeat, errorMessage = "") }
     }
 
     fun loadSchedules(containerId: Int) {
@@ -46,8 +47,8 @@ class AddScheduleViewModel(
                 onSuccess = { schedules ->
                     existingSchedules = schedules
                 },
-                onFailure = {
-                    // Keep existing schedules; optionally surface a warning if needed
+                onFailure = { error ->
+                    _schedule.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -58,7 +59,7 @@ class AddScheduleViewModel(
         val minuteValid = _schedule.value.minute in 0..59
         val dayValid = _schedule.value.dayOfWeek in 0..6
         val valid = hourValid && minuteValid && dayValid
-        _schedule.update { it.copy(isValid = valid, errorMessage = if (valid) null else it.errorMessage) }
+        _schedule.update { it.copy(isValid = valid, errorMessage = if (valid) "" else it.errorMessage) }
     }
 
     private fun validate(): Boolean {
@@ -81,14 +82,14 @@ class AddScheduleViewModel(
             return false
         }
 
-        _schedule.update { it.copy(isValid = true, errorMessage = null) }
+        _schedule.update { it.copy(isValid = true, errorMessage = "") }
         return true
     }
 
     fun save(containerId: Int) {
         if (!validate()) return
         viewModelScope.launch {
-            _schedule.update { it.copy(isLoading = true, errorMessage = null, isSuccess = false) }
+            _schedule.update { it.copy(isLoading = true, errorMessage = "", isSuccess = false) }
             val req = CreateScheduleRequest(
                 dayOfWeek = _schedule.value.dayOfWeek.coerceIn(0,6),
                 hour = _schedule.value.hour.coerceIn(0,23),
@@ -100,7 +101,7 @@ class AddScheduleViewModel(
                     _schedule.update { it.copy(isLoading = false, isSuccess = true) }
                 },
                 onFailure = { error ->
-                    _schedule.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unable to save schedule") }
+                    _schedule.update { it.copy(isLoading = false, errorMessage = error.toUiMessage()) }
                 }
             )
         }

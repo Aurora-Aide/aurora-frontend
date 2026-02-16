@@ -53,6 +53,7 @@ import com.example.aurora.R
 import com.example.aurora.features.login.TextField
 import com.example.aurora.navigation.Routes.MainRoute.Google.toGoogle
 import com.example.aurora.navigation.Routes.MainRoute.Login.toLogIn
+import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.*
 import org.koin.core.module._singleInstanceFactory
 import kotlin.math.sign
@@ -410,16 +411,7 @@ fun AddNamesFields(
             errorText = signup.isLastNameError.value?.let{ stringResource(it) } ?: ""
         )
 
-        if(signup.error.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = signup.error,
-                fontSize = FontSize.PARAGRAPH2,
-                fontWeight = FontWeight.PARAGRAPH2M,
-                lineHeight = LineHeight.PARAGRAPH2,
-                color = functionalError
-            )
-        }
+        ErrorBanner(signup.error)
 
         Spacer(modifier = Modifier.height(20.dp))
     }

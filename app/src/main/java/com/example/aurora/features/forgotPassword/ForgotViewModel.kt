@@ -4,6 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.ForgotPassUseCase
 import com.example.aurora.domain.usecase.ResetPassUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +18,19 @@ class ForgotViewModel(private val forgotUseCase: ForgotPassUseCase, private val 
 
     fun email(text: String){
         _data.update {
-            it.copy(email = text)
+            it.copy(email = text, errorMessage = "")
         }
     }
 
     fun password(text: String){
         _data.update {
-            it.copy(password = text)
+            it.copy(password = text, errorMessage = "")
         }
     }
 
     fun repeat(text: String){
         _data.update {
-            it.copy(repeat = text)
+            it.copy(repeat = text, errorMessage = "")
         }
     }
 
@@ -70,14 +71,15 @@ class ForgotViewModel(private val forgotUseCase: ForgotPassUseCase, private val 
 
     private fun forgotPass(){
         viewModelScope.launch{
+            _data.update { it.copy(errorMessage = "") }
             forgotUseCase.invoke(_data.value.email).fold(
                 onSuccess = {
                     _data.update{
-                        it.copy(isFirstStep = false)
+                        it.copy(isFirstStep = false, errorMessage = "")
                     }
                 },
-                onFailure = {
-
+                onFailure = { error ->
+                    _data.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -85,15 +87,16 @@ class ForgotViewModel(private val forgotUseCase: ForgotPassUseCase, private val 
 
     private fun resetPass(){
         viewModelScope.launch{
+            _data.update { it.copy(errorMessage = "") }
             resetPassUseCase.invoke(_data.value.password, _data.value.token).fold(
                 onSuccess = {
                     _data.update{
-                        it.copy(resultPageGood = true)
+                        it.copy(resultPageGood = true, errorMessage = "")
                     }
                 },
-                onFailure = {
+                onFailure = { error ->
                     _data.update{
-                        it.copy(resultPageBad = true)
+                        it.copy(resultPageBad = true, errorMessage = error.toUiMessage())
                     }
                 }
             )
@@ -101,6 +104,7 @@ class ForgotViewModel(private val forgotUseCase: ForgotPassUseCase, private val 
     }
 
     fun validateEmail(){
+        _data.update { it.copy(errorMessage = "") }
         val emailValid = isEmailValid()
         if(emailValid == ForgotEmailErrors.NONE){
             _data.update{
@@ -115,6 +119,7 @@ class ForgotViewModel(private val forgotUseCase: ForgotPassUseCase, private val 
     }
 
     fun validatePassword(){
+        _data.update { it.copy(errorMessage = "") }
         val passwordValid = isPasswordValid()
         val repeatValid = isRepeatValid()
         if( passwordValid == ForgotPasswordErrors.NONE && repeatValid == ForgotRepeatErrors.NONE){

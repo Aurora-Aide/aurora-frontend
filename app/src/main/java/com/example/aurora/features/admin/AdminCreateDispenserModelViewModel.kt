@@ -3,6 +3,7 @@ package com.example.aurora.features.admin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
+import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.data.model.AdminCreateDispenserModelRequest
 import com.example.aurora.domain.usecase.admin.AdminCreateDispenserModelUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
@@ -23,20 +24,20 @@ class AdminCreateDispenserModelViewModel(
         _model.update{
             it.copy(
                 code = value, 
-                error = null, 
+                errorMessage = "",
                 isCodeError = AddModelCodeErrors.NONE
             )
         }
         
     }
     fun onNameChange(value: String) = _model.update {
-        it.copy(name = value, error = null, isNameError = AddModelNameErrors.NONE)
+        it.copy(name = value, errorMessage = "", isNameError = AddModelNameErrors.NONE)
     }
     fun onSlotCountChange(value: String) = _model.update {
-        it.copy(slotCount = value, error = null, isSlotCountError = AddModelSlotCountErrors.NONE)
+        it.copy(slotCount = value, errorMessage = "", isSlotCountError = AddModelSlotCountErrors.NONE)
     }
     fun onSerialPrefixChange(value: String) = _model.update {
-        it.copy(serialPrefix = value, error = null, isSerialPrefixError = AddModelSerialPrefixErrors.NONE)
+        it.copy(serialPrefix = value, errorMessage = "", isSerialPrefixError = AddModelSerialPrefixErrors.NONE)
     }
 
     private fun isCodeValid(): AddModelCodeErrors {
@@ -90,6 +91,7 @@ class AdminCreateDispenserModelViewModel(
     }
 
     fun save() {
+        _model.update { it.copy(errorMessage = "") }
         val codeError = isCodeValid()
         val nameError = isNameValid()
         val prefixError = isSerialPrefixValid()
@@ -130,7 +132,7 @@ class AdminCreateDispenserModelViewModel(
     }
 
     private fun createModel() {
-        _model.update { it.copy(isLoading = true, error = null) }
+        _model.update { it.copy(isLoading = true, errorMessage = "") }
         viewModelScope.launch {
             createModelUseCase(
                 AdminCreateDispenserModelRequest(
@@ -141,10 +143,10 @@ class AdminCreateDispenserModelViewModel(
                 )
             ).fold(
                 onSuccess = {
-                    _model.update { it.copy(isLoading = false, isSuccess = true) }
+                    _model.update { it.copy(isLoading = false, isSuccess = true, errorMessage = "") }
                 },
                 onFailure = { error ->
-                    _model.update { it.copy(isLoading = false, error = error.message ?: "Unable to create model") }
+                    _model.update { it.copy(isLoading = false, errorMessage = error.toUiMessage()) }
                 }
             )
         }
@@ -156,13 +158,15 @@ class AdminCreateDispenserModelViewModel(
 
     fun loadModels() {
         viewModelScope.launch {
+            _model.update { it.copy(errorMessage = "") }
             listModelsUseCase().fold(
                 onSuccess = { data ->
                     val codes = data.map { it.code }
                     val serialPrefix = data.map { it.serial_prefix }
                     _model.update { it.copy(allModelsCodes = codes, allModelsPrefixes = serialPrefix) }
                 },
-                onFailure = {
+                onFailure = { error ->
+                    _model.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )
         }
