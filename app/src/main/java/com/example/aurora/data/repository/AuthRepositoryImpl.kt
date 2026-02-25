@@ -257,6 +257,10 @@ class AuthRepositoryImpl(
         )
     }
 
+    override suspend fun resetDispenserPairing(id: String): Result<Unit> {
+        return data.resetDispenserPairing(id)
+    }
+
     // admin
     override suspend fun adminListUsers(): Result<List<AdminUserModel>> {
         return data.adminListUsers()

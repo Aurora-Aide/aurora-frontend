@@ -10,5 +10,6 @@ data class DispenserData(
     val isRenameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
     val allDispenserNames: List<String> = emptyList(),
     val errorMessage: String = "",
+    val statusMessage: String = "",
     val isRenameSuccessful: Boolean = false,
 )

@@ -68,6 +68,9 @@ interface RetrofitAPI {
     @GET("${urls.getDispenserURL}{id}/")
     suspend fun getDispenser(@Path("id") id: String): Response<Dispenser>
 
+    @POST("${urls.getDispenserURL}{id}/reset-pairing/")
+    suspend fun resetDispenserPairing(@Path("id") id: String): Response<Unit>
+
     // containers
     @PATCH(urls.updatePillNameURL)
     suspend fun updatePillName(@Body dataModel: UpdatePillNameRequest): Response<ContainerModel>

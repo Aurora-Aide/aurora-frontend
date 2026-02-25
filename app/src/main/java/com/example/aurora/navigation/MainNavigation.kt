@@ -243,6 +243,7 @@ fun MainNavigation() {
             val dispenser by dispenserViewModel.dispenser.collectAsStateWithLifecycle()
             val showHideRename by dispenserViewModel.showPopUpRename.collectAsStateWithLifecycle()
             val showHideDelete by dispenserViewModel.showPopUpDelete.collectAsStateWithLifecycle()
+            val showHideResetPairing by dispenserViewModel.showPopUpResetPairing.collectAsStateWithLifecycle()
             LaunchedEffect(dispenserId) {
                 dispenserViewModel.loadDispenser(dispenserId)
             }
@@ -250,6 +251,7 @@ fun MainNavigation() {
                 dispenser = dispenser,
                 showHideRename = showHideRename,
                 showHideDelete = showHideDelete,
+                showHideResetPairing = showHideResetPairing,
                 onBackClick = { navController.navigateUp() },
                 onPillClick = { slot, pillName, containerId ->
                     navController.toContainer(dispenserId, dispenserName, slot, pillName, containerId)
@@ -265,6 +267,9 @@ fun MainNavigation() {
                 isRenameSuccessful = { dispenserViewModel.resetRename() },
                 onBackToDispenserRenameClicked = { dispenserViewModel.showHideRenameBack()},
                 onBackToDispenserDeleteClicked = { dispenserViewModel.showHideDeleteBack()},
+                onResetPairingClicked = { dispenserViewModel.showHideResetPairingBack() },
+                onResetPairingConfirm = { dispenserViewModel.confirmResetPairing() },
+                onBackToDispenserResetPairingClicked = { dispenserViewModel.showHideResetPairingBack() },
             )
         }
         composable(route = Routes.MainRoute.Container.route){ navBackStackEntry ->

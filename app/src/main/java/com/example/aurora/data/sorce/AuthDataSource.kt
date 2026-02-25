@@ -42,6 +42,7 @@ interface AuthDataSource {
     suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleModel>
     suspend fun deleteSchedule(id: Int): Result<Unit>
     suspend fun getDispenser(id: String): Result<Dispenser>
+    suspend fun resetDispenserPairing(id: String): Result<Unit>
     // admin
     suspend fun adminListUsers(): Result<List<AdminUserModel>>
     suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>

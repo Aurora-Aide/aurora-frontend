@@ -21,6 +21,7 @@ import com.example.aurora.domain.usecase.GetScheduleUseCase
 import com.example.aurora.domain.usecase.UpdateScheduleUseCase
 import com.example.aurora.domain.usecase.DeleteScheduleUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
+import com.example.aurora.domain.usecase.ResetDispenserPairingUseCase
 import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
@@ -71,7 +72,7 @@ val appModule = module {
     }
 
     viewModel {
-        DispenserViewModel(get(), get(), get(), get())
+        DispenserViewModel(get(), get(), get(), get(), get())
     }
 
     viewModel {
@@ -165,6 +166,10 @@ val appModule = module {
 
     factory { 
         GetDispenserUseCase(get())
+    }
+
+    factory {
+        ResetDispenserPairingUseCase(get())
     }
 
     factory {

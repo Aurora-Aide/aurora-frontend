@@ -57,6 +57,7 @@ fun DispenserScreen(
     dispenser: DispenserData,
     showHideRename: Boolean,
     showHideDelete: Boolean,
+    showHideResetPairing: Boolean,
     onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -65,6 +66,9 @@ fun DispenserScreen(
     isRenameSuccessful: () -> Unit,
     onBackToDispenserRenameClicked: () -> Unit,
     onBackToDispenserDeleteClicked: () -> Unit,
+    onResetPairingClicked: () -> Unit,
+    onResetPairingConfirm: () -> Unit,
+    onBackToDispenserResetPairingClicked: () -> Unit,
 
 )
 {
@@ -87,6 +91,7 @@ fun DispenserScreen(
                 dispenser = dispenser,
                 onEditClick = { onBackToDispenserRenameClicked() },
                 onDeleteClick = { onBackToDispenserDeleteClicked() },
+                onResetPairingClick = { onResetPairingClicked() },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -105,6 +110,16 @@ fun DispenserScreen(
             title = "Delete dispenser",
             caption = "Are you sure you want to delete this dispenser?",
             buttonText = "Delete"
+        )
+    }
+
+    if (showHideResetPairing) {
+        LogoutPopup(
+            onDismiss = { onBackToDispenserResetPairingClicked() },
+            onConfirmLogout = { onResetPairingConfirm() },
+            title = "Re-pair dispenser",
+            caption = "This will reset pairing. Reboot the dispenser so it can pair again.",
+            buttonText = "Reset pairing"
         )
     }
 
@@ -127,6 +142,7 @@ fun DispenserHeaderCard(
     dispenser: DispenserData,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onResetPairingClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
@@ -162,6 +178,16 @@ fun DispenserHeaderCard(
                         lineHeight = LineHeight.PARAGRAPH2,
                         color = primary1
                     )
+                    if (dispenser.statusMessage.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = dispenser.statusMessage,
+                            fontSize = FontSize.PARAGRAPH2,
+                            fontWeight = FontWeight.PARAGRAPH2M,
+                            lineHeight = LineHeight.PARAGRAPH2,
+                            color = primary1
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -174,6 +200,11 @@ fun DispenserHeaderCard(
                     iconRes = R.drawable.pen,
                     label = "Rename",
                     onClick = onEditClick,
+                )
+                ActionChip(
+                    iconRes = R.drawable.mobile_check,
+                    label = "Re-pair",
+                    onClick = onResetPairingClick,
                 )
                 ActionChip(
                     iconRes = R.drawable.delete,
