@@ -7,6 +7,7 @@ import com.example.aurora.data.error.toUiMessage
 import com.example.aurora.domain.usecase.DeleteDispenserUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
+import com.example.aurora.domain.usecase.ResetDispenserPairingUseCase
 import com.example.aurora.domain.usecase.UpdateDispenserNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ class DispenserViewModel(
     private val deleteDispenserUseCase: DeleteDispenserUseCase,
     private val getDispenserUseCase: GetDispenserUseCase,
     private val listAllUserDispensersUseCase: ListAllUserDispensersUseCase,
-    private val updateDispenserNameUseCase: UpdateDispenserNameUseCase
+    private val updateDispenserNameUseCase: UpdateDispenserNameUseCase,
+    private val resetDispenserPairingUseCase: ResetDispenserPairingUseCase
 ): ViewModel() {
 
     private val _dispenser = MutableStateFlow(DispenserData())
@@ -30,12 +32,19 @@ class DispenserViewModel(
     private val _showPopUpRename = MutableStateFlow(false)
     val showPopUpRename = _showPopUpRename.asStateFlow()
 
+    private val _showPopUpResetPairing = MutableStateFlow(false)
+    val showPopUpResetPairing = _showPopUpResetPairing.asStateFlow()
+
     fun showHideRenameBack() {
         _showPopUpRename.update { value -> value.not() }
     }
 
     fun showHideDeleteBack() {
         _showPopUpDelete.update { value -> value.not() }
+    }
+
+    fun showHideResetPairingBack() {
+        _showPopUpResetPairing.update { value -> value.not() }
     }
 
     private fun setBaseInfo(
@@ -55,7 +64,8 @@ class DispenserViewModel(
                 containers = normalizedContainers,
                 renameDraft = name.ifBlank { "Unnamed dispenser" },
                 isRenameError = AddDispenserNameErrors.NONE,
-                errorMessage = ""
+                errorMessage = "",
+                statusMessage = ""
             )
         }
     }
@@ -100,7 +110,7 @@ class DispenserViewModel(
 
     fun loadDispenser(dispenserId: String) {
         viewModelScope.launch {
-            _dispenser.update { it.copy(errorMessage = "") }
+            _dispenser.update { it.copy(errorMessage = "", statusMessage = "") }
 
             getDispenserUseCase(dispenserId).fold(
                 onSuccess = { dispenser ->
@@ -123,6 +133,7 @@ class DispenserViewModel(
                     _dispenser.update {
                         it.copy(
                             errorMessage = error.toUiMessage(),
+                            statusMessage = "",
                             containers = emptyList()
                         )
                     }
@@ -152,7 +163,7 @@ class DispenserViewModel(
     }
 
     fun confirmRename() {
-        _dispenser.update { it.copy(errorMessage = "") }
+        _dispenser.update { it.copy(errorMessage = "", statusMessage = "") }
         val nameValid = isNameValid(_dispenser.value.renameDraft)
         if (nameValid == AddDispenserNameErrors.NONE) {
             _dispenser.update {
@@ -170,7 +181,7 @@ class DispenserViewModel(
         _showPopUpRename.update { value -> value.not() }
 
         viewModelScope.launch {
-            _dispenser.update { it.copy(errorMessage = "") }
+            _dispenser.update { it.copy(errorMessage = "", statusMessage = "") }
             updateDispenserNameUseCase.invoke(_dispenser.value.name, _dispenser.value.renameDraft).fold(
                 onSuccess = { dispenser ->
                     _dispenser.update {
@@ -186,7 +197,33 @@ class DispenserViewModel(
                 },
                 onFailure = { error ->
                     _dispenser.update {
-                        it.copy(errorMessage = error.toUiMessage())
+                        it.copy(errorMessage = error.toUiMessage(), statusMessage = "")
+                    }
+                }
+            )
+        }
+    }
+
+    fun confirmResetPairing(onSuccess: (() -> Unit)? = null) {
+        _showPopUpResetPairing.update { false }
+        val dispenserId = _dispenser.value.id
+        if (dispenserId.isBlank()) return
+
+        viewModelScope.launch {
+            _dispenser.update { it.copy(errorMessage = "", statusMessage = "") }
+            resetDispenserPairingUseCase(dispenserId).fold(
+                onSuccess = {
+                    _dispenser.update {
+                        it.copy(
+                            errorMessage = "",
+                            statusMessage = "Pairing reset. Reboot the dispenser to pair again."
+                        )
+                    }
+                    onSuccess?.invoke()
+                },
+                onFailure = { error ->
+                    _dispenser.update {
+                        it.copy(errorMessage = error.toUiMessage(), statusMessage = "")
                     }
                 }
             )

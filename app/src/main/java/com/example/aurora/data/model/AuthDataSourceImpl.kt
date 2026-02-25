@@ -119,6 +119,21 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return safeRequest { retrofit.getDispenser(id) }
     }
 
+    override suspend fun resetDispenserPairing(id: String): Result<Unit> {
+        return safeResponse { retrofit.resetDispenserPairing(id) }.fold(
+            onSuccess = { response ->
+                if (response.isSuccessful) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(AppException(parseApiError(response)))
+                }
+            },
+            onFailure = { error ->
+                Result.failure(error)
+            }
+        )
+    }
+
     // admin
     override suspend fun adminListUsers(): Result<List<AdminUserModel>> {
         return safeRequest { retrofit.adminListUsers() }

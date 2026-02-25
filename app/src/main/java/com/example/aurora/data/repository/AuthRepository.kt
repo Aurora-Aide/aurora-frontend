@@ -36,6 +36,7 @@ interface AuthRepository {
     suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleEntity>
     suspend fun deleteSchedule(id: Int): Result<Unit>
     suspend fun getDispenser(id: String): Result<DispenserEntity>
+    suspend fun resetDispenserPairing(id: String): Result<Unit>
     // admin
     suspend fun adminListUsers(): Result<List<AdminUserModel>>
     suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>
