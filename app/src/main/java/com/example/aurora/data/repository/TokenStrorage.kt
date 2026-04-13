@@ -9,6 +9,7 @@ class TokenStorage(context: Context) {
     private companion object {
         const val KEY_ACCESS = "access"
         const val KEY_REFRESH = "refresh"
+        const val KEY_PUSH = "push_token"
         const val TAG = "TokenStorage"
     }
 
@@ -40,5 +41,14 @@ class TokenStorage(context: Context) {
     fun clearTokens() {
         prefs.edit().clear().apply()
         Log.d(TAG, "clearTokens")
+    }
+
+    fun savePushToken(token: String) {
+        prefs.edit().putString(KEY_PUSH, token).apply()
+        Log.d(TAG, "savePushToken: tokenLen=${token.length}")
+    }
+
+    fun getPushToken(): String? {
+        return prefs.getString(KEY_PUSH, null)
     }
 }

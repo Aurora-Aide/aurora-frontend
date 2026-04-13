@@ -32,11 +32,14 @@ interface AuthRepository {
     suspend fun updateDispenserName(currentName: String, newName: String): Result<DispenserEntity>
     suspend fun listSchedules(containerId: Int): Result<List<ScheduleEntity>>
     suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleEntity>
+    suspend fun dispenseNow(containerId: Int): Result<ScheduleEntity>
     suspend fun getSchedule(id: Int): Result<ScheduleEntity>
     suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleEntity>
     suspend fun deleteSchedule(id: Int): Result<Unit>
     suspend fun getDispenser(id: String): Result<DispenserEntity>
     suspend fun resetDispenserPairing(id: String): Result<Unit>
+    suspend fun registerPushToken(token: String): Result<Unit>
+    suspend fun deactivatePushToken(token: String): Result<Unit>
     // admin
     suspend fun adminListUsers(): Result<List<AdminUserModel>>
     suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>

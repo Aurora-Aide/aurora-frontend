@@ -6,14 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
 import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.repository.TokenStorage
 import com.example.aurora.domain.usecase.LoginUseCase
+import com.example.aurora.domain.usecase.RegisterPushTokenUseCase
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
+    private val registerPushTokenUseCase: RegisterPushTokenUseCase,
+    private val tokenStorage: TokenStorage,
+) : ViewModel() {
     private val _login = MutableStateFlow(LoginData())
 
     val login = _login.asStateFlow()
@@ -35,6 +42,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
         viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = { result ->
+                    registerPushTokenIfAvailable()
                     _login.update {
                         it.copy(
                             isLoginSuccessful = true,
@@ -98,6 +106,36 @@ class LoginViewModel(private val loginUseCase: LoginUseCase): ViewModel() {
             _login.update {
                 it.copy(isEmailError = emailValid, isPasswordError = passwordValid)
             }
+        }
+    }
+
+    private fun registerPushTokenIfAvailable() {
+        val cachedToken = tokenStorage.getPushToken()
+        if (!cachedToken.isNullOrBlank()) {
+            viewModelScope.launch {
+                registerPushTokenUseCase(cachedToken).onFailure {
+                    Log.e("AuroraFCM", "Cached push token register failed: ${it.message}")
+                }
+            }
+            return
+        }
+
+        try {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("AuroraFCM", "FCM token fetch on login failed", task.exception)
+                    return@addOnCompleteListener
+                }
+                val token = task.result ?: return@addOnCompleteListener
+                tokenStorage.savePushToken(token)
+                viewModelScope.launch {
+                    registerPushTokenUseCase(token).onFailure {
+                        Log.e("AuroraFCM", "Fresh push token register failed: ${it.message}")
+                    }
+                }
+            }
+        } catch (error: Throwable) {
+            Log.w("AuroraFCM", "Firebase unavailable; push registration skipped", error)
         }
     }
 }

@@ -49,6 +49,7 @@ fun ContainerScreen(
     container: ContainerData,
     showHideRename: Boolean,
     onAddScheduleClick: () -> Unit,
+    onDropNowClick: () -> Unit,
     onScheduleRowClick: (Int) -> Unit,
     onBackClick: () -> Unit,
     onRenameChange: (String) -> Unit,
@@ -93,6 +94,7 @@ fun ContainerScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 ContainerHeaderCard(
                     container = container,
+                    onDropNowClick = onDropNowClick,
                     onEditClick = { onBackToContainerRenameClicked() }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -209,6 +211,7 @@ private fun formatTime(hour: Int, minute: Int): String {
 @Composable
 fun ContainerHeaderCard(
     container: ContainerData,
+    onDropNowClick: () -> Unit,
     onEditClick: () -> Unit,
 ) {
     Surface(
@@ -262,6 +265,11 @@ fun ContainerHeaderCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                ActionChip(
+                    iconRes = R.drawable.download,
+                    label = "Drop Now",
+                    onClick = onDropNowClick,
+                )
                 ActionChip(
                     iconRes = R.drawable.pen,
                     label = "Rename",

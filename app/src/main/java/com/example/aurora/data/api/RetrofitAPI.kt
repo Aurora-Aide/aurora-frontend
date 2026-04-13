@@ -22,6 +22,8 @@ import com.example.aurora.data.model.AdminDispenserModel
 import com.example.aurora.data.model.AdminRenameDispenserRequest
 import com.example.aurora.data.model.AdminDispenserModelModel
 import com.example.aurora.data.model.AdminCreateDispenserModelRequest
+import com.example.aurora.data.model.RegisterPushTokenRequest
+import com.example.aurora.data.model.DeactivatePushTokenRequest
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
@@ -84,6 +86,9 @@ interface RetrofitAPI {
         @Body dataModel: CreateScheduleRequest
     ): Response<ScheduleModel>
 
+    @POST("${urls.dispenseNowByContainerBaseURL}{containerId}/dispense-now/")
+    suspend fun dispenseNow(@Path("containerId") containerId: Int): Response<ScheduleModel>
+
     @GET("${urls.schedulesBaseURL}{id}/retrieve/")
     suspend fun getSchedule(@Path("id") id: Int): Response<ScheduleModel>
 
@@ -127,4 +132,10 @@ interface RetrofitAPI {
     suspend fun adminCreateDispenserModel(
         @Body dataModel: AdminCreateDispenserModelRequest
     ): Response<AdminDispenserModelModel>
+
+    @POST(urls.registerPushTokenURL)
+    suspend fun registerPushToken(@Body dataModel: RegisterPushTokenRequest): Response<Unit>
+
+    @POST(urls.deactivatePushTokenURL)
+    suspend fun deactivatePushToken(@Body dataModel: DeactivatePushTokenRequest): Response<Unit>
 }

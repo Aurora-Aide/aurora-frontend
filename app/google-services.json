@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "51609647015",
+    "project_id": "aurora-a7caf",
+    "storage_bucket": "aurora-a7caf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51609647015:android:08e57abb7560e32d2ca882",
+        "android_client_info": {
+          "package_name": "com.example.aurora"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDj9q-OVUvm_2R0RAoMFvCkmWlctOvXR6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
