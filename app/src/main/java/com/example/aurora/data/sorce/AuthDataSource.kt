@@ -38,11 +38,14 @@ interface AuthDataSource {
     suspend fun updateDispenserName(request: UpdateDispenserNameRequest): Result<Dispenser>
     suspend fun listSchedules(containerId: Int): Result<List<ScheduleModel>>
     suspend fun createSchedule(containerId: Int, request: CreateScheduleRequest): Result<ScheduleModel>
+    suspend fun dispenseNow(containerId: Int): Result<ScheduleModel>
     suspend fun getSchedule(id: Int): Result<ScheduleModel>
     suspend fun updateSchedule(id: Int, request: UpdateScheduleRequest): Result<ScheduleModel>
     suspend fun deleteSchedule(id: Int): Result<Unit>
     suspend fun getDispenser(id: String): Result<Dispenser>
     suspend fun resetDispenserPairing(id: String): Result<Unit>
+    suspend fun registerPushToken(token: String): Result<Unit>
+    suspend fun deactivatePushToken(token: String): Result<Unit>
     // admin
     suspend fun adminListUsers(): Result<List<AdminUserModel>>
     suspend fun adminListDispensers(): Result<List<AdminDispenserModel>>

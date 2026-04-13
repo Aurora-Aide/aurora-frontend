@@ -220,6 +220,17 @@ class AuthRepositoryImpl(
         )
     }
 
+    override suspend fun dispenseNow(containerId: Int): Result<ScheduleEntity> {
+        return data.dispenseNow(containerId).fold(
+            onSuccess = {
+                schedule -> Result.success(schedule.toScheduleEntity())
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
     override suspend fun getSchedule(id: Int): Result<ScheduleEntity> {
         return data.getSchedule(id).fold(
             onSuccess = {
@@ -259,6 +270,14 @@ class AuthRepositoryImpl(
 
     override suspend fun resetDispenserPairing(id: String): Result<Unit> {
         return data.resetDispenserPairing(id)
+    }
+
+    override suspend fun registerPushToken(token: String): Result<Unit> {
+        return data.registerPushToken(token)
+    }
+
+    override suspend fun deactivatePushToken(token: String): Result<Unit> {
+        return data.deactivatePushToken(token)
     }
 
     // admin

@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.repository.TokenStorage
+import com.example.aurora.domain.usecase.DeactivatePushTokenUseCase
 import com.example.aurora.domain.usecase.DeleteUserUseCase
 import com.example.aurora.domain.usecase.GetUserUseCase
 import com.example.aurora.domain.usecase.LogoutUseCase
@@ -15,7 +17,9 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val logoutUseCase: LogoutUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val deactivatePushTokenUseCase: DeactivatePushTokenUseCase,
+    private val tokenStorage: TokenStorage,
 ): ViewModel() {
     private val _showPopUpLogOut = MutableStateFlow(false)
     val showPopUpLogOut = _showPopUpLogOut.asStateFlow()
@@ -35,6 +39,9 @@ class ProfileViewModel(
 
     fun performLogout(onSuccess: () -> Unit) {
         viewModelScope.launch {
+            tokenStorage.getPushToken()?.let { token ->
+                deactivatePushTokenUseCase(token)
+            }
             logoutUseCase.invoke().fold(
                 onSuccess = {
                     _showPopUpLogOut.update { false }

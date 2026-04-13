@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.domain.usecase.DispenseNowUseCase
 import com.example.aurora.domain.usecase.ListSchedulesUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
 import com.example.aurora.features.home.AddDispenserNameErrors
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class ContainerViewModel(
     private val updatePillNameUseCase: UpdatePillNameUseCase,
-    private val listSchedulesUseCase: ListSchedulesUseCase
+    private val listSchedulesUseCase: ListSchedulesUseCase,
+    private val dispenseNowUseCase: DispenseNowUseCase
 ) : ViewModel() {
 
     private val _container = MutableStateFlow(ContainerData())
@@ -113,6 +115,27 @@ class ContainerViewModel(
                 },
                 onFailure = { error ->
                     Log.e("TAG", "List schedules failed: ${error.message}")
+                    _container.update { it.copy(errorMessage = error.toUiMessage()) }
+                }
+            )
+        }
+    }
+
+    fun dispenseNow() {
+        val currentContainerId = _container.value.containerId
+        if (currentContainerId == 0) {
+            _container.update { it.copy(errorMessage = "Container is not loaded yet.") }
+            return
+        }
+
+        viewModelScope.launch {
+            _container.update { it.copy(errorMessage = "") }
+            dispenseNowUseCase(currentContainerId).fold(
+                onSuccess = {
+                    listSchedules()
+                },
+                onFailure = { error ->
+                    Log.e("TAG", "Dispense now failed: ${error.message}")
                     _container.update { it.copy(errorMessage = error.toUiMessage()) }
                 }
             )

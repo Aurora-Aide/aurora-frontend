@@ -22,10 +22,13 @@ import com.example.aurora.domain.usecase.UpdateScheduleUseCase
 import com.example.aurora.domain.usecase.DeleteScheduleUseCase
 import com.example.aurora.domain.usecase.GetDispenserUseCase
 import com.example.aurora.domain.usecase.ResetDispenserPairingUseCase
+import com.example.aurora.domain.usecase.DispenseNowUseCase
 import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
 import com.example.aurora.domain.usecase.admin.AdminCreateDispenserModelUseCase
+import com.example.aurora.domain.usecase.RegisterPushTokenUseCase
+import com.example.aurora.domain.usecase.DeactivatePushTokenUseCase
 import com.example.aurora.features.dispenser.AddScheduleViewModel
 import com.example.aurora.features.dispenser.ScheduleViewModel
 import com.example.aurora.features.forgotPassword.ForgotViewModel
@@ -44,11 +47,11 @@ import org.koin.dsl.module
 
 val appModule = module {
     viewModel {
-        LoginViewModel(get())
+        LoginViewModel(get(), get(), get())
     }
     
     viewModel {
-        ProfileViewModel(get(), get(), get())
+        ProfileViewModel(get(), get(), get(), get(), get())
     }
 
     viewModel {
@@ -84,7 +87,7 @@ val appModule = module {
     }
 
     viewModel {
-        ContainerViewModel(get(), get())
+        ContainerViewModel(get(), get(), get())
     }
 
     viewModel {
@@ -98,6 +101,14 @@ val appModule = module {
 
     factory{
         LoginUseCase(get())
+    }
+
+    factory {
+        RegisterPushTokenUseCase(get())
+    }
+
+    factory {
+        DeactivatePushTokenUseCase(get())
     }
 
     factory{
@@ -150,6 +161,10 @@ val appModule = module {
 
     factory {
          CreateScheduleUseCase(get())
+    }
+
+    factory {
+        DispenseNowUseCase(get())
     }
 
     factory { 

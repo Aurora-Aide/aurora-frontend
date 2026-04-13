@@ -291,6 +291,7 @@ fun MainNavigation() {
                 showHideRename = showHideRename,
                 onBackClick = { navController.navigateUp() },
                 onAddScheduleClick = { navController.toAddSchedule(containerId) },
+                onDropNowClick = { containerViewModel.dispenseNow() },
                 onScheduleRowClick = { scheduleId ->
                     navController.toSchedule(
                         scheduleId = scheduleId,

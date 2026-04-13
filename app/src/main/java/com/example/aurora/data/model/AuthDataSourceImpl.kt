@@ -7,6 +7,8 @@ import com.example.aurora.data.requestBody
 import com.example.aurora.data.safeRequest
 import com.example.aurora.data.safeResponse
 import com.example.aurora.data.sorce.AuthDataSource
+import com.example.aurora.data.model.RegisterPushTokenRequest
+import com.example.aurora.data.model.DeactivatePushTokenRequest
 import com.example.aurora.features.forgotPassword.ForgotPassVariables
 import com.example.aurora.features.forgotPassword.ResetPassVariables
 import com.example.aurora.features.home.DispenserVariables
@@ -92,6 +94,10 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
         return safeRequest { retrofit.createSchedule(containerId, request) }
     }
 
+    override suspend fun dispenseNow(containerId: Int): Result<ScheduleModel> {
+        return safeRequest { retrofit.dispenseNow(containerId) }
+    }
+
     override suspend fun getSchedule(id: Int): Result<ScheduleModel> {
         return safeRequest { retrofit.getSchedule(id) }
     }
@@ -121,6 +127,36 @@ class AuthDataSourceImpl(private val retrofit: RetrofitAPI): AuthDataSource {
 
     override suspend fun resetDispenserPairing(id: String): Result<Unit> {
         return safeResponse { retrofit.resetDispenserPairing(id) }.fold(
+            onSuccess = { response ->
+                if (response.isSuccessful) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(AppException(parseApiError(response)))
+                }
+            },
+            onFailure = { error ->
+                Result.failure(error)
+            }
+        )
+    }
+
+    override suspend fun registerPushToken(token: String): Result<Unit> {
+        return safeResponse { retrofit.registerPushToken(RegisterPushTokenRequest(token = token)) }.fold(
+            onSuccess = { response ->
+                if (response.isSuccessful) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(AppException(parseApiError(response)))
+                }
+            },
+            onFailure = { error ->
+                Result.failure(error)
+            }
+        )
+    }
+
+    override suspend fun deactivatePushToken(token: String): Result<Unit> {
+        return safeResponse { retrofit.deactivatePushToken(DeactivatePushTokenRequest(token = token)) }.fold(
             onSuccess = { response ->
                 if (response.isSuccessful) {
                     Result.success(Unit)
