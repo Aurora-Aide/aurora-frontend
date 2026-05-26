@@ -120,7 +120,7 @@ fun LoginHeader() {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Log In",
+            text = stringResource(R.string.log_in),
             fontSize = FontSize.HEADING1,
             fontWeight = FontWeight.HEADING1,
             color = primary1
@@ -138,9 +138,9 @@ fun LoginFields(
     Column {
         TextField(
             value = login.email,
-            label = "Email",
+            label = stringResource(R.string.email),
             error = login.isEmailError != LoginEmailErrors.NONE,
-            placeholder = "Email",
+            placeholder = stringResource(R.string.email),
             onValueChange = onEmailChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -155,9 +155,9 @@ fun LoginFields(
 
         TextField(
             value = login.password,
-            label = "Password",
+            label = stringResource(R.string.password),
             error = login.isPasswordError != LoginPasswordErrors.NONE,
-            placeholder = "Password",
+            placeholder = stringResource(R.string.password),
             onValueChange = onPasswordChange,
             visualTransformation = if (isVisible) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
@@ -223,7 +223,7 @@ fun LoginFooter(
 
         ) {
             Text(
-                text = if (login.isLoading) "Logging In..." else "Log In",
+                text = if (login.isLoading) stringResource(R.string.logging_in) else stringResource(R.string.log_in),
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
@@ -234,14 +234,14 @@ fun LoginFooter(
         Row {
             TextButton(onClick = onSignUpClick) {
                 Text(
-                    text = "Don't have an account?  ",
+                    text = stringResource(R.string.dont_have_account),
                     fontSize = FontSize.PARAGRAPH3,
                     fontWeight = FontWeight.PARAGRAPH3R,
                     lineHeight = LineHeight.PARAGRAPH3,
                     color = base100
                 )
                 Text(
-                    text = "Create Account",
+                    text = stringResource(R.string.create_account),
                     textDecoration = TextDecoration.Underline,
                     fontSize = FontSize.PARAGRAPH3,
                     fontWeight = FontWeight.PARAGRAPH1M,

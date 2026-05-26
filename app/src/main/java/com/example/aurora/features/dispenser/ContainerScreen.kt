@@ -99,7 +99,7 @@ fun ContainerScreen(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = "Schedules:",
+                    text = stringResource(R.string.schedules),
                     color = primary1,
                     fontSize = FontSize.BODY1,
                     fontWeight = FontWeight.BODY1,
@@ -118,8 +118,8 @@ fun ContainerScreen(
         DispenserPopup(
             onDismiss = { onBackToContainerRenameClicked() },
             onConfirmEdit = { onRenameConfirm() },
-            title = "Rename pill:",
-            caption = "Enter a new pill name for this slot.",
+            title = stringResource(R.string.rename_pill_title),
+            caption = stringResource(R.string.rename_pill_caption),
             onNameChange = { onRenameChange(it) },
             value = container.renameDraft,
             placeHolder = container.pillName,
@@ -135,7 +135,7 @@ fun ScheduleList(
 ) {
     if (container.schedules.isEmpty()) {
         Text(
-            text = "No schedules yet",
+            text = stringResource(R.string.no_schedules_yet),
             color = secondary4,
             fontSize = FontSize.PARAGRAPH2,
             fontWeight = FontWeight.PARAGRAPH2M,
@@ -173,7 +173,7 @@ fun ScheduleRow(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = schedule.day.value?.let { stringResource(it) } ?: "Day",
+                    text = schedule.day.value?.let { stringResource(it) } ?: stringResource(R.string.day),
                     color = primary1,
                     fontSize = FontSize.PARAGRAPH1,
                     fontWeight = FontWeight.PARAGRAPH1M
@@ -187,7 +187,11 @@ fun ScheduleRow(
                 )
             }
             Text(
-                text = if (schedule.repeating) "Repeats" else "Once",
+                text = if (schedule.repeating) {
+                    stringResource(R.string.repeats)
+                } else {
+                    stringResource(R.string.once)
+                },
                 color = primary1,
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M
@@ -241,7 +245,7 @@ fun ContainerHeaderCard(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Slot: ${container.slotNumber}",
+                        text = stringResource(R.string.slot_value, container.slotNumber),
                         fontSize = FontSize.PARAGRAPH2,
                         fontWeight = FontWeight.PARAGRAPH2M,
                         lineHeight = LineHeight.PARAGRAPH2,
@@ -267,12 +271,12 @@ fun ContainerHeaderCard(
             ) {
                 ActionChip(
                     iconRes = R.drawable.download,
-                    label = "Drop Now",
+                    label = stringResource(R.string.drop_now),
                     onClick = onDropNowClick,
                 )
                 ActionChip(
                     iconRes = R.drawable.pen,
-                    label = "Rename",
+                    label = stringResource(R.string.rename),
                     onClick = onEditClick,
                 )
             }

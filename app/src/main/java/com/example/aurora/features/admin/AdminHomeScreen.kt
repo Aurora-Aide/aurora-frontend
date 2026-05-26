@@ -29,7 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.aurora.R
 import com.example.aurora.features.home.BottomNavigationBar
 import com.example.aurora.ui.components.ErrorBanner
 import com.example.aurora.ui.theme.FontSize
@@ -95,7 +97,7 @@ fun AdminHomeScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Hello, ${data.name}",
+                text = stringResource(R.string.hello_name, data.name),
                 color = primary1,
                 fontSize = FontSize.BODY1,
                 fontWeight = FontWeight.BODY1,
@@ -123,21 +125,21 @@ fun AdminHomeScreen(
                 Tab(
                     selected = data.activeTab == AdminHomeTab.DISPENSERS,
                     onClick = { onTabChange(AdminHomeTab.DISPENSERS) },
-                    text = { Text("Dispensers") },
+                    text = { Text(stringResource(R.string.dispensers)) },
                     selectedContentColor = primary1,
                     unselectedContentColor = primary1,
                 )
                 Tab(
                     selected = data.activeTab == AdminHomeTab.MODELS,
                     onClick = { onTabChange(AdminHomeTab.MODELS) },
-                    text = { Text("Dispenser Models") },
+                    text = { Text(stringResource(R.string.dispenser_models)) },
                     selectedContentColor = primary1,
                     unselectedContentColor = primary1,
                 )
                 Tab(
                     selected = data.activeTab == AdminHomeTab.USERS,
                     onClick = { onTabChange(AdminHomeTab.USERS) },
-                    text = { Text("Users") },
+                    text = { Text(stringResource(R.string.users)) },
                     selectedContentColor = primary1,
                     unselectedContentColor = primary1,
                 )
@@ -158,7 +160,7 @@ fun AdminHomeScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = primary1)
                 ) {
-                    Text("Retry", color = secondary2)
+                    Text(stringResource(R.string.retry), color = secondary2)
                 }
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -175,7 +177,7 @@ fun AdminHomeScreen(
                     AdminHomeTab.DISPENSERS -> {
                     if (data.dispensers.isEmpty() && !data.isLoading) {
                         Text(
-                            text = "No dispensers found.",
+                            text = stringResource(R.string.no_dispensers_found),
                             color = secondary4,
                             fontSize = FontSize.PARAGRAPH2,
                             fontWeight = FontWeight.PARAGRAPH2R,
@@ -197,7 +199,7 @@ fun AdminHomeScreen(
                     AdminHomeTab.MODELS -> {
                         if (data.models.isEmpty() && !data.isLoading) {
                             Text(
-                                text = "No models found.",
+                                text = stringResource(R.string.no_models_found),
                                 color = secondary4,
                                 fontSize = FontSize.PARAGRAPH2,
                                 fontWeight = FontWeight.PARAGRAPH2R,
@@ -211,7 +213,7 @@ fun AdminHomeScreen(
                     AdminHomeTab.USERS -> {
                         if (data.users.isEmpty() && !data.isLoading) {
                             Text(
-                                text = "No users found.",
+                                text = stringResource(R.string.no_users_found),
                                 color = secondary4,
                                 fontSize = FontSize.PARAGRAPH2,
                                 fontWeight = FontWeight.PARAGRAPH2R,
@@ -243,7 +245,12 @@ private fun AdminModelCard(model: com.example.aurora.data.model.AdminDispenserMo
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Code: ${model.code} • Slots: ${model.slot_count} • Prefix: ${model.serial_prefix}",
+            text = stringResource(
+                R.string.admin_model_summary,
+                model.code,
+                model.slot_count,
+                model.serial_prefix
+            ),
             color = secondary4,
             fontSize = FontSize.PARAGRAPH2,
             fontWeight = FontWeight.PARAGRAPH2R,
@@ -267,7 +274,12 @@ private fun AdminUserCard(user: com.example.aurora.data.model.AdminUserModel) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "${user.first_name} ${user.last_name} • ${if (user.is_staff) "Staff" else "User"}",
+            text = stringResource(
+                R.string.admin_user_summary,
+                user.first_name,
+                user.last_name,
+                stringResource(if (user.is_staff) R.string.staff else R.string.user)
+            ),
             color = secondary4,
             fontSize = FontSize.PARAGRAPH2,
             fontWeight = FontWeight.PARAGRAPH2R,

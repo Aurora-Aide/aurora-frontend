@@ -15,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.aurora.R
 import com.example.aurora.ui.theme.primary1
 
 @Composable
@@ -49,7 +51,12 @@ fun GoogleScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Google Screen",fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = primary1)
+                Text(
+                    text = stringResource(R.string.google_screen),
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = primary1
+                )
             }
         }
 

@@ -141,7 +141,7 @@ fun AddDispenserHeader() {
         )
         Spacer(modifier = Modifier.height(36.dp))
         Text(
-            text = "Add your dispenser:",
+            text = stringResource(R.string.add_your_dispenser),
             fontSize = FontSize.HEADING2,
             fontWeight = FontWeight.HEADING2,
             lineHeight = LineHeight.HEADING2,
@@ -159,9 +159,9 @@ fun AddDispenserFields(
     Column {
         TextField(
             value = dispenser.id,
-            label = "Dispenser ID*",
+            label = stringResource(R.string.dispenser_id_required),
             error = dispenser.isIDError != AddDispenserIDErrors.NONE,
-            placeholder = "Dispenser ID*",
+            placeholder = stringResource(R.string.dispenser_id_required),
             onValueChange = onIDChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -175,7 +175,7 @@ fun AddDispenserFields(
 
         Text(
             modifier = Modifier.padding(start = 28.dp),
-            text = "*To find the ID of your dispenser look at the back of its box",
+            text = stringResource(R.string.dispenser_id_hint),
             fontSize = FontSize.PARAGRAPH3,
             fontWeight = FontWeight.PARAGRAPH3R,
             lineHeight = LineHeight.PARAGRAPH3,
@@ -186,9 +186,9 @@ fun AddDispenserFields(
 
         TextField(
             value = dispenser.name,
-            label = "Name",
+            label = stringResource(R.string.name),
             error = dispenser.isNameError != AddDispenserNameErrors.NONE,
-            placeholder = "Name",
+            placeholder = stringResource(R.string.name),
             onValueChange = onNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -222,7 +222,11 @@ fun AddDispenserFooter(
 
         ) {
             Text(
-                text = if (dispenser.isLoading) "Adding Dispenser...  " else "Add Dispenser  ",
+                text = if (dispenser.isLoading) {
+                    stringResource(R.string.adding_dispenser)
+                } else {
+                    stringResource(R.string.add_dispenser)
+                },
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

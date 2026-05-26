@@ -66,7 +66,7 @@ fun ProfileScreen(
                     .verticalScroll(scrollState)
 
             ) {
-                Header(title = "Profile")
+                Header(title = stringResource(R.string.profile))
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -75,8 +75,11 @@ fun ProfileScreen(
                 ProfileItem(stringResource(R.string.personal_information)) {
                     onPersonalInformation()
                 }
-                PersonalInfoItem("Names", personalInfo.firstName + " " + personalInfo.lastName)
-                PersonalInfoItem("Email", personalInfo.email)
+                PersonalInfoItem(
+                    stringResource(R.string.names_label),
+                    personalInfo.firstName + " " + personalInfo.lastName
+                )
+                PersonalInfoItem(stringResource(R.string.email), personalInfo.email)
 
                 Spacer(modifier = Modifier.height(20.dp))
 

@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.features.profile.LogoutPopup
@@ -65,7 +66,7 @@ fun ScheduleScreen(
             Back(onBackClick)
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
-                text = "Schedule:",
+                text = stringResource(R.string.schedule),
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -97,7 +98,11 @@ fun ScheduleScreen(
 
             ) {
                 Text(
-                    text = if (schedule.isLoading) "Saving...  " else "Save  ",
+                    text = if (schedule.isLoading) {
+                        stringResource(R.string.saving)
+                    } else {
+                        stringResource(R.string.save)
+                    },
                     fontSize = FontSize.PARAGRAPH1,
                     fontWeight = FontWeight.PARAGRAPH1M,
                     lineHeight = LineHeight.PARAGRAPH1,
@@ -117,9 +122,9 @@ fun ScheduleScreen(
         LogoutPopup(
             onDismiss = { onBackToScheduleDeleteClicked() },
             onConfirmLogout = { onDeleteClick() },
-            title = "Delete schedule",
-            caption = "Are you sure you want to delete this schedule?",
-            buttonText = "Delete"
+            title = stringResource(R.string.delete_schedule),
+            caption = stringResource(R.string.confirm_delete_schedule),
+            buttonText = stringResource(R.string.delete)
         )
     }
 }
@@ -149,7 +154,7 @@ private fun ScheduleHeaderCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = formatDay(schedule.dayOfWeek),
+                        text = stringResource(formatDayRes(schedule.dayOfWeek)),
                         color = primary1,
                         fontSize = FontSize.BODY2,
                         fontWeight = FontWeight.BODY2,
@@ -182,11 +187,12 @@ private fun ScheduleHeaderCard(
             ) {
                 ActionChip(
                     R.drawable.pen,
-                    if (schedule.isEditing) "Cancel edit" else "Edit", onEditToggle
+                    if (schedule.isEditing) stringResource(R.string.cancel_edit) else stringResource(R.string.edit),
+                    onEditToggle
                 )
                 ActionChip(
                     R.drawable.delete,
-                    "Delete",
+                    stringResource(R.string.delete),
                     onDelete,
                     isDestructive = true
                 )
@@ -226,7 +232,7 @@ private fun FormCard(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "*Times are in 24h!",
+                text = stringResource(R.string.time_24h_hint),
                 color = secondary4,
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M
@@ -241,16 +247,16 @@ private fun FormCard(
     }
 }
 
-private fun formatDay(day: Int): String =
+private fun formatDayRes(day: Int): Int =
     when (day) {
-        0 -> "Monday"
-        1 -> "Tuesday"
-        2 -> "Wednesday"
-        3 -> "Thursday"
-        4 -> "Friday"
-        5 -> "Saturday"
-        6 -> "Sunday"
-        else -> "Day not set"
+        0 -> R.string.monday
+        1 -> R.string.tuesday
+        2 -> R.string.wednesday
+        3 -> R.string.thursday
+        4 -> R.string.friday
+        5 -> R.string.saturday
+        6 -> R.string.sunday
+        else -> R.string.day_not_set
     }
 
 private fun formatTime(hour: Int, minute: Int): String {

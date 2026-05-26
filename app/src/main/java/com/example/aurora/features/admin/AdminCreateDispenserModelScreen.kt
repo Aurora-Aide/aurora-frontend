@@ -67,7 +67,7 @@ fun AdminCreateDispenserModelScreen(
             Back(onBackClick = { onBackClick() })
             Spacer(modifier = Modifier.weight(0.3f))
             Text(
-                text = "Create Dispenser Model",
+                text = stringResource(R.string.create_dispenser_model),
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -105,17 +105,17 @@ fun AddModelFields(
         TextField(
             value = modelData.code,
             onValueChange = onCodeChange,
-            label = "Code",
+            label = stringResource(R.string.code),
             error = modelData.isCodeError != AddModelCodeErrors.NONE,
-            placeholder = "Code",
+            placeholder = stringResource(R.string.code),
             errorText = modelData.isCodeError.value?.let { stringResource(it) } ?: ""
         )
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
             value = modelData.name,
             onValueChange = onNameChange,
-            label = "Name",
-            placeholder = "Name",
+            label = stringResource(R.string.name),
+            placeholder = stringResource(R.string.name),
             error = modelData.isNameError != AddModelNameErrors.NONE,
             errorText = modelData.isNameError.value?.let { stringResource(it) } ?: ""
         )
@@ -123,8 +123,8 @@ fun AddModelFields(
         TextField(
             value = modelData.slotCount.toString(),
             onValueChange = onSlotCountChange,
-            label = "Slot count",
-            placeholder = "Slot count",
+            label = stringResource(R.string.slot_count),
+            placeholder = stringResource(R.string.slot_count),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
             error = modelData.isSlotCountError != AddModelSlotCountErrors.NONE,
             errorText = modelData.isSlotCountError.value?.let { stringResource(it) } ?: ""
@@ -133,8 +133,8 @@ fun AddModelFields(
         TextField(
             value = modelData.serialPrefix,
             onValueChange = onSerialPrefixChange,
-            label = "Serial prefix",
-            placeholder = "Serial prefix",
+            label = stringResource(R.string.serial_prefix),
+            placeholder = stringResource(R.string.serial_prefix),
             error = modelData.isSerialPrefixError != AddModelSerialPrefixErrors.NONE,
             errorText = modelData.isSerialPrefixError.value?.let { stringResource(it) } ?: ""
         )
@@ -162,7 +162,11 @@ fun AddModelFooter(
 
         ) {
             Text(
-                text = if (model.isLoading) "Adding Model...  " else "Add Model  ",
+                text = if (model.isLoading) {
+                    stringResource(R.string.adding_model)
+                } else {
+                    stringResource(R.string.add_model)
+                },
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

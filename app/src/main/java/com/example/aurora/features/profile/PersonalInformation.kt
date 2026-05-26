@@ -64,14 +64,14 @@ fun PersonalInfoScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Header(title = "Change your name/s:")
+            Header(title = stringResource(R.string.change_names_title))
 
             Spacer(modifier = Modifier.height(40.dp))
 
             TextField(
                 value = personalInformationData.firstName,
                 onValueChange = onFirstNameChange,
-                label = "First Name",
+                label = stringResource(R.string.first_name),
                 placeholder = personalInformationData.firstName,
                 errorText = personalInformationData.isFirstNameError.value?.let { stringResource(it) }?: "",
                 error = personalInformationData.isFirstNameError != SignupNamesErrors.NONE,
@@ -92,7 +92,7 @@ fun PersonalInfoScreen(
             TextField(
                 value = personalInformationData.lastName,
                 onValueChange = onLastNameChange,
-                label = "Last name",
+                label = stringResource(R.string.last_name),
                 placeholder = personalInformationData.lastName,
                 errorText =  personalInformationData.isLastNameError.value?.let { stringResource(it) }?: "",
                 error = personalInformationData.isLastNameError != SignupNamesErrors.NONE,
@@ -126,7 +126,11 @@ fun PersonalInfoScreen(
 
             ) {
                 Text(
-                    text = if (personalInformationData.isLoading) "Changing names...  " else "Change Names  ",
+                    text = if (personalInformationData.isLoading) {
+                        stringResource(R.string.changing_names)
+                    } else {
+                        stringResource(R.string.change_names)
+                    },
                     fontSize = FontSize.PARAGRAPH2,
                     fontWeight = FontWeight.PARAGRAPH2M,
                     lineHeight = LineHeight.PARAGRAPH2,

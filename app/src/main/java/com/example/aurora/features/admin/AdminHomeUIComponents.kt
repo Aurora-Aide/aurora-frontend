@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
@@ -72,28 +73,38 @@ fun DispenserBox(
                     color = secondary2
                 )
                 Text(
-                    text = "ID: $id",
+                    text = stringResource(R.string.id_value, id),
                     fontWeight = FontWeight.PARAGRAPH2M,
                     fontSize = FontSize.PARAGRAPH2,
                     lineHeight = LineHeight.PARAGRAPH2,
                     color = secondary2
                 )
                 Text(
-                    text = "Serial: ${serialId ?: "-"}",
+                    text = stringResource(
+                        R.string.serial_value,
+                        serialId ?: stringResource(R.string.not_available_short)
+                    ),
                     fontWeight = FontWeight.PARAGRAPH2M,
                     fontSize = FontSize.PARAGRAPH2,
                     lineHeight = LineHeight.PARAGRAPH2,
                     color = secondary2
                 )
                 Text(
-                    text = "Owner: ${owner ?: "-"}",
+                    text = stringResource(
+                        R.string.owner_value,
+                        owner ?: stringResource(R.string.not_available_short)
+                    ),
                     fontWeight = FontWeight.PARAGRAPH2R,
                     fontSize = FontSize.PARAGRAPH2,
                     lineHeight = LineHeight.PARAGRAPH2,
                     color = secondary4
                 )
                 Text(
-                    text = "Size: ${size ?: "-"} • Model: ${model ?: "-"}",
+                    text = stringResource(
+                        R.string.size_model_summary,
+                        size ?: stringResource(R.string.not_available_short),
+                        model ?: stringResource(R.string.not_available_short)
+                    ),
                     fontWeight = FontWeight.PARAGRAPH2R,
                     fontSize = FontSize.PARAGRAPH2,
                     lineHeight = LineHeight.PARAGRAPH2,
