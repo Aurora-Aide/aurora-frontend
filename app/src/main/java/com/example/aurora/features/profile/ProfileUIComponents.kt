@@ -179,7 +179,7 @@ fun ProfileFooter(
 
         ) {
             Text(
-                text = "Log Out  ",
+                text = stringResource(R.string.log_out),
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M,
                 lineHeight = LineHeight.PARAGRAPH2,
@@ -208,7 +208,7 @@ fun ProfileFooter(
 
         ) {
             Text(
-                text = "Delete Account  ",
+                text = stringResource(R.string.delete_account),
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M,
                 lineHeight = LineHeight.PARAGRAPH2,

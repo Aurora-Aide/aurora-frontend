@@ -187,7 +187,7 @@ fun SignupHeader(
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Create Account",
+            text = stringResource(R.string.create_account),
             fontSize = FontSize.HEADING1,
             fontWeight = FontWeight.HEADING1,
             color = primary1
@@ -207,7 +207,10 @@ fun SignupFields(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ){
-            Text(text = "Personal Information", fontSize = FontSize.BODY2, fontWeight = FontWeight.BODY2,
+            Text(
+                text = stringResource(R.string.personal_information),
+                fontSize = FontSize.BODY2,
+                fontWeight = FontWeight.BODY2,
                 lineHeight = LineHeight.BODY2, color = secondary2)
             Row{
                 Box(
@@ -217,7 +220,7 @@ fun SignupFields(
                         .background(color = secondary2),
                     contentAlignment = Alignment.Center
                 ){
-                    Text(text = "1",
+                    Text(text = stringResource(R.string.step_one),
                         fontSize = FontSize.PARAGRAPH1,
                         fontWeight = FontWeight.PARAGRAPH1M,
                         lineHeight = LineHeight.PARAGRAPH1,
@@ -238,7 +241,7 @@ fun SignupFields(
                     contentAlignment = Alignment.Center,
 
                 ){
-                    Text(text = "2",
+                    Text(text = stringResource(R.string.step_two),
                         fontSize = FontSize.PARAGRAPH1,
                         fontWeight = FontWeight.PARAGRAPH1M,
                         lineHeight = LineHeight.PARAGRAPH1,
@@ -249,9 +252,9 @@ fun SignupFields(
         }
         TextField(
             value = signup.email,
-            label = "Email*",
+            label = stringResource(R.string.email_required),
             error = signup.isEmailError != LoginEmailErrors.NONE,
-            placeholder = "Email",
+            placeholder = stringResource(R.string.email),
             onValueChange = onEmailChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -267,9 +270,9 @@ fun SignupFields(
         //signup.isPasswordError.value?.let { stringResource(it) } ?: ""
         TextField(
             value = signup.password,
-            label = "Password*",
+            label = stringResource(R.string.password_required),
             error = signup.isPasswordError != LoginPasswordErrors.NONE,
-            placeholder = "Password",
+            placeholder = stringResource(R.string.password),
             onValueChange = onPasswordChange,
             visualTransformation = if (isVisible1.value) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
@@ -301,10 +304,10 @@ fun SignupFields(
 
         TextField(
             value = signup.passwordRepeat,
-            label = "Repeat Password*",
+            label = stringResource(R.string.repeat_password_required),
             error = signup.isPasswordRepeatError != LoginPasswordErrors.NONE,
            // error = isPasswordError2.value,
-            placeholder = "Repeat Password",
+            placeholder = stringResource(R.string.repeat_password),
             onValueChange = onSecondPasswordChange,
             visualTransformation = if (isVisible2.value) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
@@ -345,7 +348,7 @@ fun AddNamesFields(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Your names?",
+                text = stringResource(R.string.your_names_question),
                 fontSize = FontSize.BODY2,
                 fontWeight = FontWeight.BODY2,
                 lineHeight = LineHeight.BODY2,
@@ -360,7 +363,7 @@ fun AddNamesFields(
                         .clickable { signup.isFirstStep = true },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "1",
+                    Text(text = stringResource(R.string.step_one),
                         fontSize = FontSize.PARAGRAPH1,
                         fontWeight = FontWeight.PARAGRAPH1M,
                         lineHeight = LineHeight.PARAGRAPH1,
@@ -374,7 +377,7 @@ fun AddNamesFields(
                         .background(color = secondary2),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "2",
+                    Text(text = stringResource(R.string.step_two),
                         fontSize = FontSize.PARAGRAPH1,
                         fontWeight = FontWeight.PARAGRAPH1M,
                         lineHeight = LineHeight.PARAGRAPH1,
@@ -385,9 +388,9 @@ fun AddNamesFields(
         }
         TextField(
             value = signup.firstName,
-            label = "First Name",
+            label = stringResource(R.string.first_name),
             error = signup.isFirstNameError != SignupNamesErrors.NONE,
-            placeholder = "First Name",
+            placeholder = stringResource(R.string.first_name),
             onValueChange = onFirstNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -400,9 +403,9 @@ fun AddNamesFields(
 
         TextField(
             value = signup.lastName,
-            label = "Last Name",
+            label = stringResource(R.string.last_name),
             error = signup.isLastNameError != SignupNamesErrors.NONE,
-            placeholder = "Last Name",
+            placeholder = stringResource(R.string.last_name),
             onValueChange = onLastNameChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -438,7 +441,7 @@ fun SignupFooter(
 
         ) {
             Text(
-                text = "Continue",
+                text = stringResource(R.string.continue_label),
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,
@@ -449,14 +452,14 @@ fun SignupFooter(
         Row {
             TextButton(onClick = onLoginClick) {
                 Text(
-                    text = "Already have an account?  ",
+                    text = stringResource(R.string.already_have_account),
                     fontSize = FontSize.PARAGRAPH2,
                     fontWeight = FontWeight.PARAGRAPH2R,
                     lineHeight = LineHeight.PARAGRAPH2,
                     color = base100
                 )
                 Text(
-                    text = "Log In",
+                    text = stringResource(R.string.log_in),
                     textDecoration = TextDecoration.Underline,
                     fontSize = FontSize.PARAGRAPH3,
                     fontWeight = FontWeight.PARAGRAPH1M,
@@ -533,7 +536,11 @@ fun LogNamesFooter(
 
         ) {
             Text(
-                text = if (signup.isLoading) "Creating Account..." else "Create Account",
+                text = if (signup.isLoading) {
+                    stringResource(R.string.creating_account)
+                } else {
+                    stringResource(R.string.create_account)
+                },
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1,

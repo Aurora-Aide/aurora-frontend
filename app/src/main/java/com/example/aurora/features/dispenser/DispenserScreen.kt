@@ -107,9 +107,9 @@ fun DispenserScreen(
         LogoutPopup(
             onDismiss = { onBackToDispenserDeleteClicked() },
             onConfirmLogout = { onDeleteClick() },
-            title = "Delete dispenser",
-            caption = "Are you sure you want to delete this dispenser?",
-            buttonText = "Delete"
+            title = stringResource(R.string.delete_dispenser),
+            caption = stringResource(R.string.confirm_delete_dispenser),
+            buttonText = stringResource(R.string.delete)
         )
     }
 
@@ -117,9 +117,9 @@ fun DispenserScreen(
         LogoutPopup(
             onDismiss = { onBackToDispenserResetPairingClicked() },
             onConfirmLogout = { onResetPairingConfirm() },
-            title = "Re-pair dispenser",
-            caption = "This will reset pairing. Reboot the dispenser so it can pair again.",
-            buttonText = "Reset pairing"
+            title = stringResource(R.string.repair_dispenser),
+            caption = stringResource(R.string.reset_pairing_caption),
+            buttonText = stringResource(R.string.reset_pairing)
         )
     }
 
@@ -127,8 +127,8 @@ fun DispenserScreen(
         DispenserPopup(
             onDismiss = { onBackToDispenserRenameClicked() },
             onConfirmEdit = { onRenameConfirm() },
-            title = "Rename Dispenser:",
-            caption = "Please type the new name for your dispenser:",
+            title = stringResource(R.string.rename_dispenser_title),
+            caption = stringResource(R.string.rename_dispenser_caption),
             onNameChange = { onRenameChange(it) },
             value = dispenser.renameDraft,
             placeHolder = dispenser.name,
@@ -172,7 +172,7 @@ fun DispenserHeaderCard(
                     )
                             Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "ID: ${dispenser.id}",
+                        text = stringResource(R.string.id_value, dispenser.id.toString()),
                         fontSize = FontSize.PARAGRAPH2,
                         fontWeight = FontWeight.PARAGRAPH2M,
                         lineHeight = LineHeight.PARAGRAPH2,
@@ -198,19 +198,19 @@ fun DispenserHeaderCard(
             ) {
                 ActionChip(
                     iconRes = R.drawable.pen,
-                    label = "Rename",
+                    label = stringResource(R.string.rename),
                     onClick = onEditClick,
                 )
                 ActionChip(
                     iconRes = R.drawable.mobile_check,
-                    label = "Re-pair",
+                    label = stringResource(R.string.repair),
                     onClick = onResetPairingClick,
                 )
                 ActionChip(
                     iconRes = R.drawable.delete,
                     onClick = onDeleteClick,
                     isDestructive = true,
-                    label = "Delete"
+                    label = stringResource(R.string.delete)
                 )
             }
         }
@@ -323,13 +323,13 @@ fun EmptyState() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "No containers yet",
+                text = stringResource(R.string.no_containers_yet),
                 color = primary1,
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M
             )
             Text(
-                text = "Add containers to manage schedules and pills for this dispenser.",
+                text = stringResource(R.string.no_containers_description),
                 color = secondary4,
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M
@@ -449,7 +449,7 @@ fun DispenserPopup(
                     TextField(
                         value = value,
                         onValueChange = onNameChange,
-                        label = "Name",
+                        label = stringResource(R.string.name),
                         placeholder = placeHolder,
                         errorText = error.value?.let { stringResource(it) } ?: "",
                         error = error != AddDispenserNameErrors.NONE,
@@ -503,7 +503,7 @@ fun DispenserPopup(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Rename",
+                                text = stringResource(R.string.rename),
                                 color = primary1,
                                 fontSize = FontSize.PARAGRAPH2,
                                 fontWeight = FontWeight.PARAGRAPH2M,

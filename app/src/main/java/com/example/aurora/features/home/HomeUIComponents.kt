@@ -72,7 +72,7 @@ fun ContainerBox(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "ID: $dispenserId",
+                    text = stringResource(R.string.id_value, dispenserId),
                     fontWeight = FontWeight.PARAGRAPH2M,
                     fontSize = FontSize.PARAGRAPH2,
                     lineHeight = LineHeight.PARAGRAPH2,

@@ -27,7 +27,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.LineHeight
 import com.example.aurora.ui.theme.FontWeight
@@ -82,7 +84,7 @@ fun HomeScreen(
         )
         {
             Text(
-                text = "Hello, $name",
+                text = stringResource(R.string.hello_name, name),
                 color = primary1,
                 fontSize = FontSize.BODY2,
                 fontWeight = FontWeight.BODY2,
@@ -94,7 +96,7 @@ fun HomeScreen(
             ErrorBanner(dispensers.errorMessage)
 
             Text(
-                text = "Your Dispensers:",
+                text = stringResource(R.string.your_dispensers_colon),
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -105,7 +107,7 @@ fun HomeScreen(
 
             if(dispensers.dispensers.isEmpty()){
                 Text(
-                    text = "You don't have any dispensers! You can add your dispenser by clicking the + button on the bottom right of this page",
+                    text = stringResource(R.string.no_dispensers_hint),
                     color = secondary4,
                     fontSize = FontSize.PARAGRAPH2,
                     fontWeight = FontWeight.PARAGRAPH2R,

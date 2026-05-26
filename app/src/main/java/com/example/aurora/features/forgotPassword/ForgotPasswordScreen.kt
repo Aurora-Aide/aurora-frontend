@@ -137,7 +137,8 @@ fun ForgotPassHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
                 .width(170.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Forgot Password",
+        Text(
+            text = stringResource(R.string.forgot_password),
             fontSize = FontSize.HEADING2,
             fontWeight = FontWeight.HEADING2,
             lineHeight = LineHeight.HEADING2,
@@ -148,7 +149,7 @@ fun ForgotPassHeader(isBackVisible: Boolean, onBackClick:() -> Unit) {
             horizontalArrangement = Arrangement.Center
 
         ){
-            Text(text = "Enter your email, so we can send you a link",
+            Text(text = stringResource(R.string.forgot_password_caption),
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M,
                 lineHeight =  LineHeight.PARAGRAPH2,
@@ -167,12 +168,12 @@ fun ResetPassHeader() {
                 .width(170.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Reset Password",
+        Text(text = stringResource(R.string.reset_password),
             fontSize = FontSize.HEADING2,
             fontWeight = FontWeight.HEADING2,
             color = primary1)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Enter your new password",
+        Text(text = stringResource(R.string.reset_password_caption),
             fontSize = FontSize.PARAGRAPH2,
             fontWeight = FontWeight.PARAGRAPH2M,
             lineHeight =  LineHeight.PARAGRAPH2,
@@ -188,9 +189,9 @@ fun ForgotPassFields(
     Column {
         TextField(
             value = data.email,
-            label = "Email",
+            label = stringResource(R.string.email),
             error = data.isEmailError != ForgotEmailErrors.NONE,
-            placeholder = "Email",
+            placeholder = stringResource(R.string.email),
             onValueChange = onEmailChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -215,9 +216,9 @@ fun ResetPassFields(
     Column {
         TextField(
             value = data.password,
-            label = "New Password",
+            label = stringResource(R.string.new_password),
             error = data.isPasswordError != ForgotPasswordErrors.NONE,
-            placeholder = "New Password",
+            placeholder = stringResource(R.string.new_password),
             onValueChange = onPasswordChange,
             visualTransformation = if (isVisible1) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
@@ -245,9 +246,9 @@ fun ResetPassFields(
 
         TextField(
             value = data.repeat,
-            label = "Repeat Password",
+            label = stringResource(R.string.repeat_password),
             error = data.isRepeatError != ForgotRepeatErrors.NONE,
-            placeholder = "Repeat Password",
+            placeholder = stringResource(R.string.repeat_password),
             onValueChange = onRepeatChange,
             visualTransformation = if (isVisible2) VisualTransformation.None
             else PasswordVisualTransformation('\u002A'),
@@ -294,7 +295,10 @@ fun ForgotPassFooter(
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
-            Text(text = "Send Email", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+            Text(
+                text = stringResource(R.string.send_email),
+                fontSize = FontSize.PARAGRAPH1,
+                fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1, color = base0)
         }
     }
@@ -318,7 +322,7 @@ fun ResetPassFooter(
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
-            Text(text = "Reset Password", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+            Text(text = stringResource(R.string.reset_password), fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1, color = base0)
         }
     }
@@ -341,12 +345,12 @@ fun Success(navController: NavController){
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
-        Text(text = "Password Changed!",
+        Text(text = stringResource(R.string.password_changed_title),
             fontSize = FontSize.HEADING2,
             fontWeight = FontWeight.HEADING2,
             color = functionalSuccess)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Your password has been changed successfully.",
+        Text(text = stringResource(R.string.password_changed_caption),
             fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M,
             lineHeight = LineHeight.PARAGRAPH1,
@@ -363,7 +367,7 @@ fun Success(navController: NavController){
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
-            Text(text = "Back to Jigit", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+            Text(text = stringResource(R.string.back_to_log_in), fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1, color = base0)
         }
     }
@@ -387,12 +391,12 @@ fun Error(navController: NavController){
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
-        Text(text = "Password Change Unsuccessful!",
+        Text(text = stringResource(R.string.password_change_unsuccessful_title),
             fontSize = FontSize.HEADING2,
             fontWeight = FontWeight.HEADING2,
             color = functionalError)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "There was an error while trying to change your password.",
+        Text(text = stringResource(R.string.password_change_unsuccessful_caption),
             fontSize = FontSize.PARAGRAPH1,
             fontWeight = FontWeight.PARAGRAPH1M,
             lineHeight = LineHeight.PARAGRAPH1,
@@ -409,7 +413,7 @@ fun Error(navController: NavController){
             colors = ButtonDefaults.buttonColors(containerColor = primary1)
 
         ) {
-            Text(text = "Back to Jigit", fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
+            Text(text = stringResource(R.string.back_to_log_in), fontSize = FontSize.PARAGRAPH1, fontWeight = FontWeight.PARAGRAPH1M,
                 lineHeight = LineHeight.PARAGRAPH1, color = base0)
         }
     }

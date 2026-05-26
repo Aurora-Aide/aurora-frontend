@@ -10,7 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.aurora.R
 import com.example.aurora.ui.theme.FontSize
 import com.example.aurora.ui.theme.FontWeight
 import com.example.aurora.ui.theme.LineHeight
@@ -29,7 +31,7 @@ fun SettingsScreen(){
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Settings",
+            text = stringResource(R.string.settings),
             color = primary1,
             fontSize = FontSize.HEADING1,
             fontWeight = FontWeight.HEADING1,

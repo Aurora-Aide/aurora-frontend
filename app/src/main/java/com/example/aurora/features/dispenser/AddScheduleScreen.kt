@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -89,7 +90,7 @@ fun AddScheduleScreen(
             Back(onBackClick)
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
-                text = "Add schedule:",
+                text = stringResource(R.string.add_schedule),
                 color = primary1,
                 fontSize = FontSize.HEADING3,
                 fontWeight = FontWeight.HEADING3,
@@ -115,7 +116,7 @@ fun AddScheduleScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "*Times are in 24h!",
+                    text = stringResource(R.string.time_24h_hint),
                     color = secondary4,
                     fontSize = FontSize.PARAGRAPH2,
                     fontWeight = FontWeight.PARAGRAPH2M,
@@ -149,7 +150,11 @@ fun AddScheduleScreen(
 
             ) {
                 Text(
-                    text = if (schedule.isLoading) "Saving...  " else "Save  ",
+                    text = if (schedule.isLoading) {
+                        stringResource(R.string.saving)
+                    } else {
+                        stringResource(R.string.save)
+                    },
                     fontSize = FontSize.PARAGRAPH1,
                     fontWeight = FontWeight.PARAGRAPH1M,
                     lineHeight = LineHeight.PARAGRAPH1,
@@ -176,17 +181,18 @@ fun DayDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val baseDays = listOf(
-        "--Select day--" to -1,
-        "Monday" to 0,
-        "Tuesday" to 1,
-        "Wednesday" to 2,
-        "Thursday" to 3,
-        "Friday" to 4,
-        "Saturday" to 5,
-        "Sunday" to 6,
+        stringResource(R.string.select_day_placeholder) to -1,
+        stringResource(R.string.monday) to 0,
+        stringResource(R.string.tuesday) to 1,
+        stringResource(R.string.wednesday) to 2,
+        stringResource(R.string.thursday) to 3,
+        stringResource(R.string.friday) to 4,
+        stringResource(R.string.saturday) to 5,
+        stringResource(R.string.sunday) to 6,
     )
     val days = if (selected == -1) baseDays else baseDays.filterNot { it.second == -1 }
-    val label = days.firstOrNull { it.second == selected }?.first ?: "--Select day--"
+    val label = days.firstOrNull { it.second == selected }?.first
+        ?: stringResource(R.string.select_day_placeholder)
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -197,7 +203,7 @@ fun DayDropdown(
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text("Day of week") },
+            label = { Text(stringResource(R.string.day_of_week)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .menuAnchor()
@@ -259,7 +265,7 @@ private fun AuroraTimePickerDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ){
-                Text("Select time",
+                Text(stringResource(R.string.select_time),
                     color = primary1,
                     fontSize = FontSize.BODY1,
                     fontWeight = FontWeight.BODY1,
@@ -288,12 +294,12 @@ private fun AuroraTimePickerDialog(
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(contentColor = secondary4)
-                    ) { Text("Cancel") }
+                    ) { Text(stringResource(R.string.cancel)) }
 
                     TextButton(
                         onClick = onConfirm,
                         colors = ButtonDefaults.textButtonColors(contentColor = secondary2)
-                    ) { Text("OK") }
+                    ) { Text(stringResource(R.string.ok)) }
                 }
             }
         },
@@ -363,7 +369,7 @@ fun TimePickerField(
         onValueChange = {},
         readOnly = true,
         enabled = enabled,
-        label = { Text("Time (24h)") },
+        label = { Text(stringResource(R.string.time_24h)) },
         trailingIcon = {
             IconButton(onClick = { if(enabled) showDialog = true }) {
                 Icon(
@@ -394,13 +400,13 @@ fun Switch(
     ) {
         Column {
             Text(
-                text = "Repeat weekly",
+                text = stringResource(R.string.repeat_weekly),
                 color = if(enabled) primary1 else secondary4,
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M
             )
             Text(
-                text = "Runs every week on selected day",
+                text = stringResource(R.string.repeat_weekly_caption),
                 color = secondary4,
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M
