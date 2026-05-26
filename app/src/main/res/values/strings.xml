@@ -26,6 +26,14 @@
     <string name="error_empty_slot">Slot count is empty</string>
     <string name="error_invalid_slot">Slot count must be a number</string>
     <string name="error_negative_slot">Slot count must be non negative( >0 (more than 0) )</string>
+    <string name="error_time_out">Request timed out. Please try again.</string>
+    <string name="error_network">Network error. Check your connection.</string>
+    <string name="error_something_went_wrong">Something went wrong. Please try again.</string>
+    <string name="error_request_failed">Request failed</string>
+    <string name="error_invalid_day_time">Please select a valid day/time</string>
+    <string name="error_duplicate_schedule">You already have this schedule!</string>
+    <string name="error_container_not_loaded">Container is not loaded yet.</string>
+    <string name="something_went_wrong">Something went wrong</string>
     // Profile
     <string name="personal_information">Personal Information</string>
     <string name="your_dispensers">Your Dispensers</string>

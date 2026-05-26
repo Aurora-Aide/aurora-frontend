@@ -182,7 +182,7 @@ fun LoginFields(
             errorText = login.isPasswordError.value?.let { stringResource(it) } ?: ""
         )
 
-        ErrorBanner(login.error)
+        ErrorBanner(login.errorMessage)
 
         Spacer(modifier = Modifier.height(20.dp))
 

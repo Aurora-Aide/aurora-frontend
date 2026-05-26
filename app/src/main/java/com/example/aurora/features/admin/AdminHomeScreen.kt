@@ -145,7 +145,7 @@ fun AdminHomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (data.errorMessage.isNotEmpty()) {
+            if (data.errorMessage != com.example.aurora.ui.UiMessage.NONE) {
                 ErrorBanner(data.errorMessage)
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(

@@ -1,6 +1,7 @@
 package com.example.aurora.features.admin
 
-import com.example.aurora.data.model.AdminDispenserModelModel
+import androidx.annotation.StringRes
+import com.example.aurora.ui.UiMessage
 
 data class AdminCreateDispenserModelData(
     val code: String = "",
@@ -9,7 +10,7 @@ data class AdminCreateDispenserModelData(
     val serialPrefix: String = "",
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val errorMessage: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
     val isCodeError: AddModelCodeErrors = AddModelCodeErrors.NONE,
     val isNameError: AddModelNameErrors = AddModelNameErrors.NONE,
     val isSerialPrefixError: AddModelSerialPrefixErrors = AddModelSerialPrefixErrors.NONE,

@@ -1,6 +1,8 @@
 package com.example.aurora.features.dispenser
 
+import androidx.annotation.StringRes
 import com.example.aurora.features.home.AddDispenserNameErrors
+import com.example.aurora.ui.UiMessage
 
 data class DispenserData(
     val name: String = "",
@@ -9,7 +11,7 @@ data class DispenserData(
     val renameDraft: String = "",
     val isRenameError: AddDispenserNameErrors = AddDispenserNameErrors.NONE,
     val allDispenserNames: List<String> = emptyList(),
-    val errorMessage: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
     val statusMessage: String = "",
     val isRenameSuccessful: Boolean = false,
 )

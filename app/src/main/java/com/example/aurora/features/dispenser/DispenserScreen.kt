@@ -223,8 +223,8 @@ fun ContentArea(
     onPillClick: (slotNumber: Int, pillName: String, containerId: Int) -> Unit
 ) {
     when {
-        dispenser.errorMessage.isNotEmpty() -> {
-            ErrorState(message = dispenser.errorMessage)
+        dispenser.errorMessage != com.example.aurora.ui.UiMessage.NONE -> {
+            ErrorState(messageRes = dispenser.errorMessage)
         }
 
         dispenser.containers.isEmpty() -> {
@@ -339,7 +339,7 @@ fun EmptyState() {
 }
 
 @Composable
-fun ErrorState(message: String) {
+fun ErrorState(@androidx.annotation.StringRes messageRes: Int) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = baseBlue),
@@ -350,13 +350,13 @@ fun ErrorState(message: String) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Something went wrong",
+                text = stringResource(R.string.something_went_wrong),
                 color = functionalError,
                 fontSize = FontSize.PARAGRAPH1,
                 fontWeight = FontWeight.PARAGRAPH1M
             )
             Text(
-                text = message,
+                text = stringResource(messageRes),
                 color = functionalError,
                 fontSize = FontSize.PARAGRAPH2,
                 fontWeight = FontWeight.PARAGRAPH2M

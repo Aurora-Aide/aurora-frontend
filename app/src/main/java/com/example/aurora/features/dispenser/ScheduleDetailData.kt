@@ -1,5 +1,8 @@
 package com.example.aurora.features.dispenser
 
+import androidx.annotation.StringRes
+import com.example.aurora.ui.UiMessage
+
 data class ScheduleDetailData(
     val id: Int = 0,
     val containerName: String = "",
@@ -11,7 +14,7 @@ data class ScheduleDetailData(
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val isSaving: Boolean = false,
-    val errorMessage: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
     val isSuccess: Boolean = false,
     val isDeleted: Boolean = false
 )

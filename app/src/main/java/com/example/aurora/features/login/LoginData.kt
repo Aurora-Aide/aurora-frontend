@@ -1,5 +1,8 @@
 package com.example.aurora.features.login
 
+import androidx.annotation.StringRes
+import com.example.aurora.ui.UiMessage
+
 data class LoginData(
     val email: String = "",
     val password: String = "",
@@ -11,5 +14,5 @@ data class LoginData(
     val id: String = "",
     val isAdmin: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
 )

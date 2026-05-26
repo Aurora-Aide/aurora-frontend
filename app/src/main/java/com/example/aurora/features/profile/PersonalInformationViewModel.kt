@@ -3,7 +3,8 @@ package com.example.aurora.features.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.domain.usecase.UpdateNamesUseCase
 import com.example.aurora.domain.usecase.GetUserUseCase
 import com.example.aurora.features.signup.SignupNamesErrors
@@ -25,13 +26,13 @@ class PersonalInformationViewModel(
 
     fun firstName(text: String) {
         _personalInformation.update{
-            it.copy(firstName = text, errorMessage = "")
+            it.copy(firstName = text, errorMessage = UiMessage.NONE)
         }
     }
 
     fun lastName(text: String) {
         _personalInformation.update{
-            it.copy(lastName = text, errorMessage = "")
+            it.copy(lastName = text, errorMessage = UiMessage.NONE)
         }
     }
 
@@ -53,7 +54,7 @@ class PersonalInformationViewModel(
     }
 
     private fun updateNames() {
-        _personalInformation.update { it.copy(isLoading = true, errorMessage = "") }
+        _personalInformation.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
         viewModelScope.launch {
             updateNamesUseCase.invoke(_personalInformation.value.firstName, _personalInformation.value.lastName).fold(
                 onSuccess = { user ->
@@ -65,7 +66,7 @@ class PersonalInformationViewModel(
                             email = user.email,
                             isUpdateNamesSuccessful = true,
                             isLoading = false,
-                            errorMessage = ""
+                            errorMessage = UiMessage.NONE
                         )
                     }
                 },
@@ -75,7 +76,7 @@ class PersonalInformationViewModel(
                         it.copy(
                             isLoading = false,
                             isUpdateNamesSuccessful = false,
-                            errorMessage = error.toUiMessage()
+                            errorMessage = error.toUiMessageRes()
                         )
                     }
                 }
@@ -84,7 +85,7 @@ class PersonalInformationViewModel(
     }
 
     fun validateNames(){
-        _personalInformation.update { it.copy(errorMessage = "") }
+        _personalInformation.update { it.copy(errorMessage = UiMessage.NONE) }
         val firstNameValid = isNameValid(_personalInformation.value.firstName)
         val lastNameValid = isNameValid(_personalInformation.value.lastName)
         if(firstNameValid == SignupNamesErrors.NONE &&
@@ -102,7 +103,7 @@ class PersonalInformationViewModel(
 
     private fun fetchUser() {
         viewModelScope.launch {
-            _personalInformation.update { it.copy(errorMessage = "") }
+            _personalInformation.update { it.copy(errorMessage = UiMessage.NONE) }
             getUserUseCase.invoke().fold(
                 onSuccess = { user ->
                     _personalInformation.update {
@@ -110,13 +111,13 @@ class PersonalInformationViewModel(
                             firstName = user.firstName,
                             lastName = user.lastName,
                             email = user.email,
-                            errorMessage = ""
+                            errorMessage = UiMessage.NONE
                         )
                     }
                 },
                 onFailure = { error ->
                     Log.e("TAG", "Get user failed: ${error.message}")
-                    _personalInformation.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _personalInformation.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }

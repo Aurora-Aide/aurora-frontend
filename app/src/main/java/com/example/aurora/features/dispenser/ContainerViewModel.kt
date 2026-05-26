@@ -2,8 +2,10 @@ package com.example.aurora.features.dispenser
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.aurora.R
+import com.example.aurora.ui.UiMessage
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
 import com.example.aurora.domain.usecase.DispenseNowUseCase
 import com.example.aurora.domain.usecase.ListSchedulesUseCase
 import com.example.aurora.domain.usecase.UpdatePillNameUseCase
@@ -51,7 +53,7 @@ class ContainerViewModel(
 
     fun setRenameDraft(text: String) {
         _container.update {
-            it.copy(renameDraft = text, errorMessage = "")
+            it.copy(renameDraft = text, errorMessage = UiMessage.NONE)
         }
     }
 
@@ -67,7 +69,7 @@ class ContainerViewModel(
     }
 
     fun confirmRename() {
-        _container.update { it.copy(errorMessage = "") }
+        _container.update { it.copy(errorMessage = UiMessage.NONE) }
         val nameValid = isNameValid(_container.value.renameDraft)
         if (nameValid == AddDispenserNameErrors.NONE) {
             _container.update {
@@ -103,19 +105,19 @@ class ContainerViewModel(
 
     fun listSchedules() {
         viewModelScope.launch {
-            _container.update { it.copy(errorMessage = "") }
+            _container.update { it.copy(errorMessage = UiMessage.NONE) }
             listSchedulesUseCase(_container.value.containerId).fold(
                 onSuccess = { schedules ->
                     _container.update {
                         it.copy(
                             schedules = schedules.map { schedule -> mapSchedule(schedule) },
-                            errorMessage = ""
+                            errorMessage = UiMessage.NONE
                         )
                     }
                 },
                 onFailure = { error ->
                     Log.e("TAG", "List schedules failed: ${error.message}")
-                    _container.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _container.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -124,19 +126,19 @@ class ContainerViewModel(
     fun dispenseNow() {
         val currentContainerId = _container.value.containerId
         if (currentContainerId == 0) {
-            _container.update { it.copy(errorMessage = "Container is not loaded yet.") }
+            _container.update { it.copy(errorMessage = R.string.error_container_not_loaded) }
             return
         }
 
         viewModelScope.launch {
-            _container.update { it.copy(errorMessage = "") }
+            _container.update { it.copy(errorMessage = UiMessage.NONE) }
             dispenseNowUseCase(currentContainerId).fold(
                 onSuccess = {
                     listSchedules()
                 },
                 onFailure = { error ->
                     Log.e("TAG", "Dispense now failed: ${error.message}")
-                    _container.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _container.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -146,7 +148,7 @@ class ContainerViewModel(
         _showPopUpRename.update { value -> value.not() }
 
         viewModelScope.launch {
-            _container.update { it.copy(errorMessage = "") }
+            _container.update { it.copy(errorMessage = UiMessage.NONE) }
             updatePillNameUseCase(_container.value.dispenserName,
                 _container.value.slotNumber, _container.value.renameDraft).fold(
                 onSuccess = { container ->
@@ -156,7 +158,7 @@ class ContainerViewModel(
                             pillName = container.pillName,
                             renameDraft = container.pillName,
                             isUpdating = false,
-                            errorMessage = ""
+                            errorMessage = UiMessage.NONE
                         )
                     }
                 },
@@ -165,7 +167,7 @@ class ContainerViewModel(
                     _container.update {
                         it.copy(
                             isUpdating = false,
-                            errorMessage = error.toUiMessage()
+                            errorMessage = error.toUiMessageRes()
                         )
                     }
                 }
