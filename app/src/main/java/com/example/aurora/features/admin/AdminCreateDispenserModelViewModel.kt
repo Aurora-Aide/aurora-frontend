@@ -3,7 +3,8 @@ package com.example.aurora.features.admin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.data.model.AdminCreateDispenserModelRequest
 import com.example.aurora.domain.usecase.admin.AdminCreateDispenserModelUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
@@ -24,20 +25,20 @@ class AdminCreateDispenserModelViewModel(
         _model.update{
             it.copy(
                 code = value, 
-                errorMessage = "",
+                errorMessage = UiMessage.NONE,
                 isCodeError = AddModelCodeErrors.NONE
             )
         }
         
     }
     fun onNameChange(value: String) = _model.update {
-        it.copy(name = value, errorMessage = "", isNameError = AddModelNameErrors.NONE)
+        it.copy(name = value, errorMessage = UiMessage.NONE, isNameError = AddModelNameErrors.NONE)
     }
     fun onSlotCountChange(value: String) = _model.update {
-        it.copy(slotCount = value, errorMessage = "", isSlotCountError = AddModelSlotCountErrors.NONE)
+        it.copy(slotCount = value, errorMessage = UiMessage.NONE, isSlotCountError = AddModelSlotCountErrors.NONE)
     }
     fun onSerialPrefixChange(value: String) = _model.update {
-        it.copy(serialPrefix = value, errorMessage = "", isSerialPrefixError = AddModelSerialPrefixErrors.NONE)
+        it.copy(serialPrefix = value, errorMessage = UiMessage.NONE, isSerialPrefixError = AddModelSerialPrefixErrors.NONE)
     }
 
     private fun isCodeValid(): AddModelCodeErrors {
@@ -91,7 +92,7 @@ class AdminCreateDispenserModelViewModel(
     }
 
     fun save() {
-        _model.update { it.copy(errorMessage = "") }
+        _model.update { it.copy(errorMessage = UiMessage.NONE) }
         val codeError = isCodeValid()
         val nameError = isNameValid()
         val prefixError = isSerialPrefixValid()
@@ -132,7 +133,7 @@ class AdminCreateDispenserModelViewModel(
     }
 
     private fun createModel() {
-        _model.update { it.copy(isLoading = true, errorMessage = "") }
+        _model.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
         viewModelScope.launch {
             createModelUseCase(
                 AdminCreateDispenserModelRequest(
@@ -143,10 +144,10 @@ class AdminCreateDispenserModelViewModel(
                 )
             ).fold(
                 onSuccess = {
-                    _model.update { it.copy(isLoading = false, isSuccess = true, errorMessage = "") }
+                    _model.update { it.copy(isLoading = false, isSuccess = true, errorMessage = UiMessage.NONE) }
                 },
                 onFailure = { error ->
-                    _model.update { it.copy(isLoading = false, errorMessage = error.toUiMessage()) }
+                    _model.update { it.copy(isLoading = false, errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -158,7 +159,7 @@ class AdminCreateDispenserModelViewModel(
 
     fun loadModels() {
         viewModelScope.launch {
-            _model.update { it.copy(errorMessage = "") }
+            _model.update { it.copy(errorMessage = UiMessage.NONE) }
             listModelsUseCase().fold(
                 onSuccess = { data ->
                     val codes = data.map { it.code }
@@ -166,7 +167,7 @@ class AdminCreateDispenserModelViewModel(
                     _model.update { it.copy(allModelsCodes = codes, allModelsPrefixes = serialPrefix) }
                 },
                 onFailure = { error ->
-                    _model.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _model.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }

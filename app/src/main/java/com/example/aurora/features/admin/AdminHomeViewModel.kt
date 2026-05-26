@@ -2,7 +2,8 @@ package com.example.aurora.features.admin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.domain.usecase.admin.AdminListDispensersUseCase
 import com.example.aurora.domain.usecase.admin.AdminListDispenserModelsUseCase
 import com.example.aurora.domain.usecase.admin.AdminListUsersUseCase
@@ -25,7 +26,7 @@ class AdminHomeViewModel(
     }
 
     fun setTab(tab: AdminHomeTab) {
-        _data.update { it.copy(activeTab = tab, errorMessage = "") }
+        _data.update { it.copy(activeTab = tab, errorMessage = UiMessage.NONE) }
         when (tab) {
             AdminHomeTab.DISPENSERS -> {
                 if (_data.value.dispensers.isEmpty()) loadDispensers()
@@ -41,13 +42,13 @@ class AdminHomeViewModel(
 
     fun loadDispensers() {
         viewModelScope.launch {
-            _data.update { it.copy(isLoading = true, errorMessage = "") }
+            _data.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
             listDispensersUseCase().fold(
                 onSuccess = { list ->
-                    _data.update { it.copy(isLoading = false, dispensers = list, errorMessage = "") }
+                    _data.update { it.copy(isLoading = false, dispensers = list, errorMessage = UiMessage.NONE) }
                 },
                 onFailure = { err ->
-                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessage()) }
+                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessageRes()) }
                 }
             )
         }
@@ -55,13 +56,13 @@ class AdminHomeViewModel(
 
     fun loadModels() {
         viewModelScope.launch {
-            _data.update { it.copy(isLoading = true, errorMessage = "") }
+            _data.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
             listModelsUseCase().fold(
                 onSuccess = { list ->
-                    _data.update { it.copy(isLoading = false, models = list, errorMessage = "") }
+                    _data.update { it.copy(isLoading = false, models = list, errorMessage = UiMessage.NONE) }
                 },
                 onFailure = { err ->
-                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessage()) }
+                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessageRes()) }
                 }
             )
         }
@@ -69,13 +70,13 @@ class AdminHomeViewModel(
 
     fun loadUsers() {
         viewModelScope.launch {
-            _data.update { it.copy(isLoading = true, errorMessage = "") }
+            _data.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
             listUsersUseCase().fold(
                 onSuccess = { list ->
-                    _data.update { it.copy(isLoading = false, users = list, errorMessage = "") }
+                    _data.update { it.copy(isLoading = false, users = list, errorMessage = UiMessage.NONE) }
                 },
                 onFailure = { err ->
-                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessage()) }
+                    _data.update { it.copy(isLoading = false, errorMessage = err.toUiMessageRes()) }
                 }
             )
         }
