@@ -3,7 +3,8 @@ package com.example.aurora.features.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.data.repository.TokenStorage
 import com.example.aurora.domain.usecase.DeactivatePushTokenUseCase
 import com.example.aurora.domain.usecase.DeleteUserUseCase
@@ -47,7 +48,7 @@ class ProfileViewModel(
                     _showPopUpLogOut.update { false }
                     Log.d("TAG", "log out request successful")
                     _logout.update {
-                        it.copy(refresh = "", isLoggedOut = true, errorMessage = "")
+                        it.copy(refresh = "", isLoggedOut = true, errorMessage = UiMessage.NONE)
                     }
                     onSuccess()
                 },
@@ -55,8 +56,8 @@ class ProfileViewModel(
                     Log.e("TAG", "log out request failed: ${error.message}")
                     // Still hide popup on failure, but don't navigate
                     _showPopUpLogOut.update { false }
-                    _logout.update { it.copy(errorMessage = error.toUiMessage()) }
-                    _personalInformation.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _logout.update { it.copy(errorMessage = error.toUiMessageRes()) }
+                    _personalInformation.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -68,7 +69,7 @@ class ProfileViewModel(
                 onSuccess = {
                     Log.d("TAG", "Delete user request successful")
                     _logout.update {
-                        it.copy(refresh = "", isLoggedOut = true, errorMessage = "")
+                        it.copy(refresh = "", isLoggedOut = true, errorMessage = UiMessage.NONE)
                     }
                     _showPopUpDelete.update { false }
                     onSuccess()
@@ -77,8 +78,8 @@ class ProfileViewModel(
                     Log.e("TAG", "Delete user request failed: ${error.message}")
                     // Still hide popup on failure, but don't navigate
                     _showPopUpDelete.update { false }
-                    _logout.update { it.copy(errorMessage = error.toUiMessage()) }
-                    _personalInformation.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _logout.update { it.copy(errorMessage = error.toUiMessageRes()) }
+                    _personalInformation.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -95,12 +96,12 @@ class ProfileViewModel(
                             lastName = user.lastName,
                             email = user.email,
                             isAdmin = user.isSuperuser,
-                            errorMessage = ""
+                            errorMessage = UiMessage.NONE
                         )
                     }
                 },
                 onFailure = { error ->
-                    _personalInformation.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _personalInformation.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }

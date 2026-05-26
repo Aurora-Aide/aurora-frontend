@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.domain.usecase.AddDispenserUseCase
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,13 +22,13 @@ class AddDispenserViewModel(
 
     fun id(text: String) {
         _dispenser.update{
-            it.copy(id = text, errorMessage = "")
+            it.copy(id = text, errorMessage = UiMessage.NONE)
         }
     }
 
     fun name(text: String) {
         _dispenser.update{
-            it.copy(name = text, errorMessage = "")
+            it.copy(name = text, errorMessage = UiMessage.NONE)
         }
     }
 
@@ -41,7 +42,7 @@ class AddDispenserViewModel(
                         it.copy(
                             allDispenserNames = names,
                             allDispenserIds = ids,
-                            errorMessage = "",
+                            errorMessage = UiMessage.NONE,
                             //isCountError = names.size >= 5
                         )
                     }
@@ -49,24 +50,24 @@ class AddDispenserViewModel(
                     Log.d("TAG", "names ${_dispenser.value.allDispenserNames}")
                 },
                 onFailure = { error ->
-                    _dispenser.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _dispenser.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
     }
 
     private fun addDispenser(){
-        _dispenser.update { it.copy(isLoading = true, errorMessage = "") }
+        _dispenser.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
         viewModelScope.launch{
             addDispenserUseCase.invoke(_dispenser.value.id, _dispenser.value.name).fold(
                 onSuccess = {
                     Log.d("TAG", "add dispenser request")
                     _dispenser.update {
-                        it.copy(isAddDispenserSuccessful = true, isLoading = false, errorMessage = "")
+                        it.copy(isAddDispenserSuccessful = true, isLoading = false, errorMessage = UiMessage.NONE)
                     }
                 },
                 onFailure = { error ->
-                    _dispenser.update { it.copy(isLoading = false, errorMessage = error.toUiMessage()) }
+                    _dispenser.update { it.copy(isLoading = false, errorMessage = error.toUiMessageRes()) }
                 }
             )
         }
@@ -107,7 +108,7 @@ class AddDispenserViewModel(
     }
 
     fun validate(){
-        _dispenser.update { it.copy(errorMessage = "") }
+        _dispenser.update { it.copy(errorMessage = UiMessage.NONE) }
         val idValid = isIDValid()
         val nameValid = isNameValid()
         if(idValid == AddDispenserIDErrors.NONE && nameValid == AddDispenserNameErrors.NONE /*&& !_dispenser.value.isCountError*/){

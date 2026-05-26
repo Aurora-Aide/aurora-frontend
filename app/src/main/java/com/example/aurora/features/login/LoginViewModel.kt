@@ -5,7 +5,8 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aurora.R
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.data.repository.TokenStorage
 import com.example.aurora.domain.usecase.LoginUseCase
 import com.example.aurora.domain.usecase.RegisterPushTokenUseCase
@@ -27,18 +28,18 @@ class LoginViewModel(
 
     fun email(text: String) {
         _login.update{
-            it.copy(email = text, error = "")
+            it.copy(email = text, errorMessage = UiMessage.NONE)
         }
     }
 
     fun password(text: String) {
         _login.update{
-            it.copy(password = text, error = "")
+            it.copy(password = text, errorMessage = UiMessage.NONE)
         }
     }
 
     fun login() {
-        _login.update { it.copy(isLoading = true, error = "") }
+        _login.update { it.copy(isLoading = true, errorMessage = UiMessage.NONE) }
         viewModelScope.launch {
             loginUseCase.invoke(_login.value.email, _login.value.password).fold(
                 onSuccess = { result ->
@@ -50,7 +51,7 @@ class LoginViewModel(
                             lastName = result.lastName,
                             isAdmin = result.isSuperuser,
                             isLoading = false,
-                            error = "",
+                            errorMessage = UiMessage.NONE,
                         )
                     }
                 },
@@ -59,7 +60,7 @@ class LoginViewModel(
                         it.copy(
                             isLoginSuccessful = false,
                             isLoading = false,
-                            error = error.toUiMessage(),
+                            errorMessage = error.toUiMessageRes(),
                         )
                     }
                 }

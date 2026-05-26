@@ -1,6 +1,8 @@
 package com.example.aurora.features.profile
 
+import androidx.annotation.StringRes
 import com.example.aurora.features.signup.SignupNamesErrors
+import com.example.aurora.ui.UiMessage
 
 data class PersonalInformationData(
     val firstName: String = "",
@@ -11,5 +13,5 @@ data class PersonalInformationData(
     val isFirstNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     val isLoading: Boolean = false,
-    val errorMessage: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
 )

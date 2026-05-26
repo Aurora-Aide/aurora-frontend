@@ -411,7 +411,7 @@ fun AddNamesFields(
             errorText = signup.isLastNameError.value?.let{ stringResource(it) } ?: ""
         )
 
-        ErrorBanner(signup.error)
+        ErrorBanner(signup.errorMessage)
 
         Spacer(modifier = Modifier.height(20.dp))
     }

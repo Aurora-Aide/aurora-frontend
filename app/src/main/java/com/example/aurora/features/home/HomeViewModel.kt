@@ -3,7 +3,8 @@ package com.example.aurora.features.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aurora.data.error.toUiMessage
+import com.example.aurora.data.error.toUiMessageRes
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.domain.usecase.ListAllUserDispensersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,17 +19,17 @@ class HomeViewModel(
 
     fun listDispensers() {
         viewModelScope.launch {
-            _dispensers.update { it.copy(errorMessage = "") }
+            _dispensers.update { it.copy(errorMessage = UiMessage.NONE) }
             listDispensersUseCase.invoke()
                 .onSuccess { data ->
                     Log.d("TAG", "Home: List all user dispensers request")
                     _dispensers.update {
-                        it.copy(dispensers = data.dispensers, errorMessage = "")
+                        it.copy(dispensers = data.dispensers, errorMessage = UiMessage.NONE)
                     }
                 }
                 .onFailure { error ->
                     Log.e("TAG", "Home: Failed to load dispensers: ${error.message}")
-                    _dispensers.update { it.copy(errorMessage = error.toUiMessage()) }
+                    _dispensers.update { it.copy(errorMessage = error.toUiMessageRes()) }
                 }
         }
     }

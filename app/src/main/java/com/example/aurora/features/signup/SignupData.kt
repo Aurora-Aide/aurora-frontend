@@ -1,6 +1,8 @@
 package com.example.aurora.features.signup
 
+import androidx.annotation.StringRes
 import com.example.aurora.features.login.LoginEmailErrors
+import com.example.aurora.ui.UiMessage
 import com.example.aurora.features.login.LoginPasswordErrors
 
 data class SignupData (
@@ -17,7 +19,7 @@ data class SignupData (
     val isLastNameError: SignupNamesErrors = SignupNamesErrors.NONE,
     var isFirstStep: Boolean = true,
     val isLoading: Boolean = false,
-    val error: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
     val isAdmin: Boolean = false,
     //val id: String = "",
 )

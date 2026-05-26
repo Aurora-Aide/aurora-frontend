@@ -1,5 +1,8 @@
 package com.example.aurora.features.forgotPassword
 
+import androidx.annotation.StringRes
+import com.example.aurora.ui.UiMessage
+
 data class ForgotPassData(
     val email: String = "",
     val password: String = "",
@@ -11,5 +14,5 @@ data class ForgotPassData(
     val token: String = "",
     val resultPageGood: Boolean = false,
     val resultPageBad: Boolean = false,
-    val errorMessage: String = "",
+    @StringRes val errorMessage: Int = UiMessage.NONE,
 )

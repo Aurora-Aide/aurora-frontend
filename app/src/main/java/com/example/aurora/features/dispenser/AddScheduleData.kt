@@ -1,5 +1,8 @@
 package com.example.aurora.features.dispenser
 
+import androidx.annotation.StringRes
+import com.example.aurora.ui.UiMessage
+
 data class ScheduleFormState(
     val dayOfWeek: Int = -1,
     val hour: Int = -1,
@@ -8,6 +11,6 @@ data class ScheduleFormState(
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val isValid: Boolean = false,
-    val errorMessage: String = ""
+    @StringRes val errorMessage: Int = UiMessage.NONE,
 )
 
